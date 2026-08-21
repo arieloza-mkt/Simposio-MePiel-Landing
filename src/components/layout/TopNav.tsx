@@ -12,11 +12,22 @@ export function TopNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState("");
   const { theme, toggle } = useTheme();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 50);
+      const pos = window.scrollY + 96;
+      let current = "";
+      for (const link of NAV_LINKS) {
+        const el = document.querySelector(link.href) as HTMLElement | null;
+        if (el && el.offsetTop <= pos) current = link.href;
+      }
+      setActiveHref(current);
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -57,21 +68,29 @@ export function TopNav() {
           </a>
 
           <nav className="hidden gap-8 md:flex">
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollTo(link.href);
-                }}
-                className={`text-sm transition-colors hover:text-accent ${
-                  overDarkHero ? "text-white/70" : "text-fg"
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const isActive = activeHref === link.href;
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo(link.href);
+                  }}
+                  aria-current={isActive ? "true" : undefined}
+                  className={`group relative py-1 text-sm transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:rounded-full after:bg-accent after:transition-transform after:duration-300 after:ease-[var(--ease-out-expo)] after:content-[''] ${
+                    isActive
+                      ? "text-accent after:scale-x-100"
+                      : `after:scale-x-0 hover:text-accent hover:after:scale-x-100 ${
+                          overDarkHero ? "text-white/70" : "text-fg"
+                        }`
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -141,19 +160,25 @@ export function TopNav() {
 
       {mobileOpen && (
         <nav className="border-b border-border bg-surface px-8 py-4 md:hidden">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              onClick={(e) => {
-                e.preventDefault();
-                scrollTo(link.href);
-              }}
-              className="block border-b border-border py-3 text-base text-fg last:border-b-0 hover:text-accent"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isActive = activeHref === link.href;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollTo(link.href);
+                }}
+                aria-current={isActive ? "true" : undefined}
+                className={`block border-b border-border py-3 text-base last:border-b-0 transition-colors hover:text-accent ${
+                  isActive ? "font-semibold text-accent" : "text-fg"
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
           <div className="mt-4">
             <Button
               variant="primary"
@@ -173,6 +198,7 @@ export function TopNav() {
         open={registerOpen}
         onClose={() => setRegisterOpen(false)}
         label="Formulario de registro"
+        className="max-w-2xl"
       >
         <RegistrationForm />
       </Modal>

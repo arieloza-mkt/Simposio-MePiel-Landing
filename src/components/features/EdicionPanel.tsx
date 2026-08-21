@@ -1,17 +1,36 @@
 "use client";
 
+import { useState } from "react";
 import { EDITIONS } from "@/lib/constants";
 import { Container } from "@/components/layout/Container";
 import { PhotoCarousel } from "./PhotoCarousel";
+import { EditionDetailModal } from "./EditionDetailModal";
 
 interface EdicionPanelProps {
   edition: (typeof EDITIONS)[number];
 }
 
 export function EdicionPanel({ edition }: EdicionPanelProps) {
+  const [detailOpen, setDetailOpen] = useState(false);
+
   return (
     <div className="absolute inset-0 flex items-center py-[clamp(48px,8vw,96px)]">
-      <Container className="w-full">
+      {edition.backdrop ? (
+        <>
+          <img
+            src={edition.backdrop}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="pointer-events-none absolute inset-0 h-full w-full object-cover brightness-[0.32]"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-dark/55"
+            aria-hidden
+          />
+        </>
+      ) : null}
+      <Container className="relative w-full">
         <div className="items-center gap-[clamp(32px,5vw,72px)] grid grid-cols-2 max-md:grid-cols-1 max-md:gap-[40px]">
           <div>
             <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
@@ -38,33 +57,37 @@ export function EdicionPanel({ edition }: EdicionPanelProps) {
                 </div>
               ))}
             </div>
+            <button
+              onClick={() => setDetailOpen(true)}
+              className="group mt-[clamp(24px,3vw,40px)] inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
+            >
+              Ver más
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.8}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 transition-transform duration-150 ease-[var(--ease-out-expo)] group-hover:translate-x-0.5"
+                aria-hidden
+              >
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
           </div>
 
           {edition.video ? (
-            <div className="relative grid aspect-[16/10] w-full place-items-center overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-dark-s">
-              <div
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background:
-                    "radial-gradient(circle at 50% 40%, rgba(46,197,232,.10), transparent 60%)",
-                }}
-                aria-hidden
+            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/40">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${edition.video}?rel=0`}
+                title={`Video de la ${edition.ordinal} edición`}
+                className="absolute inset-0 h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                referrerPolicy="strict-origin-when-cross-origin"
+                loading="lazy"
               />
-              <div className="relative text-center">
-                <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-full border border-accent/50 bg-accent/12 text-accent">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="ml-1 h-6 w-6"
-                    aria-hidden
-                  >
-                    <path d="M8 5.14v13.72L19 12 8 5.14z" />
-                  </svg>
-                </div>
-                <p className="m-0 font-mono text-xs uppercase tracking-[0.08em] text-white/55">
-                  Video de la edición próximamente
-                </p>
-              </div>
             </div>
           ) : (
             <PhotoCarousel
@@ -74,6 +97,12 @@ export function EdicionPanel({ edition }: EdicionPanelProps) {
           )}
         </div>
       </Container>
+
+      <EditionDetailModal
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        edition={edition}
+      />
     </div>
   );
 }

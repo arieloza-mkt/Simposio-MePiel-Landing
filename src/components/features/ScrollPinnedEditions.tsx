@@ -56,23 +56,7 @@ export function ScrollPinnedEditions() {
           </div>
         ))}
 
-        <div className="absolute bottom-[clamp(24px,3vw,40px)] left-1/2 z-20 flex -translate-x-1/2 gap-3">
-          {EDITIONS.map((edition, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={`flex items-center gap-2 rounded-full border-2 px-4 py-2 text-xs font-medium transition-all ${
-                i === activeIndex
-                  ? "border-accent bg-accent text-white"
-                  : "border-white/30 bg-white/8 text-white/60 hover:border-white/50 hover:text-white"
-              }`}
-              aria-label={`Edición ${edition.ordinal}`}
-            >
-              <span className="hidden sm:inline">{edition.year}</span>
-              <span className="sm:hidden">{i + 1}</span>
-            </button>
-          ))}
-        </div>
+       
       </section>
     </div>
   );

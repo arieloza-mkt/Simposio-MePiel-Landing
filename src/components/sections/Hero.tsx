@@ -1,7 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { SITE, METRICS } from "@/lib/constants";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { SITE, METRICS, HERO_VIDEO_ID } from "@/lib/constants";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 
@@ -28,49 +33,91 @@ export function Hero() {
     }
   };
 
+  const reducedMotion = useReducedMotion();
+  const { scrollY } = useScroll();
+  const backdropY = useTransform(scrollY, [0, 900], [0, 240]);
+
   return (
     <section className="relative overflow-hidden bg-dark px-8 pt-[clamp(120px,18vw,180px)] pb-[clamp(56px,10vw,120px)] text-white">
+      <div className="pointer-events-none absolute inset-0" aria-hidden>
+        <motion.div
+          style={reducedMotion ? undefined : { y: backdropY }}
+          className="absolute inset-0"
+        >
+          <div className="absolute inset-0 overflow-hidden">
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${HERO_VIDEO_ID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${HERO_VIDEO_ID}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+              title="Video de fondo del Simposio Dermocosmético"
+              allow="autoplay; encrypted-media"
+              referrerPolicy="strict-origin-when-cross-origin"
+              className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.55]"
+            />
+          </div>
+        </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/45 to-dark" />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.09) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+            maskImage:
+              "radial-gradient(ellipse 90% 80% at 50% 40%, black 40%, transparent 100%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 90% 80% at 50% 40%, black 40%, transparent 100%)",
+          }}
+          aria-hidden
+        />
+      </div>
+
       <HeroRibbon />
 
-      <Container>
-        <div className="items-center gap-[clamp(32px,5vw,72px)] max-md:gap-[56px] grid grid-cols-2 max-md:grid-cols-1">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={heroChildren}
-            className="text-left"
+      <Container className="relative">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={heroChildren}
+          className="max-w-[720px] text-left"
+        >
+          <motion.p
+            variants={heroChild}
+            className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent"
           >
-            <motion.p variants={heroChild} className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
-              {SITE.edition} - [PENDIENTE: fecha exacta] - [PENDIENTE: sede]
-            </motion.p>
-            <motion.h1 variants={heroChild} className="mb-5 font-display text-[clamp(44px,6vw,76px)] font-bold leading-[1.04] tracking-tight text-white">
-              El encuentro comercial más relevante de la industria dermocosmética en México
-            </motion.h1>
-            <motion.p variants={heroChild} className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55">
-              {SITE.description}
-            </motion.p>
-            <motion.div variants={heroChild} className="flex flex-col gap-3 sm:flex-row sm:gap-3">
-              <Button variant="primary" className="w-full justify-center sm:w-auto" onClick={() => scrollTo("#registro")}>
-                Registrarme
-              </Button>
-              <Button variant="secondary" className="w-full justify-center sm:w-auto" onClick={() => scrollTo("#acerca")}>
-                Conoce más
-              </Button>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
-            className="relative"
+            {SITE.edition} - [PENDIENTE: fecha exacta] - [PENDIENTE: sede]
+          </motion.p>
+          <motion.h1
+            variants={heroChild}
+            className="mb-5 font-display text-[clamp(44px,6vw,76px)] font-bold leading-[1.04] tracking-tight text-white"
           >
-            <div className="pointer-events-none absolute inset-[-20%] z-[-1] rounded-full bg-[radial-gradient(circle,rgba(46,197,232,.12)_0%,rgba(230,57,155,.06)_40%,transparent_70%)]" />
-            <div className="aspect-[4/3] w-full rounded-[var(--radius-lg)] bg-[linear-gradient(135deg,rgba(46,197,232,.12),rgba(26,26,30,.06))] border border-white/8 grid place-items-center font-mono text-xs tracking-widest text-white/35">
-              <img src="https://placehold.co/600x400?text=Coloca+Imagen" alt="" />
-            </div>
+            Una alianza que impulsa tu práctica. Una experiencia que reconoce tu
+            confianza.
+          </motion.h1>
+          <motion.p
+            variants={heroChild}
+            className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55"
+          >
+            {SITE.description}
+          </motion.p>
+          <motion.div
+            variants={heroChild}
+            className="flex flex-col gap-3 sm:flex-row sm:gap-3"
+          >
+            <Button
+              variant="primary"
+              className="w-full justify-center sm:w-auto"
+              onClick={() => scrollTo("#registro")}
+            >
+              Registrarme
+            </Button>
+            <Button
+              variant="secondary"
+              className="w-full justify-center sm:w-auto"
+              onClick={() => scrollTo("#acerca")}
+            >
+              Conoce más
+            </Button>
           </motion.div>
-        </div>
+        </motion.div>
 
         <div className="mt-[clamp(48px,6vw,72px)] grid grid-cols-4 gap-[32px] border-t border-white/8 pt-[clamp(32px,4vw,48px)] text-center max-sm:grid-cols-2 max-sm:gap-5">
           {METRICS.map((m) => (
@@ -109,9 +156,27 @@ function HeroRibbon() {
           <stop offset="100%" stopColor="#2EC5E8" stopOpacity={0.14} />
         </linearGradient>
       </defs>
-      <path d="M-100,120 C200,40 500,280 800,160 S1200,320 1540,80" stroke="url(#rg1)" strokeWidth={120} fill="none" opacity={0.6} />
-      <path d="M-100,380 C300,260 600,520 900,360 S1300,480 1540,300" stroke="url(#rg2)" strokeWidth={80} fill="none" opacity={0.5} />
-      <path d="M-100,500 C250,420 550,600 850,480 S1250,560 1540,440" stroke="url(#rg1)" strokeWidth={40} fill="none" opacity={0.3} />
+      <path
+        d="M-100,120 C200,40 500,280 800,160 S1200,320 1540,80"
+        stroke="url(#rg1)"
+        strokeWidth={120}
+        fill="none"
+        opacity={0.6}
+      />
+      <path
+        d="M-100,380 C300,260 600,520 900,360 S1300,480 1540,300"
+        stroke="url(#rg2)"
+        strokeWidth={80}
+        fill="none"
+        opacity={0.5}
+      />
+      <path
+        d="M-100,500 C250,420 550,600 850,480 S1250,560 1540,440"
+        stroke="url(#rg1)"
+        strokeWidth={40}
+        fill="none"
+        opacity={0.3}
+      />
     </svg>
   );
 }

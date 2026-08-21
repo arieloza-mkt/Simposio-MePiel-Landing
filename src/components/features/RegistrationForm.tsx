@@ -56,9 +56,9 @@ export function RegistrationForm() {
   }
 
   return (
-    <div className="rounded-[var(--radius-lg)] border border-border bg-surface p-8">
+    <div>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <div className="flex flex-col gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field
             label="Nombre completo *"
             error={errors.nombre?.message}
@@ -125,6 +125,7 @@ export function RegistrationForm() {
           <Field
             label="Perfil profesional *"
             error={errors.perfil?.message}
+            className="sm:col-span-2"
           >
             <select
               className={`select ${errors.perfil ? "border-error" : ""}`}
@@ -144,7 +145,7 @@ export function RegistrationForm() {
             type="submit"
             variant="primary"
             size="lg"
-            className="mt-2 w-full justify-center"
+            className="mt-2 w-full justify-center sm:col-span-2"
           >
             Enviar mi registro
           </Button>
@@ -157,14 +158,16 @@ export function RegistrationForm() {
 function Field({
   label,
   error,
+  className,
   children,
 }: {
   label: string;
   error?: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={`flex flex-col gap-1.5 ${className ?? ""}`}>
       <label className="text-[13px] text-muted">{label}</label>
       {children}
       {error && (

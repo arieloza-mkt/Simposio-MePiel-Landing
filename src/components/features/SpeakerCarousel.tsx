@@ -2,7 +2,16 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { LABS } from "@/lib/constants";
+import { SPEAKERS } from "@/lib/constants";
+
+function initials(name: string) {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
 
 export function SpeakerCarousel() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -34,24 +43,53 @@ export function SpeakerCarousel() {
     };
   }, [emblaApi, onSelect]);
 
+  if (SPEAKERS.length === 0) {
+    return (
+      <div className="grid place-items-center rounded-[var(--radius-lg)] border border-dashed border-border bg-surface/60 px-6 py-16 text-center">
+        <p className="m-0 font-mono text-xs uppercase tracking-widest text-muted">
+          [PENDIENTE: ponentes por confirmar]
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {LABS.map((lab) => (
+          {SPEAKERS.map((speaker) => (
             <div
-              key={lab.name}
-              className="min-w-0 shrink-0 basis-1/4 px-3 text-center max-lg:basis-1/2 max-sm:basis-full"
+              key={speaker.id}
+              className="min-w-0 shrink-0 basis-full px-3 max-md:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
-              <div className="mb-3 grid aspect-square w-full place-items-center rounded-full border border-border bg-[linear-gradient(135deg,rgba(46,197,232,.12),rgba(26,26,30,.06))] p-8">
-                <img
-                  src={lab.image}
-                  alt={lab.name}
-                  className="max-h-full max-w-full object-contain dark:brightness-0 dark:invert"
-                  loading="lazy"
-                />
-              </div>
-              <div className="text-[15px] font-semibold mb-0.5">{lab.name}</div>
+              <figure className="m-0">
+                {speaker.image ? (
+                  <img
+                    src={speaker.image}
+                    alt={`Retrato de ${speaker.name}`}
+                    loading="lazy"
+                    className="mb-4 aspect-[4/5] w-full rounded-[var(--radius-lg)] border border-border object-cover"
+                  />
+                ) : (
+                  <div
+                    aria-hidden
+                    className="mb-4 grid aspect-[4/5] w-full place-items-center rounded-[var(--radius-lg)] border border-border bg-[linear-gradient(135deg,rgba(46,197,232,.12),rgba(26,26,30,.06))] font-display text-[clamp(28px,3vw,40px)] font-bold text-accent/70"
+                  >
+                    {initials(speaker.name)}
+                  </div>
+                )}
+                <figcaption>
+                  <div className="mb-1 text-[15px] font-semibold leading-snug">
+                    {speaker.name}
+                  </div>
+                  {speaker.role ? (
+                    <div className="text-sm leading-snug text-muted">
+                      {speaker.role}
+                      {speaker.company ? ` · ${speaker.company}` : ""}
+                    </div>
+                  ) : null}
+                </figcaption>
+              </figure>
             </div>
           ))}
         </div>

@@ -5,7 +5,7 @@ export const SITE = {
   tagline:
     "El encuentro comercial más relevante de la industria dermocosmética en México",
   description:
-    "Donde farmacias independientes, laboratorios, distribuidores y especialistas conectan para impulsar la categoría dermocosmética en punto de venta.",
+    "En mepiel distribuidores especializados creemos que una gran relación con nuestros médicos va más allá de ofrecer productos. Buscamos construir alianzas duraderas que generen valor para tu práctica, tus pacientes y tu crecimiento profesional. ",
 } as const;
 
 export const METRICS = [
@@ -53,57 +53,119 @@ export const BENEFITS = [
 export const EDITIONS = [
   {
     ordinal: "1ra.",
-    year: 2022,
-    title: "Simposio Dermocosmético 2022",
+    year: 2024,
+    title: "El inicio de una conversación que transforma ",
     eyebrow: "Primera edición",
-    description: "El Simposio arrancó con fuerza: más de 1000 profesionales del canal dermocosmético se reunieron por primera vez en México.",
+    description:
+      "Una primera edición que reunió a expertos, líderes de la industria y profesionales de la salud para analizar el presente y futuro de la dermocosmética en México. Un espacio de intercambio y conocimiento que puso sobre la mesa las tendencias, retos y oportunidades de una categoría en constante evolución.",
     stats: [
       { value: "+1000", label: "Asistentes" },
       { value: "+15", label: "Laboratorios" },
       { value: "+30", label: "Conferencias" },
     ],
-    video: false,
+    video: "" as string,
+    labs: [
+      { name: "Uriage", image: "/images/uriage.png" },
+      { name: "Eucerin", image: "https://placehold.co/300x160?text=Eucerin" },
+      { name: "Pierre Fabre", image: "/images/pierre-fabre.png" },
+      { name: "ISISPHARMA", image: "/images/isisphharma.png" },
+      { name: "IFC", image: "https://placehold.co/300x160?text=IFC" },
+      { name: "ISDIN", image: "/images/isdin.png" },
+      { name: "IQVIA", image: "https://placehold.co/300x160?text=IQVIA" },
+    ] as { name: string; image: string }[],
+    speakerIds: [1, 2, 3, 4, 5, 6],
+    backdrop:
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
     images: [
-      { src: "https://placehold.co/1920x1080?text=Edición+2024", alt: "Primera edición - panorama general" },
-      { src: "https://placehold.co/1920x1080?text=Edición+2024", alt: "Primera edición - conferencia magistral" },
-      { src: "https://placehold.co/1920x1080?text=Edición+2024", alt: "Primera edición - networking" },
+      {
+        src: "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Primera edición - panorama general",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Primera edición - conferencia magistral",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Primera edición - networking",
+      },
     ],
   },
   {
     ordinal: "2da.",
-    year: 2023,
-    title: "Simposio Dermocosmético 2023",
+    year: 2025,
+    title: "Consolidando una comunidad que impulsa la categoría ",
     eyebrow: "Segunda edición",
-    description: "La segunda edición superó todas las expectativas: más laboratorios, más contenido y una audiencia cualificada que consolidó al evento.",
+    description:
+      "Una segunda edición que llevó la conversación más allá, conectando a expertos y profesionales para compartir nuevas perspectivas, estrategias y oportunidades de crecimiento. Un encuentro que fortaleció la colaboración entre la industria y el punto de venta, consolidando al Simposio como un espacio clave para impulsar la dermocosmética en México.",
     stats: [
       { value: "+3500", label: "Asistentes" },
       { value: "+40", label: "Laboratorios" },
       { value: "+50", label: "Conferencias" },
     ],
-    video: false,
+    video: "" as string,
+    labs: [
+      { name: "ISDIN", image: "/images/isdin.png" },
+      { name: "Cantabria Labs", image: "/images/cantabrialabs.png" },
+      { name: "Galderma", image: "/images/galderma.png" },
+      { name: "Pierre Fabre", image: "/images/pierre-fabre.png" },
+      { name: "BDF", image: "https://placehold.co/300x160?text=BDF" },
+      { name: "NAOS", image: "/images/naos.png" },
+      { name: "Uriage", image: "/images/uriage.png" },
+      { name: "ISISPHARMA", image: "/images/isisphharma.png" },
+      {
+        name: "L'Oréal Dermatological Beauty",
+        image: "/images/loreal.png",
+      },
+      { name: "Megalabs", image: "/images/megalabs.png" },
+      { name: "IQVIA", image: "https://placehold.co/300x160?text=IQVIA" },
+    ] as { name: string; image: string }[],
+    speakerIds: [7, 8, 2, 9, 10, 11, 1, 12, 4, 13, 5, 14, 15],
+    backdrop:
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
     images: [
-      { src: "/ediciones/2023-1.jpg", alt: "Segunda edición - panorama general" },
-      { src: "/ediciones/2023-2.jpg", alt: "Segunda edición - stands de laboratorios" },
-      { src: "/ediciones/2023-3.jpg", alt: "Segunda edición - panel de expertos" },
+      {
+        src: "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Segunda edición - panorama general",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Segunda edición - stands de laboratorios",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Segunda edición - panel de expertos",
+      },
     ],
   },
   {
     ordinal: "3ra.",
     year: 2026,
-    title: "Simposio Dermocosmético 2026",
+    title: "En octubre, nos volvemos a encontrar",
     eyebrow: "Tercera edición",
-    description:
-      "La edición más ambiciosa: más laboratorios, más contenido y más oportunidades de negocio que nunca.",
+    description: `La tercera edición del Simposio Dermocosmético llegará con la esencia que ya nos caracteriza, pero con nuevas experiencias para conectar, aprender y vivir la categoría de una forma diferente. 
+    Habrá más ponencias, espacios de convivencia y encuentros con los laboratorios participantes… y tenemos algo más preparado para esta edición que todavía no podemos revelar.  
+    Nuevas experiencias. La misma misión: seguir impulsando juntos la dermocosmética en México.`,
     stats: [
       { value: "+5000", label: "Asistentes" },
       { value: "+60", label: "Laboratorios" },
       { value: "+80", label: "Conferencias" },
     ],
-    video: true,
+    video: "SShlS6r6ZRg",
+    labs: [] as { name: string; image: string }[],
+    speakerIds: [] as number[],
+    backdrop:
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
     images: [
-      { src: "/ediciones/2026-1.jpg", alt: "Tercera edición - proximamente" },
-      { src: "/ediciones/2026-2.jpg", alt: "Tercera edición - lineup de speakers" },
-      { src: "/ediciones/2026-3.jpg", alt: "Tercera edición - recinto del evento" },
+      { src: "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Tercera edición - proximamente" },
+      {
+        src: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Tercera edición - lineup de speakers",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        alt: "Tercera edición - recinto del evento",
+      },
     ],
   },
 ] as const;
@@ -147,6 +209,63 @@ export const TRACKS = [
   },
 ] as const;
 
+export type ScheduleTag =
+  | "Conferencia"
+  | "Panel"
+  | "Networking"
+  | "Activo"
+  | "Cierre";
+
+export interface ScheduleItem {
+  time: string;
+  title: string;
+  description?: string;
+  tag: ScheduleTag;
+}
+
+export const SCHEDULE: ScheduleItem[] = [
+  {
+    time: "09:00",
+    title: "Registro y check-in",
+    description: "Acreditación de asistentes y acceso al recinto.",
+    tag: "Activo",
+  },
+  {
+    time: "10:00",
+    title: "[PENDIENTE: conferencia de apertura]",
+    description:
+      "Keynote de bienvenida a cargo de [PENDIENTE: nombre del ponente].",
+    tag: "Conferencia",
+  },
+  {
+    time: "11:00",
+    title: "[PENDIENTE: bloque de conferencias]",
+    tag: "Conferencia",
+  },
+  {
+    time: "12:30",
+    title: "Networking y descanso",
+    description: "Coffee break y recorrido por los stands de exhibición.",
+    tag: "Networking",
+  },
+  {
+    time: "13:30",
+    title: "[PENDIENTE: panel de expertos]",
+    description: "Mesa redonda con [PENDIENTE: nombres de los panelistas].",
+    tag: "Panel",
+  },
+  {
+    time: "15:00",
+    title: "[PENDIENTE: taller o actividad]",
+    tag: "Activo",
+  },
+  {
+    time: "17:00",
+    title: "[PENDIENTE: cierre del evento]",
+    tag: "Cierre",
+  },
+];
+
 export const LABS: { name: string; image: string }[] = [
   { name: "ISDIN", image: "/images/isdin.png" },
   { name: "Cantabria Labs", image: "/images/cantabrialabs.png" },
@@ -157,7 +276,21 @@ export const LABS: { name: string; image: string }[] = [
   { name: "Uriage", image: "/images/uriage.png" },
   { name: "ISISPHARMA", image: "/images/isisphharma.png" },
   { name: "Megalabs", image: "/images/megalabs.png" },
+  // Pendiente reemplazar por logos oficiales en /public/images/
+  { name: "Eucerin", image: "https://placehold.co/300x160?text=Eucerin" },
+  { name: "BDF", image: "https://placehold.co/300x160?text=BDF" },
+  { name: "IFC", image: "https://placehold.co/300x160?text=IFC" },
+  { name: "IQVIA", image: "https://placehold.co/300x160?text=IQVIA" },
 ];
+
+export const HERO_VIDEO_ID = "BOG_CbEDhag";
+
+export const LIVESTREAM = {
+  videoId: "55q-1jpgnGc",
+  isLive: true,
+  backdrop:
+    "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop",
+} as const;
 
 export const LAB_FEATURES = [
   {
@@ -198,11 +331,110 @@ export const LAB_FEATURES = [
   },
 ] as const;
 
-export const SPEAKERS = Array.from({ length: 8 }, (_, i) => ({
-  id: i + 1,
-  name: "[PENDIENTE: nombre]",
-  role: "[PENDIENTE: puesto y empresa]",
-}));
+export interface Speaker {
+  id: number;
+  name: string;
+  role?: string;
+  company?: string;
+  image?: string;
+}
+
+/**
+ * Agrega o quita ponentes aquí. Se muestran en el carrusel del home y,
+ * si se referencian por id en EDITIONS[].speakerIds, en el modal de cada edición.
+ */
+export const SPEAKERS: Speaker[] = [
+  {
+    id: 1,
+    name: "Margarita Trujillo",
+    role: "Directora de Unidades de Negocio",
+    company: "Grupo Mepiel",
+  },
+  {
+    id: 2,
+    name: "Eliana Cardozo",
+    role: "TD&DS BU's and Commercial Director",
+    company: "Galderma México",
+  },
+  {
+    id: 3,
+    name: "Andrea Figueroa",
+    role: "Directora de Marketing y Transformación Digital",
+    company: "NAOS",
+  },
+  {
+    id: 4,
+    name: "Phillipe de Carvalho",
+    role: "General Manager México y Director General de América",
+    company: "Pierre Fabre",
+  },
+  {
+    id: 5,
+    name: "Julián Moncada Restrepo",
+    role: "Gerente de Zona Latinoamérica y Director México",
+    company: "ISISPHARMA",
+  },
+  {
+    id: 6,
+    name: "Sebastián Parisi",
+    role: "Vicepresidente de Marketing Norteamérica",
+    company: "Beiersdorf",
+  },
+  {
+    id: 7,
+    name: "Mario Muñiz",
+    role: "Sr. General Manager NOLA",
+    company: "IQVIA",
+  },
+  {
+    id: 8,
+    name: "Laurencia Mussol",
+    role: "CEO Adjunta",
+    company: "ISISPHARMA",
+  },
+  {
+    id: 9,
+    name: "Mariagna Ortiz",
+    role: "Directora Comercial",
+    company: "Pierre Fabre México",
+  },
+  {
+    id: 10,
+    name: "Salathiel Rosas",
+    role: "Senior Digital and Community Manager",
+    company: "ISDIN México",
+  },
+  {
+    id: 11,
+    name: "Susana Alfaro",
+    role: "Business Unit Head",
+    company: "Eucerin México y Centroamérica",
+  },
+  {
+    id: 12,
+    name: "Corrado De Gennaro",
+    role: "CEO",
+    company: "Galderma México",
+  },
+  {
+    id: 13,
+    name: "Marie Di Cesare",
+    role: "General Manager",
+    company: "L'Oréal Dermatological Beauty México",
+  },
+  {
+    id: 14,
+    name: "Andrés Razo",
+    role: "Regional Managing Director",
+    company: "NAOS Américas",
+  },
+  {
+    id: 15,
+    name: "Joel Foradada",
+    role: "LATAM Regional Manager",
+    company: "PUIG",
+  },
+];
 
 export const GALLERY_ITEMS = Array.from({ length: 6 }, (_, i) => ({
   id: i + 1,
@@ -238,10 +470,9 @@ export const FAQ_ITEMS = [
 ] as const;
 
 export const NAV_LINKS = [
-  { label: "El Simposio", href: "#acerca" },
+  { label: "Acerca de", href: "#acerca" },
   { label: "Ediciones", href: "#ediciones" },
-  { label: "Expositores", href: "#laboratorios" },
-  { label: "Para Laboratorios", href: "#para-labs" },
+  { label: "Transmisión en Vivo", href: "#transmision" },
 ] as const;
 
 export const PROFILE_OPTIONS = [
