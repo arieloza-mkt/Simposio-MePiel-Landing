@@ -1,16 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { LIVESTREAM } from "@/lib/constants";
+import type {
+  EventConfig,
+  ScheduleItem,
+  TransmisionSettings,
+} from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { CronogramaModal } from "@/components/features/CronogramaModal";
 
-function LiveBadge() {
+function LiveBadge({ isLive }: { isLive: boolean }) {
   return (
     <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-dark-s px-4 py-1.5 font-mono text-xs uppercase tracking-widest text-white/70">
-      {LIVESTREAM.isLive ? (
+      {isLive ? (
         <>
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff4d5e] opacity-75" />
@@ -31,16 +35,24 @@ function LiveBadge() {
 const DARK_BUTTON =
   "inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition-colors duration-200 ease-[var(--ease-out-expo)] hover:border-accent hover:text-accent";
 
-export function Transmision() {
+export function Transmision({
+  transmision,
+  schedule,
+  eventConfig,
+}: {
+  transmision: TransmisionSettings;
+  schedule: ScheduleItem[];
+  eventConfig: EventConfig;
+}) {
   const [scheduleOpen, setScheduleOpen] = useState(false);
-  const hasStream = Boolean(LIVESTREAM.videoId);
+  const hasStream = Boolean(transmision.videoId) && transmision.isLive;
 
   return (
     <Section id="transmision" dark className="relative overflow-hidden">
-      {LIVESTREAM.backdrop ? (
+      {transmision.backdropUrl ? (
         <>
           <img
-            src={LIVESTREAM.backdrop}
+            src={transmision.backdropUrl}
             alt=""
             aria-hidden
             loading="lazy"
@@ -59,23 +71,22 @@ export function Transmision() {
             Transmisión en vivo
           </p>
           <h2 className="font-display text-[clamp(30px,4vw,48px)] font-bold leading-[1.1] tracking-tight text-white">
-            Acompaña el Simposio desde donde estés
+            {transmision.title}
           </h2>
           <p className="mx-auto mt-5 max-w-[56ch] text-[19px] leading-relaxed text-white/55">
-            Sigue la transmisión oficial del evento: conferencias magistrales y
-            los momentos clave de la jornada en tiempo real.
+            {transmision.description}
           </p>
         </div>
 
         <AnimatedSection animation="fade-up" className="mx-auto max-w-[880px]">
           <div className="mb-4 flex justify-center">
-            <LiveBadge />
+            <LiveBadge isLive={transmision.isLive} />
           </div>
 
           {hasStream ? (
             <div className="relative aspect-video overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/50">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${LIVESTREAM.videoId}?rel=0`}
+                src={`https://www.youtube-nocookie.com/embed/${transmision.videoId}?rel=0`}
                 title="Transmisión en vivo del Simposio Dermocosmético"
                 className="absolute inset-0 h-full w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -112,7 +123,7 @@ export function Transmision() {
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             {hasStream ? (
               <a
-                href={`https://www.youtube.com/watch?v=${LIVESTREAM.videoId}`}
+                href={`https://www.youtube.com/watch?v=${transmision.videoId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={DARK_BUTTON}
@@ -152,7 +163,12 @@ export function Transmision() {
         </AnimatedSection>
       </Container>
 
-      <CronogramaModal open={scheduleOpen} onClose={() => setScheduleOpen(false)} />
+      <CronogramaModal
+        open={scheduleOpen}
+        onClose={() => setScheduleOpen(false)}
+        items={schedule}
+        eventConfig={eventConfig}
+      />
     </Section>
   );
 }

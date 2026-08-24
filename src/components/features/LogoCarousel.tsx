@@ -68,11 +68,11 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
               key={item.name}
               className="min-w-0 shrink-0 basis-1/2 px-2.5 max-sm:basis-full sm:basis-1/3 lg:basis-1/4"
             >
-              <div className="flex h-20 items-center justify-center rounded-full border border-border bg-surface px-6 transition-all hover:border-accent hover:shadow-md">
+              <div className="flex h-20 items-center justify-center rounded-full border border-border bg-[#fafafa] px-6 transition-all hover:border-accent hover:shadow-md">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="max-h-10 max-w-[120px] object-contain opacity-70 grayscale transition-all hover:opacity-100 hover:grayscale-0 dark:brightness-0 dark:invert dark:opacity-80"
+                  className="max-h-12 max-w-[130px] object-contain"
                   loading="lazy"
                 />
               </div>

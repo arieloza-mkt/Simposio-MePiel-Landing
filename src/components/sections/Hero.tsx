@@ -6,7 +6,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { SITE, METRICS, HERO_VIDEO_ID } from "@/lib/constants";
+import type { HeroSettings, SiteInfo } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
 
@@ -22,7 +22,7 @@ const heroChild = {
   visible: { opacity: 1, y: 0 },
 };
 
-export function Hero() {
+export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
     if (el) {
@@ -36,9 +36,10 @@ export function Hero() {
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
   const backdropY = useTransform(scrollY, [0, 900], [0, 240]);
+  const heroVideoId = hero.videoId;
 
   return (
-    <section className="relative overflow-hidden bg-dark px-8 pt-[clamp(120px,18vw,180px)] pb-[clamp(56px,10vw,120px)] text-white">
+    <section id="inicio" className="relative overflow-hidden bg-dark px-8 pt-[clamp(120px,18vw,180px)] pb-[clamp(56px,10vw,120px)] text-white">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <motion.div
           style={reducedMotion ? undefined : { y: backdropY }}
@@ -46,7 +47,7 @@ export function Hero() {
         >
           <div className="absolute inset-0 overflow-hidden">
             <iframe
-              src={`https://www.youtube-nocookie.com/embed/${HERO_VIDEO_ID}?autoplay=1&mute=1&controls=0&loop=1&playlist=${HERO_VIDEO_ID}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+              src={`https://www.youtube-nocookie.com/embed/${heroVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroVideoId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
               title="Video de fondo del Simposio Dermocosmético"
               allow="autoplay; encrypted-media"
               referrerPolicy="strict-origin-when-cross-origin"
@@ -70,7 +71,13 @@ export function Hero() {
         />
       </div>
 
-      <HeroRibbon />
+      <img
+        src="https://res.cloudinary.com/cc4tium7/image/upload/v1787611636/hero-bg-decor.svg"
+        alt=""
+        aria-hidden
+        loading="eager"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-[0.05]"
+      />
 
       <Container className="relative">
         <motion.div
@@ -79,12 +86,6 @@ export function Hero() {
           variants={heroChildren}
           className="max-w-[720px] text-left"
         >
-          <motion.p
-            variants={heroChild}
-            className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent"
-          >
-            {SITE.edition} - [PENDIENTE: fecha exacta] - [PENDIENTE: sede]
-          </motion.p>
           <motion.h1
             variants={heroChild}
             className="mb-5 font-display text-[clamp(44px,6vw,76px)] font-bold leading-[1.04] tracking-tight text-white"
@@ -96,19 +97,12 @@ export function Hero() {
             variants={heroChild}
             className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55"
           >
-            {SITE.description}
+            {site.description}
           </motion.p>
           <motion.div
             variants={heroChild}
             className="flex flex-col gap-3 sm:flex-row sm:gap-3"
           >
-            <Button
-              variant="primary"
-              className="w-full justify-center sm:w-auto"
-              onClick={() => scrollTo("#registro")}
-            >
-              Registrarme
-            </Button>
             <Button
               variant="secondary"
               className="w-full justify-center sm:w-auto"
@@ -118,65 +112,8 @@ export function Hero() {
             </Button>
           </motion.div>
         </motion.div>
-
-        <div className="mt-[clamp(48px,6vw,72px)] grid grid-cols-4 gap-[32px] border-t border-white/8 pt-[clamp(32px,4vw,48px)] text-center max-sm:grid-cols-2 max-sm:gap-5">
-          {METRICS.map((m) => (
-            <div key={m.label}>
-              <div className="font-display text-[clamp(32px,4vw,48px)] font-bold leading-none tracking-tight text-accent tabular-nums">
-                {m.value}
-              </div>
-              <div className="mt-1 font-mono text-[13px] uppercase tracking-widest text-white/55 whitespace-pre-line">
-                {m.label}
-              </div>
-            </div>
-          ))}
-        </div>
       </Container>
     </section>
   );
 }
 
-function HeroRibbon() {
-  return (
-    <svg
-      className="pointer-events-none absolute inset-0 z-0 h-full w-full"
-      viewBox="0 0 1440 600"
-      preserveAspectRatio="none"
-      aria-hidden
-    >
-      <defs>
-        <linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#2EC5E8" stopOpacity={0.18} />
-          <stop offset="50%" stopColor="#E6399B" stopOpacity={0.12} />
-          <stop offset="100%" stopColor="#7B3FE4" stopOpacity={0.16} />
-        </linearGradient>
-        <linearGradient id="rg2" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#7B3FE4" stopOpacity={0.1} />
-          <stop offset="40%" stopColor="#E6399B" stopOpacity={0.08} />
-          <stop offset="100%" stopColor="#2EC5E8" stopOpacity={0.14} />
-        </linearGradient>
-      </defs>
-      <path
-        d="M-100,120 C200,40 500,280 800,160 S1200,320 1540,80"
-        stroke="url(#rg1)"
-        strokeWidth={120}
-        fill="none"
-        opacity={0.6}
-      />
-      <path
-        d="M-100,380 C300,260 600,520 900,360 S1300,480 1540,300"
-        stroke="url(#rg2)"
-        strokeWidth={80}
-        fill="none"
-        opacity={0.5}
-      />
-      <path
-        d="M-100,500 C250,420 550,600 850,480 S1250,560 1540,440"
-        stroke="url(#rg1)"
-        strokeWidth={40}
-        fill="none"
-        opacity={0.3}
-      />
-    </svg>
-  );
-}

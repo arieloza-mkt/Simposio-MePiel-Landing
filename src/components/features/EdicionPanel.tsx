@@ -1,24 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { EDITIONS } from "@/lib/constants";
+import type { Edition, Speaker } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { PhotoCarousel } from "./PhotoCarousel";
 import { EditionDetailModal } from "./EditionDetailModal";
 
 interface EdicionPanelProps {
-  edition: (typeof EDITIONS)[number];
+  edition: Edition;
+  speakers: Speaker[];
 }
 
-export function EdicionPanel({ edition }: EdicionPanelProps) {
+export function EdicionPanel({ edition, speakers }: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);
 
   return (
     <div className="absolute inset-0 flex items-center py-[clamp(48px,8vw,96px)]">
-      {edition.backdrop ? (
+      {edition.backdropUrl ? (
         <>
           <img
-            src={edition.backdrop}
+            src={edition.backdropUrl}
             alt=""
             aria-hidden
             loading="lazy"
@@ -33,15 +34,23 @@ export function EdicionPanel({ edition }: EdicionPanelProps) {
       <Container className="relative w-full">
         <div className="items-center gap-[clamp(32px,5vw,72px)] grid grid-cols-2 max-md:grid-cols-1 max-md:gap-[40px]">
           <div>
-            <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
-              {edition.eyebrow}
-            </p>
-            <div className="font-display text-[clamp(56px,8vw,88px)] font-bold leading-[0.95] tracking-tight text-accent">
-              {edition.ordinal}
-            </div>
-            <div className="mt-2 font-display text-[clamp(24px,3vw,32px)] font-bold text-white">
-              {edition.title}
-            </div>
+            {edition.logoUrl ? (
+              <img
+                src={edition.logoUrl}
+                alt={`${edition.eyebrow} — ${edition.title}`}
+                loading="lazy"
+                className="max-h-[clamp(72px,10vw,120px)] w-auto max-w-full object-contain object-left"
+              />
+            ) : (
+              <>
+                <div className="font-display text-[clamp(56px,8vw,88px)] font-bold leading-[0.95] tracking-tight text-accent">
+                  {edition.ordinal}
+                </div>
+                <div className="mt-2 font-display text-[clamp(24px,3vw,32px)] font-bold text-white">
+                  {edition.title}
+                </div>
+              </>
+            )}
             <p className="mt-6 mb-0 text-[17px] leading-relaxed text-white/55">
               {edition.description}
             </p>
@@ -77,10 +86,10 @@ export function EdicionPanel({ edition }: EdicionPanelProps) {
             </button>
           </div>
 
-          {edition.video ? (
+          {edition.videoId ? (
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/40">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${edition.video}?rel=0`}
+                src={`https://www.youtube-nocookie.com/embed/${edition.videoId}?rel=0`}
                 title={`Video de la ${edition.ordinal} edición`}
                 className="absolute inset-0 h-full w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -102,6 +111,7 @@ export function EdicionPanel({ edition }: EdicionPanelProps) {
         open={detailOpen}
         onClose={() => setDetailOpen(false)}
         edition={edition}
+        speakers={speakers}
       />
     </div>
   );

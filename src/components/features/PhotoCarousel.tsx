@@ -31,7 +31,8 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
+    const syncInitial = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    queueMicrotask(syncInitial);
     emblaApi.on("select", onSelect);
     return () => {
       emblaApi.off("select", onSelect);

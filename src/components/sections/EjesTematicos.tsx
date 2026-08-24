@@ -1,11 +1,11 @@
 "use client";
 
-import { TRACKS } from "@/lib/constants";
+import type { Track } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 
-export function EjesTematicos() {
+export function EjesTematicos({ tracks }: { tracks: Track[] }) {
   return (
     <Section id="ejes-tematicos">
       <Container>
@@ -20,7 +20,7 @@ export function EjesTematicos() {
 
         <AnimatedSection animation="fade-up">
           <div className="grid grid-cols-2 gap-[24px] max-md:grid-cols-1 lg:grid-cols-3 lg:gap-[32px]">
-            {TRACKS.map((t) => (
+            {tracks.map((t) => (
               <div
                 key={t.num}
                 className="flex flex-col gap-3 rounded-[var(--radius-lg)] border border-border bg-surface p-7"

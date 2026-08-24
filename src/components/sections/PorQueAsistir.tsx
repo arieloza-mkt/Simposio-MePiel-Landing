@@ -1,6 +1,6 @@
 "use client";
 
-import { BENEFITS } from "@/lib/constants";
+import type { Benefit } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
@@ -12,7 +12,7 @@ const ICONS: Record<string, React.ReactNode> = {
   layers: <><path d="M12 2L2 7l10 5 10-5-10-5z" /><path d="M2 17l10 5 10-5M2 12l10 5 10-5" /></>,
 };
 
-export function PorQueAsistir() {
+export function PorQueAsistir({ benefits }: { benefits: Benefit[] }) {
   return (
     <Section>
       <Container>
@@ -27,7 +27,7 @@ export function PorQueAsistir() {
 
         <AnimatedSection animation="fade-up">
           <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1 lg:grid-cols-4">
-            {BENEFITS.map((b) => (
+            {benefits.map((b) => (
               <div key={b.title} className="flex flex-col gap-3">
                 <div className="h-40 rounded-[var(--radius-lg)] bg-[linear-gradient(135deg,rgba(46,197,232,.12),rgba(26,26,30,.06))]" />
                 <div className="grid h-12 w-12 place-items-center rounded-[var(--radius)] bg-accent/12 text-accent">

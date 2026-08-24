@@ -1,12 +1,12 @@
 "use client";
 
-import { FAQ_ITEMS } from "@/lib/constants";
+import type { FaqItem } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { Accordion } from "@/components/ui/Accordion";
 
-export function FAQ() {
+export function FAQ({ faq }: { faq: FaqItem[] }) {
   return (
     <Section id="faq">
       <Container className="max-w-[800px]">
@@ -21,7 +21,7 @@ export function FAQ() {
 
         <AnimatedSection animation="fade-up">
           <Accordion
-            items={FAQ_ITEMS.map((item) => ({
+            items={faq.map((item) => ({
               question: item.question,
               answer: item.answer,
             }))}

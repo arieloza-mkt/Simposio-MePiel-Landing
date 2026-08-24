@@ -1,31 +1,37 @@
-"use client";
-
 import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
+import { LogoSpin } from "@/components/features/LogoSpin";
 import { QueEs } from "@/components/sections/QueEs";
+import { MepielAlianza } from "@/components/sections/MepielAlianza";
 import { Laboratorios } from "@/components/sections/Laboratorios";
 import { Expositores } from "@/components/sections/Expositores";
-import { Transmision } from "@/components/sections/Transmision";
 import { Registro } from "@/components/sections/Registro";
 import { FAQ } from "@/components/sections/FAQ";
-import { CTACierre } from "@/components/sections/CTACierre";
 import { ScrollPinnedEditions } from "@/components/features/ScrollPinnedEditions";
+import { getLandingContent } from "@/lib/content";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const content = await getLandingContent();
+
   return (
     <>
       <TopNav />
       <main id="content">
-        <Hero />
-        <QueEs />
-        <ScrollPinnedEditions />
-        <Laboratorios />
-        <Expositores />
-        <Transmision />
+        <Hero site={content.site} hero={content.hero} />
+        <LogoSpin />
+        <MepielAlianza alianza={content.mepielAlianza} />
+        <QueEs queEs={content.queEs} />
+        <ScrollPinnedEditions
+          editions={content.editions}
+          speakers={content.speakers}
+        />
+        <Laboratorios labsList={content.labsList} />
+        <Expositores speakers={content.speakers} />
         <Registro />
-        <FAQ />
-        <CTACierre />
+        <FAQ faq={content.faq} />
       </main>
       <Footer />
     </>

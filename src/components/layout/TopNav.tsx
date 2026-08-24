@@ -3,17 +3,11 @@
 import { useState, useEffect } from "react";
 import { NAV_LINKS } from "@/lib/constants";
 import { Container } from "./Container";
-import { Button } from "@/components/ui/Button";
-import { Modal } from "@/components/ui/Modal";
-import { RegistrationForm } from "@/components/features/RegistrationForm";
-import { useTheme } from "@/lib/theme-provider";
 
 export function TopNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [registerOpen, setRegisterOpen] = useState(false);
   const [activeHref, setActiveHref] = useState("");
-  const { theme, toggle } = useTheme();
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,7 +36,7 @@ export function TopNav() {
     }
   };
 
-  const overDarkHero = !scrolled && theme === "dark";
+  const overDarkHero = !scrolled;
 
   return (
     <header
@@ -58,16 +52,15 @@ export function TopNav() {
         <div className="flex items-center justify-between py-3.5">
           <a href="#" className="flex items-center gap-2.5">
             <img
-              src="/logo-vertical-no-edit-1.png"
+              src="https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg"
               alt="Simposio Dermocosmético"
               height={56}
-              className={`h-12 w-auto transition-all duration-300 md:h-14 ${
-                overDarkHero ? "brightness-0 invert" : ""
-              }`}
+              className="h-12 w-auto transition-all duration-300 md:h-14"
             />
           </a>
 
-          <nav className="hidden gap-8 md:flex">
+          <div className="flex items-center gap-2">
+            <nav className="hidden gap-8 md:flex">
             {NAV_LINKS.map((link) => {
               const isActive = activeHref === link.href;
               return (
@@ -93,35 +86,6 @@ export function TopNav() {
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggle}
-              className={`grid h-10 w-10 place-items-center rounded-full border transition-colors ${
-                overDarkHero
-                  ? "border-white/20 text-white hover:bg-white/10"
-                  : "border-border text-fg hover:bg-border/50"
-              }`}
-              aria-label={theme === "dark" ? "Modo claro" : "Modo oscuro"}
-            >
-              {theme === "dark" ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" className="h-[18px] w-[18px]">
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]">
-                  <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
-                </svg>
-              )}
-            </button>
-
             <button
               className={`grid h-11 w-11 place-items-center rounded-full border-none bg-transparent md:hidden transition-colors ${
                 overDarkHero ? "text-white" : "text-fg"
@@ -145,15 +109,6 @@ export function TopNav() {
                 )}
               </svg>
             </button>
-
-            <Button
-              variant="primary"
-              size="sm"
-              className="hidden md:inline-flex"
-              onClick={() => setRegisterOpen(true)}
-            >
-              Registrarme
-            </Button>
           </div>
         </div>
       </Container>
@@ -178,30 +133,8 @@ export function TopNav() {
                 {link.label}
               </a>
             );
-          })}
-          <div className="mt-4">
-            <Button
-              variant="primary"
-              className="w-full justify-center"
-              onClick={() => {
-                setMobileOpen(false);
-                setRegisterOpen(true);
-              }}
-            >
-              Registrarme
-            </Button>
-          </div>
-        </nav>
+          })}        </nav>
       )}
-
-      <Modal
-        open={registerOpen}
-        onClose={() => setRegisterOpen(false)}
-        label="Formulario de registro"
-        className="max-w-2xl"
-      >
-        <RegistrationForm />
-      </Modal>
     </header>
   );
 }

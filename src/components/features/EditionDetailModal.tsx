@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { EDITIONS, SPEAKERS, type Speaker } from "@/lib/constants";
+import type { Edition, Speaker } from "@/lib/content";
 import { Modal } from "@/components/ui/Modal";
 import { LogoCarousel } from "./LogoCarousel";
 
@@ -19,6 +19,7 @@ function useEmblaDots() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "trimSnaps",
+    loop: true,
   });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
@@ -52,7 +53,28 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
 
   return (
     <div role="region" aria-label="Ponentes de la edición">
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="relative">
+        <button
+          onClick={() => emblaApi?.scrollPrev()}
+          disabled={selectedIndex === 0}
+          className="absolute left-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-8 max-md:w-8"
+          aria-label="Ponente anterior"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button
+          onClick={() => emblaApi?.scrollNext()}
+          disabled={selectedIndex === scrollSnaps.length - 1}
+          className="absolute right-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-8 max-md:w-8"
+          aria-label="Ponente siguiente"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+        <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {speakers.map((speaker) => (
             <div
@@ -60,9 +82,9 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
               className="min-w-0 shrink-0 basis-full px-2.5 max-sm:basis-full sm:basis-1/2 lg:basis-1/3"
             >
               <figure className="m-0 overflow-hidden rounded-[var(--radius-lg)] border border-border bg-bg">
-                {speaker.image ? (
+                {speaker.imageUrl ? (
                   <img
-                    src={speaker.image}
+                    src={speaker.imageUrl}
                     alt={`Retrato de ${speaker.name}`}
                     className="aspect-[4/5] w-full object-cover"
                     loading="lazy"
@@ -94,20 +116,10 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
             </div>
           ))}
         </div>
+        </div>
       </div>
 
-      <div className="mt-5 flex items-center justify-center gap-5">
-        <button
-          onClick={() => emblaApi?.scrollPrev()}
-          disabled={selectedIndex === 0}
-          className="grid h-10 w-10 place-items-center rounded-full border border-border bg-surface text-fg transition-colors hover:border-accent hover:bg-accent/12 disabled:pointer-events-none disabled:opacity-35"
-          aria-label="Ponente anterior"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-
+      <div className="mt-5 flex items-center justify-center">
         <div className="flex gap-1.5">
           {scrollSnaps.map((_, i) => (
             <button
@@ -120,17 +132,6 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
             />
           ))}
         </div>
-
-        <button
-          onClick={() => emblaApi?.scrollNext()}
-          disabled={selectedIndex === scrollSnaps.length - 1}
-          className="grid h-10 w-10 place-items-center rounded-full border border-border bg-surface text-fg transition-colors hover:border-accent hover:bg-accent/12 disabled:pointer-events-none disabled:opacity-35"
-          aria-label="Ponente siguiente"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
       </div>
     </div>
   );
@@ -139,16 +140,18 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
 interface EditionDetailModalProps {
   open: boolean;
   onClose: () => void;
-  edition: (typeof EDITIONS)[number];
+  edition: Edition;
+  speakers: Speaker[];
 }
 
 export function EditionDetailModal({
   open,
   onClose,
   edition,
+  speakers,
 }: EditionDetailModalProps) {
   const editionSpeakers = edition.speakerIds
-    .map((id) => SPEAKERS.find((speaker) => speaker.id === id))
+    .map((id) => speakers.find((speaker) => speaker.id === id))
     .filter((speaker): speaker is Speaker => Boolean(speaker));
 
   return (

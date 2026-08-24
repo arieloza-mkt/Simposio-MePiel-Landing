@@ -1,14 +1,23 @@
 "use client";
 
+import type { Speaker } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SpeakerCarousel } from "@/components/features/SpeakerCarousel";
 
-export function Expositores() {
+export function Expositores({ speakers }: { speakers: Speaker[] }) {
   return (
-    <Section>
-      <Container>
+    <Section id="ponentes" className="relative overflow-hidden">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="https://res.cloudinary.com/cc4tium7/image/upload/v1787613330/bg-decor-1.svg"
+        alt=""
+        aria-hidden
+        loading="lazy"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.1]"
+      />
+      <Container className="relative z-10">
         <div className="mb-[56px] max-w-[36ch]">
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
             Expositores y speakers
@@ -19,7 +28,7 @@ export function Expositores() {
         </div>
 
         <AnimatedSection animation="fade-up">
-          <SpeakerCarousel />
+          <SpeakerCarousel speakers={speakers} />
         </AnimatedSection>
       </Container>
     </Section>

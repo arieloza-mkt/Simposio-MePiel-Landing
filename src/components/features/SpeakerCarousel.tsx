@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { SPEAKERS } from "@/lib/constants";
+import Autoplay from "embla-carousel-autoplay";
+import type { Speaker } from "@/lib/content";
 
 function initials(name: string) {
   return name
@@ -13,11 +14,17 @@ function initials(name: string) {
     .join("");
 }
 
-export function SpeakerCarousel() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
-    containScroll: "trimSnaps",
-  });
+export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { align: "start", containScroll: "trimSnaps", loop: true },
+    [
+      Autoplay({
+        delay: 3500,
+        stopOnInteraction: false,
+        stopOnMouseEnter: true,
+      }),
+    ],
+  );
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
@@ -33,8 +40,11 @@ export function SpeakerCarousel() {
 
   useEffect(() => {
     if (!emblaApi) return;
-    setScrollSnaps(emblaApi.scrollSnapList());
-    onSelect();
+    const syncInitial = () => {
+      setScrollSnaps(emblaApi.scrollSnapList());
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    };
+    queueMicrotask(syncInitial);
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
     return () => {
@@ -43,7 +53,7 @@ export function SpeakerCarousel() {
     };
   }, [emblaApi, onSelect]);
 
-  if (SPEAKERS.length === 0) {
+  if (speakers.length === 0) {
     return (
       <div className="grid place-items-center rounded-[var(--radius-lg)] border border-dashed border-border bg-surface/60 px-6 py-16 text-center">
         <p className="m-0 font-mono text-xs uppercase tracking-widest text-muted">
@@ -55,17 +65,36 @@ export function SpeakerCarousel() {
 
   return (
     <div>
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="relative">
+        <button
+          onClick={() => emblaApi?.scrollPrev()}
+          className="absolute left-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-8 max-md:w-8"
+          aria-label="Anterior"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button
+          onClick={() => emblaApi?.scrollNext()}
+          className="absolute right-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-8 max-md:w-8"
+          aria-label="Siguiente"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+            <path d="M9 18l6-6-6-6" />
+          </svg>
+        </button>
+        <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {SPEAKERS.map((speaker) => (
+          {speakers.map((speaker) => (
             <div
               key={speaker.id}
               className="min-w-0 shrink-0 basis-full px-3 max-md:basis-1/2 md:basis-1/3 lg:basis-1/4"
             >
               <figure className="m-0">
-                {speaker.image ? (
+                {speaker.imageUrl ? (
                   <img
-                    src={speaker.image}
+                    src={speaker.imageUrl}
                     alt={`Retrato de ${speaker.name}`}
                     loading="lazy"
                     className="mb-4 aspect-[4/5] w-full rounded-[var(--radius-lg)] border border-border object-cover"
@@ -93,20 +122,10 @@ export function SpeakerCarousel() {
             </div>
           ))}
         </div>
+        </div>
       </div>
 
-      <div className="mt-8 flex items-center justify-center gap-5">
-        <button
-          onClick={() => emblaApi?.scrollPrev()}
-          disabled={selectedIndex === 0}
-          className="grid h-11 w-11 place-items-center rounded-full border border-border bg-surface text-fg transition-colors hover:border-accent hover:bg-accent/12 disabled:pointer-events-none disabled:opacity-35"
-          aria-label="Anterior"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-
+      <div className="mt-8 flex items-center justify-center">
         <div className="flex gap-1.5">
           {scrollSnaps.map((_, i) => (
             <button
@@ -119,17 +138,6 @@ export function SpeakerCarousel() {
             />
           ))}
         </div>
-
-        <button
-          onClick={() => emblaApi?.scrollNext()}
-          disabled={selectedIndex === scrollSnaps.length - 1}
-          className="grid h-11 w-11 place-items-center rounded-full border border-border bg-surface text-fg transition-colors hover:border-accent hover:bg-accent/12 disabled:pointer-events-none disabled:opacity-35"
-          aria-label="Siguiente"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]">
-            <path d="M9 18l6-6-6-6" />
-          </svg>
-        </button>
       </div>
     </div>
   );

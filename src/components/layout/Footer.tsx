@@ -21,16 +21,25 @@ const CONTACT_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/8 bg-dark py-[clamp(40px,6vw,56px)] text-[13px] text-muted">
-      <Container>
+    <footer className="relative overflow-hidden border-t border-white/8 bg-dark py-[clamp(40px,6vw,56px)] text-[13px] text-muted">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.1]"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/cc4tium7/image/upload/v1787613333/bg-footer-decor.svg')",
+          backgroundRepeat: "repeat",
+        }}
+      />
+      <Container className="relative z-10">
         <div className="mb-[40px] grid gap-[40px] text-[14px] sm:grid-cols-2 md:grid-cols-4 md:gap-[56px]">
           <div className="sm:col-span-2 md:col-span-1">
             <div className="mb-5 flex items-center gap-2.5">
               <img
-                src="/logo-vertical-no-edit-1.png"
+                src="https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg"
                 alt="Simposio Dermocosmético"
                 height={44}
-                className="h-11 w-auto brightness-0 invert"
+                className="h-11 w-auto"
                 loading="lazy"
               />
             </div>

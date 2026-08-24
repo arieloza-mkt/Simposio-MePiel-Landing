@@ -60,7 +60,7 @@ export function Modal({
       <div className="flex min-h-full items-center justify-center p-4 sm:p-6">
         <div
           className={cn(
-            "relative w-full rounded-[var(--radius-lg)] border border-border bg-surface p-6 shadow-2xl sm:p-8",
+            "relative flex max-h-[calc(100dvh_-_2rem)] w-full flex-col rounded-[var(--radius-lg)] border border-border bg-surface shadow-2xl sm:max-h-[calc(100dvh_-_3rem)]",
             className ?? "max-w-lg",
           )}
         >
@@ -68,7 +68,7 @@ export function Modal({
             ref={closeButtonRef}
             onClick={onClose}
             aria-label="Cerrar"
-            className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full border-none bg-transparent text-muted transition-colors hover:bg-border/50 hover:text-fg"
+            className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full border-none bg-surface text-muted transition-colors hover:bg-border/50 hover:text-fg"
           >
             <svg
               viewBox="0 0 24 24"
@@ -82,7 +82,9 @@ export function Modal({
               <line x1="6" y1="18" x2="18" y2="6" />
             </svg>
           </button>
-          {children}
+          <div className="min-h-0 overflow-y-auto overscroll-contain p-6 sm:p-8">
+            {children}
+          </div>
         </div>
       </div>
     </div>,

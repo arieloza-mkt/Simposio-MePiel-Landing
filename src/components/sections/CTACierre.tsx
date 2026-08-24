@@ -1,12 +1,12 @@
 "use client";
 
-import { SITE } from "@/lib/constants";
+import type { CtaCierreSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { Button } from "@/components/ui/Button";
 
-export function CTACierre() {
+export function CTACierre({ ctaCierre }: { ctaCierre: CtaCierreSettings }) {
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
     if (el) {
@@ -28,7 +28,7 @@ export function CTACierre() {
             La industria se encuentra en el Simposio
           </h2>
           <p className="mx-auto my-5 max-w-[52ch] text-[19px] leading-relaxed text-white/55">
-            No te quedes fuera de la conversación que está definiendo el futuro del canal dermocosmético. Regístrate ahora y forma parte de la {SITE.edition}.
+            {ctaCierre.description}
           </p>
           <Button variant="primary" size="lg" onClick={() => scrollTo("#registro")}>
             Registrarme ahora

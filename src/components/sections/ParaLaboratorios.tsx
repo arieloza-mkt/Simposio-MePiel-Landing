@@ -1,6 +1,6 @@
 "use client";
 
-import { LAB_FEATURES } from "@/lib/constants";
+import type { Benefit } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
@@ -15,7 +15,7 @@ const ICONS: Record<string, React.ReactNode> = {
   search: <><path d="M21 21H3a1 1 0 01-1-1V4a1 1 0 011-1h18a1 1 0 011 1v16a1 1 0 01-1 1z" /><path d="M7 8h4v4H7z" /><path d="M13 8h4M13 12h4M7 16h10" /></>,
 };
 
-export function ParaLaboratorios() {
+export function ParaLaboratorios({ labFeatures }: { labFeatures: Benefit[] }) {
   return (
     <Section id="para-labs" dark>
       <Container>
@@ -33,7 +33,7 @@ export function ParaLaboratorios() {
 
         <AnimatedSection animation="fade-up">
           <div className="grid grid-cols-3 gap-[32px] max-md:grid-cols-1">
-            {LAB_FEATURES.map((f) => (
+            {labFeatures.map((f) => (
               <Card key={f.title} dark>
                 <div className="flex flex-col gap-1.5">
                   <div className="mb-5 grid h-9 w-9 place-items-center rounded-[10px] border border-white/8 text-accent">
