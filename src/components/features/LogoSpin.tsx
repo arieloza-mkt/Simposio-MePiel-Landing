@@ -15,22 +15,33 @@ const SCALE_BUFFER = 1.15; // margen extra para cubrir bien las esquinas
 // El círculo blanco se funde al fondo de la sección siguiente al final,
 // para que la pantalla nunca quede "en blanco" antes de liberar el pin.
 const MERGE_START = 0.68;
+// Overlay de la siguiente sección aparece desde este % del progreso.
+const PREVIEW_FADE_START = 0.62;
+const PREVIEW_FADE_END = 0.82;
+
+interface NextPreview {
+  title: string;
+  highlight: string;
+  intro: string;
+}
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-export function LogoSpin() {
+export function LogoSpin({ nextPreview }: { nextPreview?: NextPreview }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     const pin = pinRef.current;
     const circle = circleRef.current;
     const logo = logoRef.current;
+    const preview = previewRef.current;
     if (!wrapper || !pin || !circle || !logo) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -79,6 +90,12 @@ export function LogoSpin() {
       circle.style.boxShadow = `0 0 40px ${(14 * (1 - mergeT)).toFixed(1)}px rgba(255, 255, 255, ${(
         0.32 * (1 - mergeT)
       ).toFixed(3)})`;
+
+      if (preview) {
+        const previewT = Math.min(Math.max((progress - PREVIEW_FADE_START) / (PREVIEW_FADE_END - PREVIEW_FADE_START), 0), 1);
+        preview.style.opacity = String(previewT);
+        preview.style.pointerEvents = previewT > 0.1 ? "auto" : "none";
+      }
     };
 
     const onScroll = () => {
@@ -134,6 +151,34 @@ export function LogoSpin() {
             className="block w-[62%]"
           />
         </div>
+
+        {nextPreview && (
+          <div
+            ref={previewRef}
+            className="absolute inset-0 z-[2] flex items-center justify-center opacity-0"
+            style={{ pointerEvents: "none" }}
+          >
+            <div className="max-w-[480px] px-8 text-center">
+              <p className="mb-4 font-mono text-xs uppercase tracking-[0.08em] text-accent">
+                Qué es el Simposio
+              </p>
+              <h2 className="m-0 font-display text-[clamp(28px,4vw,44px)] font-bold leading-[1.1] tracking-tight text-white">
+                {nextPreview.highlight ? (
+                  <>
+                    {nextPreview.title.split(nextPreview.highlight)[0]}
+                    <span className="text-accent">{nextPreview.highlight}</span>
+                    {nextPreview.title.split(nextPreview.highlight)[1]}
+                  </>
+                ) : (
+                  nextPreview.title
+                )}
+              </h2>
+              <p className="mx-auto mt-4 max-w-[42ch] text-[15px] leading-relaxed text-white/55">
+                {nextPreview.intro}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

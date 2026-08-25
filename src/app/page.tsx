@@ -21,8 +21,8 @@ export default async function Home() {
       <TopNav />
       <main id="content">
         <Hero site={content.site} hero={content.hero} />
-        <LogoSpin />
         <MepielAlianza alianza={content.mepielAlianza} />
+        <LogoSpin nextPreview={{ title: content.queEs.title, highlight: content.queEs.highlight, intro: content.queEs.intro }} />
         <QueEs queEs={content.queEs} />
         <ScrollPinnedEditions
           editions={content.editions}
