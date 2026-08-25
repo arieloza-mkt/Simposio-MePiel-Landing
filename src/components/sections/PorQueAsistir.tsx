@@ -29,7 +29,7 @@ export function PorQueAsistir({ benefits }: { benefits: Benefit[] }) {
           <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1 lg:grid-cols-4">
             {benefits.map((b) => (
               <div key={b.title} className="flex flex-col gap-3">
-                <div className="h-40 rounded-[var(--radius-lg)] bg-[linear-gradient(135deg,rgba(46,197,232,.12),rgba(26,26,30,.06))]" />
+                <div className="h-40 rounded-[var(--radius-lg)] bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_12%,transparent),color-mix(in_srgb,var(--color-fg)_6%,transparent))]" />
                 <div className="grid h-12 w-12 place-items-center rounded-[var(--radius)] bg-accent/12 text-accent">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} className="h-6 w-6">
                     {ICONS[b.icon]}

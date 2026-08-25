@@ -17,8 +17,8 @@ function LiveBadge({ isLive }: { isLive: boolean }) {
       {isLive ? (
         <>
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff4d5e] opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff4d5e]" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-live opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-live" />
           </span>
           En vivo ahora
         </>

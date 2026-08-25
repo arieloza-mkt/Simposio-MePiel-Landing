@@ -10,8 +10,11 @@ const NAVY = [8, 16, 32];
 const NEXT_BG = [11, 20, 38];
 
 const TOTAL_ROTATION_DEG = 1440; // 4 vueltas, giro continuo
-const LOGO_FADE_END = 0.45; // el logo se desvanece por completo a este % del progreso
+const LOGO_FADE_END = 0.5; // el logo se desvanece por completo a este % del progreso
 const SCALE_BUFFER = 1.15; // margen extra para cubrir bien las esquinas
+// El círculo blanco se funde al fondo de la sección siguiente al final,
+// para que la pantalla nunca quede "en blanco" antes de liberar el pin.
+const MERGE_START = 0.68;
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
@@ -67,6 +70,15 @@ export function LogoSpin() {
       const g = lerp(NAVY[1], NEXT_BG[1], progress);
       const b = lerp(NAVY[2], NEXT_BG[2], progress);
       pin.style.background = `rgb(${r.toFixed(1)}, ${g.toFixed(1)}, ${b.toFixed(1)})`;
+
+      const mergeT = Math.min(Math.max((progress - MERGE_START) / (1 - MERGE_START), 0), 1);
+      const cr = Math.round(lerp(255, NEXT_BG[0], mergeT));
+      const cg = Math.round(lerp(255, NEXT_BG[1], mergeT));
+      const cb = Math.round(lerp(255, NEXT_BG[2], mergeT));
+      circle.style.backgroundColor = `rgb(${cr}, ${cg}, ${cb})`;
+      circle.style.boxShadow = `0 0 40px ${(14 * (1 - mergeT)).toFixed(1)}px rgba(255, 255, 255, ${(
+        0.32 * (1 - mergeT)
+      ).toFixed(3)})`;
     };
 
     const onScroll = () => {
@@ -96,7 +108,7 @@ export function LogoSpin() {
     <div
       ref={wrapperRef}
       aria-hidden
-      className="relative h-[260vh] select-none"
+      className="relative h-[170vh] select-none"
     >
       <div
         ref={pinRef}

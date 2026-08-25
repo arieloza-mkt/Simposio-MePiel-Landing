@@ -102,7 +102,7 @@ export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
                 ) : (
                   <div
                     aria-hidden
-                    className="mb-4 grid aspect-[4/5] w-full place-items-center rounded-[var(--radius-lg)] border border-border bg-[linear-gradient(135deg,rgba(46,197,232,.12),rgba(26,26,30,.06))] font-display text-[clamp(28px,3vw,40px)] font-bold text-accent/70"
+                    className="mb-4 grid aspect-[4/5] w-full place-items-center rounded-[var(--radius-lg)] border border-border bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_12%,transparent),color-mix(in_srgb,var(--color-fg)_6%,transparent))] font-display text-[clamp(28px,3vw,40px)] font-bold text-accent/70"
                   >
                     {initials(speaker.name)}
                   </div>

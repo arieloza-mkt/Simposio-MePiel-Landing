@@ -45,7 +45,7 @@ export function TopNav() {
           ? "bg-surface/95 backdrop-blur-xl border-b border-border shadow-sm"
           : overDarkHero
             ? "bg-transparent"
-            : "bg-white"
+            : "bg-surface"
       }`}
     >
       <Container>

@@ -25,7 +25,7 @@ export function Galeria() {
                 key={item.id}
                 className="overflow-hidden rounded-[var(--radius-lg)]"
               >
-                <div className="aspect-[16/9] w-full border-0 bg-[linear-gradient(135deg,rgba(46,197,232,.12),rgba(26,26,30,.06))] grid place-items-center font-mono text-xs tracking-widest text-muted">
+                <div className="aspect-[16/9] w-full border-0 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_12%,transparent),color-mix(in_srgb,var(--color-fg)_6%,transparent))] grid place-items-center font-mono text-xs tracking-widest text-muted">
                   {item.label}
                 </div>
               </div>

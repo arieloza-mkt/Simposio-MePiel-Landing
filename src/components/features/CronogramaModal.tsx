@@ -92,7 +92,7 @@ function ScheduleRow({
         <span
           className={`absolute -left-[5px] top-1.5 h-[9px] w-[9px] rounded-full ring-4 ring-surface ${TAG_COLOR[item.tag] ?? "bg-accent"} ${
             status === "actual"
-              ? "scale-150 shadow-[0_0_0_4px_rgba(46,197,232,0.25)]"
+              ? "scale-150 shadow-[0_0_0_4px_color-mix(in_srgb,var(--color-accent)_25%,transparent)]"
               : ""
           } group-hover:scale-125`}
           aria-hidden

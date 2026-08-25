@@ -3,11 +3,11 @@
 @custom-variant dark ([data-theme="dark"] &);
 
 @theme {
-  --color-bg: #F8F7F5;
+  --color-bg: #F5F3EF;
   --color-surface: #FFFFFF;
-  --color-fg: #1A1A1E;
-  --color-muted: #6B6B72;
-  --color-border: #E2E0DC;
+  --color-fg: #1C1C22;
+  --color-muted: #7A7A82;
+  --color-border: #DDD9D3;
   --color-accent: #2EC5E8;
   --color-dark: #0B1426;
   --color-dark-s: #111D33;
@@ -19,6 +19,7 @@
   --color-gm: #E6399B;
   --color-gp: #7B3FE4;
   --color-error: #e6394a;
+  --color-live: #FF4D5E;
 
   --font-display: var(--font-poppins), "Poppins", system-ui, sans-serif;
   --font-body: var(--font-poppins), "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -31,11 +32,11 @@
 }
 
 [data-theme="dark"] {
-  --color-bg: #0B1426;
-  --color-surface: #111D33;
-  --color-fg: #F0EDE8;
-  --color-muted: #9CA3AF;
-  --color-border: #1E293B;
+  --color-bg: #080E1A;
+  --color-surface: #0F1A2E;
+  --color-fg: #E8E4DF;
+  --color-muted: #8891A0;
+  --color-border: #1A2540;
 }
 
 [data-theme="dark"] body {
@@ -108,7 +109,8 @@ h4 {
 
 .input:focus,
 .select:focus {
-  outline: 2px solid rgba(46, 197, 232, 0.12);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 0;
   border-color: var(--color-accent);
 }
 
@@ -119,7 +121,7 @@ h4 {
 
 .select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B72' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7A82' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   padding-right: 36px;
