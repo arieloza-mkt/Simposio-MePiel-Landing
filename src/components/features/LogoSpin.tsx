@@ -1,35 +1,23 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 const LOGO_URL =
   "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png";
 
-// Navy profundo de inicio → fondo real de la sección siguiente (#0B1426)
-const NAVY = [8, 16, 32];
-const NEXT_BG = [11, 20, 38];
+const NAVY = [10, 19, 48];
+const NEXT_BG = [255, 255, 255];
 
-const TOTAL_ROTATION_DEG = 1440; // 4 vueltas, giro continuo
-const LOGO_FADE_END = 0.5; // el logo se desvanece por completo a este % del progreso
-const SCALE_BUFFER = 1.15; // margen extra para cubrir bien las esquinas
-// El círculo blanco se funde al fondo de la sección siguiente al final,
-// para que la pantalla nunca quede "en blanco" antes de liberar el pin.
-const MERGE_START = 0.68;
-// Overlay de la siguiente sección aparece desde este % del progreso.
-const PREVIEW_FADE_START = 0.62;
-const PREVIEW_FADE_END = 0.82;
-
-interface NextPreview {
-  title: string;
-  highlight: string;
-  intro: string;
-}
+const SPIN_END = 0.5;
+const TOTAL_ROTATION_DEG = 1440;
+const SLIDE_BUFFER = 100;
+const PREVIEW_FADE_START = 0.5;
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-export function LogoSpin({ nextPreview }: { nextPreview?: NextPreview }) {
+export function LogoSpin({ nextPreview }: { nextPreview?: ReactNode }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
@@ -42,22 +30,17 @@ export function LogoSpin({ nextPreview }: { nextPreview?: NextPreview }) {
     const circle = circleRef.current;
     const logo = logoRef.current;
     const preview = previewRef.current;
-    if (!wrapper || !pin || !circle || !logo) return;
+    if (!wrapper || !pin || !circle || !logo || !preview) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let ticking = false;
     let rafId = 0;
-    let maxScale = 6;
+    let slideDistance = 800;
 
-    const computeMaxScale = () => {
-      const diagonal = Math.sqrt(
-        window.innerWidth ** 2 + window.innerHeight ** 2,
-      );
-      const baseDiameter = circle.offsetWidth || 1;
-      maxScale = (diagonal / baseDiameter) * SCALE_BUFFER;
+    const computeSlideDistance = () => {
+      slideDistance =
+        window.innerWidth / 2 + circle.offsetWidth / 2 + SLIDE_BUFFER;
     };
 
     const update = () => {
@@ -69,33 +52,36 @@ export function LogoSpin({ nextPreview }: { nextPreview?: NextPreview }) {
       let progress = -rect.top / scrollableDistance;
       progress = Math.min(Math.max(progress, 0), 1);
 
-      const rotation = progress * TOTAL_ROTATION_DEG;
-      const scale = 1 + progress * (maxScale - 1);
-      circle.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+      // FASE 1 (0–50%): solo gira
+      const spinProgress = Math.min(progress / SPIN_END, 1);
+      const rotation = spinProgress * TOTAL_ROTATION_DEG;
 
-      let logoFade = progress / LOGO_FADE_END;
-      logoFade = Math.min(Math.max(logoFade, 0), 1);
-      logo.style.opacity = String(1 - logoFade);
+      // FASE 2 (50–100%): se desliza a la derecha
+      let slideProgress =
+        progress <= SPIN_END ? 0 : (progress - SPIN_END) / (1 - SPIN_END);
+      slideProgress = Math.min(Math.max(slideProgress, 0), 1);
+      const translateX = slideProgress * slideDistance;
 
+      circle.style.transform = `translateX(${translateX}px) rotate(${rotation}deg)`;
+
+      // Logo siempre visible
+      logo.style.opacity = "1";
+
+      // Círculo siempre visible
+      circle.style.opacity = "1";
+
+      // Preview de la siguiente sección: fade in desde 50%
+      let previewFade =
+        (progress - PREVIEW_FADE_START) / (1 - PREVIEW_FADE_START);
+      previewFade = Math.min(Math.max(previewFade, 0), 1);
+      preview.style.opacity = String(previewFade);
+      preview.style.pointerEvents = previewFade > 0.1 ? "auto" : "none";
+
+      // Background crossfade: navy → siguiente sección (0–100%)
       const r = lerp(NAVY[0], NEXT_BG[0], progress);
       const g = lerp(NAVY[1], NEXT_BG[1], progress);
       const b = lerp(NAVY[2], NEXT_BG[2], progress);
       pin.style.background = `rgb(${r.toFixed(1)}, ${g.toFixed(1)}, ${b.toFixed(1)})`;
-
-      const mergeT = Math.min(Math.max((progress - MERGE_START) / (1 - MERGE_START), 0), 1);
-      const cr = Math.round(lerp(255, NEXT_BG[0], mergeT));
-      const cg = Math.round(lerp(255, NEXT_BG[1], mergeT));
-      const cb = Math.round(lerp(255, NEXT_BG[2], mergeT));
-      circle.style.backgroundColor = `rgb(${cr}, ${cg}, ${cb})`;
-      circle.style.boxShadow = `0 0 40px ${(14 * (1 - mergeT)).toFixed(1)}px rgba(255, 255, 255, ${(
-        0.32 * (1 - mergeT)
-      ).toFixed(3)})`;
-
-      if (preview) {
-        const previewT = Math.min(Math.max((progress - PREVIEW_FADE_START) / (PREVIEW_FADE_END - PREVIEW_FADE_START), 0), 1);
-        preview.style.opacity = String(previewT);
-        preview.style.pointerEvents = previewT > 0.1 ? "auto" : "none";
-      }
     };
 
     const onScroll = () => {
@@ -106,13 +92,13 @@ export function LogoSpin({ nextPreview }: { nextPreview?: NextPreview }) {
     };
 
     const onResize = () => {
-      computeMaxScale();
+      computeSlideDistance();
       update();
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
-    computeMaxScale();
+    computeSlideDistance();
     update();
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -125,18 +111,27 @@ export function LogoSpin({ nextPreview }: { nextPreview?: NextPreview }) {
     <div
       ref={wrapperRef}
       aria-hidden
-      className="relative h-[170vh] select-none"
+      className="relative h-[260vh] select-none"
     >
       <div
         ref={pinRef}
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden"
         style={{ background: `rgb(${NAVY.join(",")})` }}
       >
+        {nextPreview && (
+          <div
+            ref={previewRef}
+            className="absolute inset-0 z-10 flex items-center justify-center px-8 text-center opacity-1 pointer-events-none dark:bg-[#0a1330]"
+          >
+            <div className="w-full max-w-[1440px]">{nextPreview}</div>
+          </div>
+        )}
+
         <div
           ref={circleRef}
-          className="flex h-[min(56vmin,470px)] w-[min(56vmin,470px)] items-center justify-center rounded-full bg-white will-change-transform"
+          className="relative z-20 flex h-[min(46vmin,380px)] w-[min(46vmin,380px)] items-center justify-center rounded-full bg-white will-change-transform"
           style={{
-            boxShadow: "0 0 40px 14px rgba(255, 255, 255, 0.32)",
+            boxShadow: "0 0 90px 45px rgba(38, 198, 218, 0.45)",
             transformOrigin: "50% 50%",
           }}
         >
@@ -148,37 +143,9 @@ export function LogoSpin({ nextPreview }: { nextPreview?: NextPreview }) {
             draggable={false}
             loading="eager"
             decoding="async"
-            className="block w-[62%]"
+            className="block w-[74%]"
           />
         </div>
-
-        {nextPreview && (
-          <div
-            ref={previewRef}
-            className="absolute inset-0 z-[2] flex items-center justify-center opacity-0"
-            style={{ pointerEvents: "none" }}
-          >
-            <div className="max-w-[480px] px-8 text-center">
-              <p className="mb-4 font-mono text-xs uppercase tracking-[0.08em] text-accent">
-                Qué es el Simposio
-              </p>
-              <h2 className="m-0 font-display text-[clamp(28px,4vw,44px)] font-bold leading-[1.1] tracking-tight text-white">
-                {nextPreview.highlight ? (
-                  <>
-                    {nextPreview.title.split(nextPreview.highlight)[0]}
-                    <span className="text-accent">{nextPreview.highlight}</span>
-                    {nextPreview.title.split(nextPreview.highlight)[1]}
-                  </>
-                ) : (
-                  nextPreview.title
-                )}
-              </h2>
-              <p className="mx-auto mt-4 max-w-[42ch] text-[15px] leading-relaxed text-white/55">
-                {nextPreview.intro}
-              </p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -12,8 +12,8 @@ const benefit = z.object({
   description: z.string(),
 });
 
-const benefitLines = z.string().transform((raw) =>
-  raw
+function parseBenefitLines(raw: string) {
+  return raw
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
@@ -21,11 +21,21 @@ const benefitLines = z.string().transform((raw) =>
       const [icon = "", title = "", ...rest] = line.split("|").map((p) => p.trim());
       return { icon, title, description: rest.join(" | ") };
     })
-    .filter((b) => b.title !== ""),
-);
+    .filter((b) => b.title !== "");
+}
 
-const pairLines = z.string().transform((raw) =>
-  raw
+const benefitLines = z.string().transform((raw) => {
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+  } catch {
+    // not JSON, treat as pipe-delimited
+  }
+  return parseBenefitLines(raw);
+});
+
+function parsePairLines(raw: string) {
+  return raw
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean)
@@ -33,8 +43,28 @@ const pairLines = z.string().transform((raw) =>
       const [value = "", label = ""] = line.split("|").map((p) => p.trim());
       return { value, label };
     })
-    .filter((p) => p.value !== ""),
-);
+    .filter((p) => p.value !== "");
+}
+
+const pairLines = z.string().transform((raw) => {
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+  } catch {
+    // not JSON, treat as pipe-delimited
+  }
+  return parsePairLines(raw);
+});
+
+const stringArray = z.string().transform((raw) => {
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed.map(String);
+  } catch {
+    // not JSON, treat as newline-separated
+  }
+  return raw.split("\n").map((l) => l.trim()).filter(Boolean);
+});
 
 export type ContentKey =
   | "site"
@@ -64,28 +94,26 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
     highlight: z.string().trim(),
     intro: z.string(),
     experienceIntro: z.string(),
-    experienceItems: z
-      .string()
-      .transform((raw) =>
-        raw.split("\n").map((l) => l.trim()).filter(Boolean),
-      ),
+    experienceItems: stringArray,
   }),
   mepielAlianza: z.object({
     eyebrow: z.string().trim(),
     title: z.string().trim().min(2),
     highlight: z.string().trim(),
-    paragraphs: z
-      .string()
-      .transform((raw) =>
-        raw.split("\n").map((l) => l.trim()).filter(Boolean),
-      ),
+    paragraphs: stringArray,
     imageUrl: z.string().trim(),
   }),
   benefits: z.object({ items: benefitLines }),
   labFeatures: z.object({ items: benefitLines }),
   attendeeTypes: z.object({
-    items: z.string().transform((raw) =>
-      raw
+    items: z.string().transform((raw) => {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        // not JSON
+      }
+      return raw
         .split("\n")
         .map((line) => line.trim())
         .filter(Boolean)
@@ -93,12 +121,18 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
           const [icon = "", label = ""] = line.split("|").map((p) => p.trim());
           return { icon, label };
         })
-        .filter((a) => a.label !== ""),
-    ),
+        .filter((a) => a.label !== "");
+    }),
   }),
   tracks: z.object({
-    items: z.string().transform((raw) =>
-      raw
+    items: z.string().transform((raw) => {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        // not JSON
+      }
+      return raw
         .split("\n")
         .map((line) => line.trim())
         .filter(Boolean)
@@ -108,8 +142,8 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
             .map((p) => p.trim());
           return { num, title, description: rest.join(" | ") };
         })
-        .filter((t) => t.title !== ""),
-    ),
+        .filter((t) => t.title !== "");
+    }),
   }),
   ctaCierre: z.object({
     description: z.string().trim().min(2),

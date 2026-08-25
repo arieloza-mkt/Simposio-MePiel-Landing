@@ -6,7 +6,8 @@ import {
   saveSpeaker,
   type SpeakerInput,
 } from "@/app/actions/admin/speakers";
-import { Button, Field, TextInput } from "@/components/admin/ui";
+import { Button, Field, TextInput, TextArea } from "@/components/admin/ui";
+import { ImageField } from "@/components/admin/ImageField";
 import { SpeakerCheckInButton } from "@/components/admin/CheckInButtons";
 
 export interface SpeakerRowData {
@@ -15,6 +16,9 @@ export interface SpeakerRowData {
   role: string | null;
   company: string | null;
   imageUrl: string | null;
+  bio: string | null;
+  linkedinUrl: string | null;
+  websiteUrl: string | null;
   sortOrder: number;
 }
 
@@ -38,6 +42,9 @@ export function SpeakerEditor({
         role: String(formData.get("role") ?? "") || null,
         company: String(formData.get("company") ?? "") || null,
         imageUrl: String(formData.get("imageUrl") ?? "") || null,
+        bio: String(formData.get("bio") ?? "") || null,
+        linkedinUrl: String(formData.get("linkedinUrl") ?? "") || null,
+        websiteUrl: String(formData.get("websiteUrl") ?? "") || null,
         sortOrder: Number(formData.get("sortOrder") ?? 0),
       };
       const result = await saveSpeaker(input);
@@ -105,15 +112,6 @@ export function SpeakerEditor({
                 defaultValue={speaker.company ?? ""}
               />
             </Field>
-            <Field label="URL de foto" htmlFor={`image-${speaker.id}`}>
-              <TextInput
-                id={`image-${speaker.id}`}
-                name="imageUrl"
-                type="url"
-                defaultValue={speaker.imageUrl ?? ""}
-                placeholder="https://…"
-              />
-            </Field>
             <Field
               label="Orden"
               htmlFor={`order-${speaker.id}`}
@@ -126,6 +124,47 @@ export function SpeakerEditor({
                 min={0}
                 max={9999}
                 defaultValue={speaker.sortOrder}
+              />
+            </Field>
+          </div>
+
+          <div className="mt-3">
+            <ImageField
+              name="imageUrl"
+              label="Foto del ponente"
+              defaultValue={speaker.imageUrl ?? ""}
+            />
+          </div>
+
+          <div className="mt-3">
+            <Field label="Biografía" htmlFor={`bio-${speaker.id}`}>
+              <TextArea
+                id={`bio-${speaker.id}`}
+                name="bio"
+                rows={3}
+                defaultValue={speaker.bio ?? ""}
+                placeholder="Breve descripción del ponente..."
+              />
+            </Field>
+          </div>
+
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <Field label="LinkedIn" htmlFor={`linkedin-${speaker.id}`} hint="URL completa">
+              <TextInput
+                id={`linkedin-${speaker.id}`}
+                name="linkedinUrl"
+                type="url"
+                defaultValue={speaker.linkedinUrl ?? ""}
+                placeholder="https://linkedin.com/in/..."
+              />
+            </Field>
+            <Field label="Website" htmlFor={`website-${speaker.id}`} hint="URL completa">
+              <TextInput
+                id={`website-${speaker.id}`}
+                name="websiteUrl"
+                type="url"
+                defaultValue={speaker.websiteUrl ?? ""}
+                placeholder="https://..."
               />
             </Field>
           </div>
@@ -179,6 +218,9 @@ export function NewSpeakerForm() {
             role: String(formData.get("role") ?? "") || null,
             company: String(formData.get("company") ?? "") || null,
             imageUrl: String(formData.get("imageUrl") ?? "") || null,
+            bio: String(formData.get("bio") ?? "") || null,
+            linkedinUrl: String(formData.get("linkedinUrl") ?? "") || null,
+            websiteUrl: String(formData.get("websiteUrl") ?? "") || null,
             sortOrder: Number(formData.get("sortOrder") ?? 0),
           });
           if (result.ok) setOpen(false);
@@ -197,8 +239,27 @@ export function NewSpeakerForm() {
         <Field label="Empresa" htmlFor="new-company">
           <TextInput id="new-company" name="company" />
         </Field>
-        <Field label="URL de foto" htmlFor="new-image">
-          <TextInput id="new-image" name="imageUrl" type="url" placeholder="https://…" />
+        <Field label="Orden" htmlFor="new-order" hint="Menor = primero">
+          <TextInput id="new-order" name="sortOrder" type="number" min={0} defaultValue={0} />
+        </Field>
+      </div>
+
+      <div className="mt-3">
+        <ImageField name="imageUrl" label="Foto del ponente" />
+      </div>
+
+      <div className="mt-3">
+        <Field label="Biografía" htmlFor="new-bio">
+          <TextArea id="new-bio" name="bio" rows={3} placeholder="Breve descripción..." />
+        </Field>
+      </div>
+
+      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+        <Field label="LinkedIn" htmlFor="new-linkedin" hint="URL completa">
+          <TextInput id="new-linkedin" name="linkedinUrl" type="url" placeholder="https://linkedin.com/in/..." />
+        </Field>
+        <Field label="Website" htmlFor="new-website" hint="URL completa">
+          <TextInput id="new-website" name="websiteUrl" type="url" placeholder="https://..." />
         </Field>
       </div>
 

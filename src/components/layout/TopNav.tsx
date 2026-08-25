@@ -63,7 +63,7 @@ export function TopNav() {
             <img
               src={isDark
                 ? "https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg"
-                : "https://res.cloudinary.com/cc4tium7/image/upload/v1787612014/logo-color-white.svg"}
+                : "https://res.cloudinary.com/cc4tium7/image/upload/v1787681794/logo-color.svg"}
               alt="Simposio Dermocosmético"
               height={56}
               className="h-12 w-auto transition-all duration-300 md:h-14"

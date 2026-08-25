@@ -78,4 +78,7 @@ export const DDL_STATEMENTS: string[] = [
   `ALTER TABLE registrations ADD COLUMN IF NOT EXISTS access_code TEXT`,
   `ALTER TABLE editions ADD COLUMN IF NOT EXISTS logo_url TEXT`,
   `CREATE UNIQUE INDEX IF NOT EXISTS registrations_access_code_unique ON registrations (access_code)`,
+  `ALTER TABLE speakers ADD COLUMN IF NOT EXISTS bio TEXT`,
+  `ALTER TABLE speakers ADD COLUMN IF NOT EXISTS linkedin_url TEXT`,
+  `ALTER TABLE speakers ADD COLUMN IF NOT EXISTS website_url TEXT`,
 ];

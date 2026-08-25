@@ -8,7 +8,6 @@ import {
 } from "framer-motion";
 import type { HeroSettings, SiteInfo } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
-import { Button } from "@/components/ui/Button";
 
 const heroChildren = {
   hidden: {},
@@ -99,18 +98,33 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           >
             {site.description}
           </motion.p>
-          <motion.div
-            variants={heroChild}
-            className="flex flex-col gap-3 sm:flex-row sm:gap-3"
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="flex justify-center mt-12"
+        >
+          <button
+            onClick={() => scrollTo("#alianza")}
+            aria-label="Scroll hacia abajo"
+            className="group rounded-full border border-white/15 p-3 transition-colors hover:border-accent hover:text-accent text-white/40"
           >
-            <Button
-              variant="secondary"
-              className="w-full justify-center sm:w-auto"
-              onClick={() => scrollTo("#acerca")}
+            <motion.svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-6 w-6"
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
             >
-              Conoce más
-            </Button>
-          </motion.div>
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </motion.svg>
+          </button>
         </motion.div>
       </Container>
     </section>

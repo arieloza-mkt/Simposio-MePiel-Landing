@@ -8,7 +8,7 @@ import { SpeakerCarousel } from "@/components/features/SpeakerCarousel";
 
 export function Expositores({ speakers }: { speakers: Speaker[] }) {
   return (
-    <Section id="ponentes" className="relative overflow-hidden">
+    <Section id="ponentes" fullHeight dark className="relative overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="https://res.cloudinary.com/cc4tium7/image/upload/v1787613330/bg-decor-1.svg"
@@ -18,7 +18,7 @@ export function Expositores({ speakers }: { speakers: Speaker[] }) {
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-[0.1]"
       />
       <Container className="relative z-10">
-        <div className="mb-[56px] max-w-[36ch]">
+        <div className="mb-[56px] mx-auto text-center">
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
             Expositores y speakers
           </p>

@@ -13,10 +13,13 @@ export function ScrollPinnedEditions({
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
+
+    let prevIndex = 0;
 
     const handler = () => {
       const rect = wrapper.getBoundingClientRect();
@@ -27,6 +30,10 @@ export function ScrollPinnedEditions({
         editions.length - 1,
         Math.round(progress * (editions.length - 1)),
       );
+      if (idx !== prevIndex) {
+        setDirection(idx > prevIndex ? 1 : -1);
+        prevIndex = idx;
+      }
       setActiveIndex(idx);
     };
 
@@ -47,23 +54,32 @@ export function ScrollPinnedEditions({
   return (
     <div ref={wrapperRef} id="ediciones" className="relative" style={{ height: "300vh" }}>
       <section className="sticky top-0 h-screen overflow-hidden bg-dark">
-        {editions.map((edition, i) => (
-          <div
-            key={edition.id}
-            data-edition-panel
-            className={`absolute inset-0 transition-all duration-500 ease-[var(--ease-out-expo)] ${
-              i === activeIndex
-                ? "opacity-100 translate-y-0 z-10 pointer-events-auto"
-                : i < activeIndex
-                  ? "opacity-0 -translate-y-16 z-0 pointer-events-none"
-                  : "opacity-0 translate-y-16 z-0 pointer-events-none"
-            }`}
-          >
-            <EdicionPanel edition={edition} speakers={speakers} />
-          </div>
-        ))}
+        {editions.map((edition, i) => {
+          const isActive = i === activeIndex;
+          const isPast = i < activeIndex;
+          const slideOffset = isPast ? "-100%" : "100%";
 
-       
+          return (
+            <div
+              key={edition.id}
+              className="absolute inset-0 z-0 pointer-events-none"
+              style={{
+                transform: isActive ? "translateY(0)" : `translateY(${slideOffset})`,
+                transition: "transform 600ms cubic-bezier(0.16, 1, 0.3, 1)",
+                willChange: "transform",
+              }}
+            >
+              {isActive && (
+                <div className="pointer-events-auto">
+                  <EdicionPanel edition={edition} speakers={speakers} />
+                </div>
+              )}
+              {!isActive && (
+                <EdicionPanel edition={edition} speakers={speakers} />
+              )}
+            </div>
+          );
+        })}
       </section>
     </div>
   );

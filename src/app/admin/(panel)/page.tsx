@@ -10,6 +10,17 @@ import {
   labs,
   checkins,
 } from "@/lib/db/schema";
+import {
+  Users,
+  ScanLine,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Mic2,
+  Calendar,
+  BookOpen,
+  FlaskConical,
+} from "lucide-react";
 
 async function getCounts() {
   await ensureDb();
@@ -43,27 +54,38 @@ async function getCounts() {
   };
 }
 
-function Stat({
+function StatCard({
   label,
   value,
   href,
+  icon: Icon,
   accent,
 }: {
   label: string;
   value: number | string;
   href?: string;
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   accent?: boolean;
 }) {
   const content = (
     <div
-      className={`h-full rounded-2xl border p-5 transition ${
+      className={`flex items-start gap-4 rounded-2xl border p-5 transition ${
         accent
-          ? "border-accent/30 bg-accent/[0.06]"
-          : "border-border bg-surface/30 hover:border-border"
+          ? "border-accent/25 bg-accent/[0.05] shadow-sm shadow-accent/5"
+          : "border-border bg-surface/30 hover:border-border hover:bg-surface/50"
       } ${href ? "cursor-pointer" : ""}`}
     >
-      <p className="font-display text-3xl font-bold tracking-tight">{value}</p>
-      <p className="mt-1 text-sm text-muted">{label}</p>
+      <div
+        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+          accent ? "bg-accent/15 text-accent" : "bg-fg/5 text-muted"
+        }`}
+      >
+        <Icon className="h-5 w-5" strokeWidth={1.8} />
+      </div>
+      <div>
+        <p className="font-display text-2xl font-bold tracking-tight">{value}</p>
+        <p className="mt-0.5 text-sm text-muted">{label}</p>
+      </div>
     </div>
   );
   return href ? <Link href={href}>{content}</Link> : content;
@@ -83,48 +105,61 @@ export default async function AdminResumenPage() {
         </p>
       </header>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Stat
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <StatCard
           label="Registros totales"
           value={counts.total}
-          href="/admin/registros"
+          href="/admin/asistentes"
+          icon={Users}
           accent
         />
-        <Stat
+        <StatCard
           label="Ingresos con QR"
           value={counts.ingresos}
-          href="/admin/asistencia"
+          href="/admin/asistentes?tab=asistencia"
+          icon={ScanLine}
         />
-        <Stat
-          label="Pendientes de aprobar"
+        <StatCard
+          label="Pendientes"
           value={counts.pendiente}
-          href="/admin/registros?status=pendiente"
+          href="/admin/asistentes?status=pendiente"
+          icon={Clock}
         />
-        <Stat
+        <StatCard
           label="Aprobados"
           value={counts.aprobado}
-          href="/admin/registros?status=aprobado"
+          href="/admin/asistentes?status=aprobado"
+          icon={CheckCircle2}
         />
-        <Stat
+        <StatCard
           label="Rechazados"
           value={counts.rechazado}
-          href="/admin/registros?status=rechazado"
+          href="/admin/asistentes?status=rechazado"
+          icon={XCircle}
         />
-        <Stat label="Ponentes" value={counts.ponentes} href="/admin/ponentes" />
-        <Stat
-          label="Actividades en cronograma"
+        <StatCard
+          label="Ponentes"
+          value={counts.ponentes}
+          href="/admin/ponentes"
+          icon={Mic2}
+        />
+        <StatCard
+          label="Actividades"
           value={counts.actividades}
           href="/admin/cronograma"
+          icon={Calendar}
         />
-        <Stat
-          label="Ediciones publicadas"
+        <StatCard
+          label="Ediciones"
           value={counts.ediciones}
           href="/admin/ediciones"
+          icon={BookOpen}
         />
-        <Stat
-          label="Laboratorios aliados"
+        <StatCard
+          label="Laboratorios"
           value={counts.laboratorios}
-          href="/admin/ediciones"
+          href="/admin/contenido"
+          icon={FlaskConical}
         />
       </div>
     </>

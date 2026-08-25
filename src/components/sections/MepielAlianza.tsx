@@ -9,7 +9,7 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
     : [alianza.title];
 
   return (
-    <Section className="relative overflow-hidden">
+    <Section id="alianza" fullHeight className="relative overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="https://res.cloudinary.com/cc4tium7/image/upload/v1787608569/bg-elemnts-01.png"
@@ -62,9 +62,6 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
 
           <div className="col-span-12 lg:col-span-7">
             <AnimatedSection animation="fade-up">
-              <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
-                {alianza.eyebrow}
-              </p>
               <h2 className="m-0 max-w-[22ch] font-display text-[clamp(32px,4.4vw,56px)] font-bold leading-[1.06] tracking-tight">
                 {alianza.highlight && title.length > 1 ? (
                   <>

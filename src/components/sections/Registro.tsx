@@ -7,7 +7,7 @@ import { RegistrationForm } from "@/components/features/RegistrationForm";
 
 export function Registro() {
   return (
-    <Section id="registro">
+    <Section id="registro" fullHeight>
       <Container>
         <div className="items-center gap-[clamp(40px,6vw,80px)] grid grid-cols-2 max-md:grid-cols-1">
           <AnimatedSection animation="fade-left">

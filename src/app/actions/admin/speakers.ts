@@ -19,6 +19,21 @@ const speakerSchema = z.object({
       message: "La imagen debe ser una URL http(s)",
     })
     .nullable(),
+  bio: z.string().trim().nullable(),
+  linkedinUrl: z
+    .string()
+    .trim()
+    .refine((v) => v === "" || /^https?:\/\//.test(v), {
+      message: "LinkedIn debe ser una URL http(s)",
+    })
+    .nullable(),
+  websiteUrl: z
+    .string()
+    .trim()
+    .refine((v) => v === "" || /^https?:\/\//.test(v), {
+      message: "Website debe ser una URL http(s)",
+    })
+    .nullable(),
   sortOrder: z.number().int().min(0).max(9999),
 });
 
@@ -44,6 +59,9 @@ export async function saveSpeaker(
     role: data.role || null,
     company: data.company || null,
     imageUrl: data.imageUrl || null,
+    bio: data.bio || null,
+    linkedinUrl: data.linkedinUrl || null,
+    websiteUrl: data.websiteUrl || null,
     sortOrder: data.sortOrder,
   };
 

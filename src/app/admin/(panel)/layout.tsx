@@ -15,17 +15,17 @@ export default function AdminPanelLayout({
 }) {
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 lg:flex-row lg:gap-10 lg:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 lg:flex-row lg:gap-8 lg:px-8">
         <aside className="lg:w-56 lg:shrink-0">
-          <div className="mb-5 flex items-center justify-between gap-3 lg:block">
+          <div className="mb-6 flex items-center justify-between gap-3 lg:block">
             <div>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://res.cloudinary.com/cc4tium7/image/upload/v1787612014/logo-color-white.svg"
                 alt="Simposio Dermocosmético"
-                className="mb-1.5 h-9 w-auto"
+                className="mb-2 h-8 w-auto opacity-90"
               />
-              <p className="font-display text-lg font-bold tracking-tight">
+              <p className="font-display text-sm font-semibold tracking-tight text-muted">
                 Panel admin
               </p>
             </div>

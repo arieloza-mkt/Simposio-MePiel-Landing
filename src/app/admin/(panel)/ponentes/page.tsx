@@ -41,6 +41,9 @@ export default async function AdminPonentesPage() {
                 role: speaker.role,
                 company: speaker.company,
                 imageUrl: speaker.imageUrl,
+                bio: speaker.bio,
+                linkedinUrl: speaker.linkedinUrl,
+                websiteUrl: speaker.websiteUrl,
                 sortOrder: speaker.sortOrder,
               }}
             />

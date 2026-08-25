@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 
@@ -13,66 +13,65 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
   const autoplay = useMemo(
     () =>
       Autoplay({
-        delay: 2200,
+        delay: 2000,
         stopOnInteraction: false,
       }),
     [],
   );
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true, align: "start" },
+    { loop: true, align: "start", slidesToScroll: 1 },
     [autoplay],
   );
-  const [paused, setPaused] = useState(false);
+
+  const scrollPrev = useCallback(() => {
+    autoplay.stop();
+    emblaApi?.scrollPrev();
+  }, [emblaApi, autoplay]);
+
+  const scrollNext = useCallback(() => {
+    autoplay.stop();
+    emblaApi?.scrollNext();
+  }, [emblaApi, autoplay]);
 
   useEffect(() => {
     if (!emblaApi) return;
     const onPointerDown = () => autoplay.stop();
-    const onPointerUp = () => autoplay.play();
     emblaApi.on("pointerDown", onPointerDown);
-    emblaApi.on("pointerUp", onPointerUp);
     return () => {
       emblaApi.off("pointerDown", onPointerDown);
-      emblaApi.off("pointerUp", onPointerUp);
     };
   }, [emblaApi, autoplay]);
 
-  const togglePause = () => {
-    if (!emblaApi) return;
-    if (paused) {
-      autoplay.play();
-      setPaused(false);
-    } else {
-      autoplay.stop();
-      setPaused(true);
-    }
-  };
-
   return (
     <div
-      className="group relative"
+      className="group relative flex items-center gap-4"
       role="region"
       aria-label={label}
-      onMouseEnter={() => {
-        autoplay.stop();
-        setPaused(true);
-      }}
-      onMouseLeave={() => {
-        autoplay.play();
-        setPaused(false);
-      }}
     >
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
+      {/* Arrow left */}
+      <button
+        onClick={scrollPrev}
+        aria-label="Anterior"
+        className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-accent"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+
+      {/* Carousel — 5 logos visibles */}
+      <div className="min-w-0 flex-1 overflow-hidden" ref={emblaRef}>
+        <div className="flex items-center">
           {items.map((item) => (
             <div
               key={item.name}
-              className="min-w-0 shrink-0 basis-1/2 px-2.5 max-sm:basis-full sm:basis-1/3 lg:basis-1/4"
+              className="min-w-0 shrink-0 basis-1/5 px-3"
             >
-              <div className="flex h-20 items-center justify-center rounded-full border border-border bg-surface px-6 transition-all hover:border-accent hover:shadow-md">
+              <div className="flex items-center justify-center py-4">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="max-h-12 max-w-[130px] object-contain"
+                  className="max-h-16 max-w-[160px] object-contain dark:brightness-0 dark:invert"
                   loading="lazy"
                 />
               </div>
@@ -81,22 +80,15 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
         </div>
       </div>
 
+      {/* Arrow right */}
       <button
-        onClick={togglePause}
-        aria-label={paused ? "Reanudar carousel" : "Pausar carousel"}
-        aria-pressed={paused}
-        className="absolute -top-11 right-0 grid h-9 w-9 place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-accent"
+        onClick={scrollNext}
+        aria-label="Siguiente"
+        className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-accent"
       >
-        {paused ? (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="ml-0.5 h-4 w-4" aria-hidden>
-            <path d="M8 5.5v13l11-6.5z" />
-          </svg>
-        ) : (
-          <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
-            <rect x="7" y="5" width="3.5" height="14" rx="1" />
-            <rect x="13.5" y="5" width="3.5" height="14" rx="1" />
-          </svg>
-        )}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
       </button>
     </div>
   );

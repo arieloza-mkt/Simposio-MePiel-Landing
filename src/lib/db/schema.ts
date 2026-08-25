@@ -60,6 +60,9 @@ export const speakers = pgTable("speakers", {
   role: text("role"),
   company: text("company"),
   imageUrl: text("image_url"),
+  bio: text("bio"),
+  linkedinUrl: text("linkedin_url"),
+  websiteUrl: text("website_url"),
   checkedInAt: timestamp("checked_in_at", { withTimezone: true }),
   sortOrder: integer("sort_order").notNull().default(0),
 });

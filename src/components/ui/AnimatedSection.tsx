@@ -39,7 +39,7 @@ export function AnimatedSection({
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.08, margin: "0px 0px -40px 0px" }}
+      viewport={{ once: true, amount: 0.2, margin: "0px 0px -40px 0px" }}
       variants={variants[animation]}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       className={className}

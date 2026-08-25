@@ -8,7 +8,7 @@ import { LogoCarousel } from "@/components/features/LogoCarousel";
 
 export function Laboratorios({ labsList }: { labsList: Lab[] }) {
   return (
-    <Section id="laboratorios" className="relative overflow-hidden">
+    <Section id="laboratorios" fullHeight className="relative overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="https://res.cloudinary.com/cc4tium7/image/upload/v1787613326/bg-decor-2.svg"
@@ -18,7 +18,7 @@ export function Laboratorios({ labsList }: { labsList: Lab[] }) {
         className="pointer-events-none absolute inset-y-0 right-0 h-full w-auto max-w-full object-contain opacity-[0.12]"
       />
       <Container className="relative z-10">
-        <div className="mb-[56px] max-w-[36ch]">
+        <div className="mb-[56px] mx-auto text-center">
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
             Laboratorios participantes
           </p>
