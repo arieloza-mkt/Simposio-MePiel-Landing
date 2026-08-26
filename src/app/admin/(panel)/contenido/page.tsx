@@ -17,15 +17,18 @@ export default async function AdminContenidoPage() {
       </header>
 
       <ContenidoEditor
+        seo={content.seo}
         site={content.site}
         hero={content.hero}
         queEs={content.queEs}
         mepielAlianza={content.mepielAlianza}
-        benefits={content.benefits}
-        attendeeTypes={content.attendeeTypes}
-        tracks={content.tracks}
-        labFeatures={content.labFeatures}
-        ctaCierre={content.ctaCierre}
+        logoSpin={content.logoSpin}
+        editionsModal={content.editionsModal}
+        editionsPanel={content.editionsPanel}
+        labsSection={content.labsSection}
+        expositoresSection={content.expositoresSection}
+        registroSection={content.registroSection}
+        footer={content.footer}
         labsList={content.labsList}
       />
     </>

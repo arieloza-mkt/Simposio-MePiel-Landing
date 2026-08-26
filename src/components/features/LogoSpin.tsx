@@ -2,9 +2,6 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 
-const LOGO_URL =
-  "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png";
-
 const NAVY = [10, 19, 48];
 const NEXT_BG = [255, 255, 255];
 
@@ -17,7 +14,7 @@ function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-export function LogoSpin({ nextPreview }: { nextPreview?: ReactNode }) {
+export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPreview?: ReactNode }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
@@ -138,7 +135,7 @@ export function LogoSpin({ nextPreview }: { nextPreview?: ReactNode }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             ref={logoRef}
-            src={LOGO_URL}
+            src={logoUrl || "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png"}
             alt=""
             draggable={false}
             loading="eager"

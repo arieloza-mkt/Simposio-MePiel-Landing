@@ -28,7 +28,7 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
       {/* Columna izquierda: texto + íconos */}
       <div className="col-span-12 flex flex-col lg:col-span-7">
         <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-[#38bdf8]">
-          Qué es el Simposio
+          {queEs.eyebrow}
         </p>
         <h2 className="m-0 font-display text-[clamp(22px,4vw,44px)] font-bold leading-[1.1] tracking-tight">
           {queEs.highlight ? (
@@ -80,12 +80,18 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
 
       {/* Columna derecha: imagen */}
       <div className="col-span-12 lg:col-span-5">
-        <img
-          src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1112&auto=format&fit=crop"
-          alt="Edición anterior del Simposio Dermocosmético"
-          loading="lazy"
-          className="aspect-[3/4] w-full rounded-2xl border border-white/10 object-cover"
-        />
+        {queEs.imageUrl ? (
+          <img
+            src={queEs.imageUrl}
+            alt={queEs.imageAlt}
+            loading="lazy"
+            className="aspect-[3/4] w-full rounded-2xl border border-white/10 object-cover"
+          />
+        ) : (
+          <div className="aspect-[3/4] w-full rounded-2xl border border-dashed border-white/15 grid place-items-center text-white/30 font-mono text-xs uppercase tracking-widest">
+            Imagen pendiente
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 "use server";
 
 import { eq, inArray } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -44,8 +43,6 @@ export async function updateLabLogo(
     return { ok: false, error: "Laboratorio no encontrado." };
   }
 
-  revalidatePath("/");
-  revalidatePath("/admin/contenido");
   return { ok: true };
 }
 
@@ -93,7 +90,5 @@ export async function saveLabsList(
     }
   }
 
-  revalidatePath("/");
-  revalidatePath("/admin/contenido");
   return { ok: true };
 }

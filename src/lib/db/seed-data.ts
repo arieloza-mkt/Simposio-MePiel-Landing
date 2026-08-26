@@ -250,14 +250,24 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     description:
       "En mepiel distribuidores especializados creemos que una gran relación con nuestros médicos va más allá de ofrecer productos. Buscamos construir alianzas duraderas que generen valor para tu práctica, tus pacientes y tu crecimiento profesional.",
   },
+  seo: {
+    title: "Simposio Dermocosmético - 3a Edición - Registro Abierto",
+    siteName: "Simposio Dermocosmético",
+    keywords:
+      "simposio, dermocosmética, farmacia, laboratorios, registro, evento, México, industria farmacéutica",
+    description:
+      "El encuentro comercial más relevante de la industria dermocosmética en México. Farmacias, laboratorios, distribuidores y especialistas conectan para impulsar la categoría.",
+  },
   hero: {
+    headline:
+      "Una alianza que impulsa tu práctica. Una experiencia que reconoce tu confianza.",
     metrics: [
       { value: "+1500", label: "Asistentes\nacumulados" },
       { value: "+50", label: "Laboratorios\nparticipantes" },
       { value: "+400", label: "Horas de\ncontenido" },
       { value: "3", label: "Ediciones\nrealizadas" },
     ],
-    videoId: "BOG_CbEDhag",
+    videoId: "https://1t0z4lon9s.ucarecd.net/c60a2707-2c0f-44b6-a84e-14ed5b88e0d7/RECAPDOSEDICIONES.mp4",
   },
   transmision: {
     title: "Transmisión en vivo",
@@ -378,6 +388,7 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     },
   ],
   queEs: {
+    eyebrow: "Qué es el Simposio",
     title: "Más que un evento, una experiencia para conectar y crecer",
     highlight: "conectar y crecer",
     intro:
@@ -390,6 +401,9 @@ export const SETTINGS_SEED: Record<string, unknown> = {
       "Demos de punto de venta",
       "Una experiencia exclusiva diseñada para reconocer y fortalecer la relación con nuestros mejores aliados.",
     ],
+    imageUrl:
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1112&auto=format&fit=crop",
+    imageAlt: "Edición anterior del Simposio Dermocosmético",
   },
   mepielAlianza: {
     eyebrow: "Mepiel · Distribuidores Especializados",
@@ -401,6 +415,7 @@ export const SETTINGS_SEED: Record<string, unknown> = {
       "Entre estas oportunidades se encuentra una invitación al Simposio Dermocosmético 2025, un encuentro creado para profesionales que buscan mantenerse a la vanguardia de la industria.",
     ],
     imageUrl: "",
+    imageAlt: "Mepiel distribuidores especializados",
   },
   ctaCierre: {
     description:
@@ -412,5 +427,64 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     timezone: "America/Mexico_City",
     dateLabel: "[PENDIENTE: fecha exacta] · Octubre 2026",
     venueLabel: "[PENDIENTE: sede], Ciudad de México",
+  },
+  logoSpin: {
+    logoUrl:
+      "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png",
+  },
+  editionsModal: {
+    speakersTitle: "Ponentes de la edición",
+    speakersDescription:
+      "Especialistas y líderes que compartieron su experiencia en escenario.",
+    labsTitle: "Laboratorios participantes",
+    labsDescription:
+      "Las marcas que exhibieron su portafolio en el recinto.",
+  },
+  editionsPanel: {
+    viewMoreText: "Ver más",
+  },
+  labsSection: {
+    eyebrow: "Laboratorios participantes",
+    title: "Las marcas que lideran la categoría",
+  },
+  expositoresSection: {
+    eyebrow: "Expositores y speakers",
+    title: "Líderes de la industria compartiendo su experiencia",
+  },
+  registroSection: {
+    eyebrow: "Registro",
+    title: "Asegura tu lugar en la 3a edición",
+    description:
+      "Completa el formulario y nuestro equipo revisará tu registro. Te confirmaremos tu asistencia por correo electrónico una vez validado tu perfil profesional.",
+    validationText:
+      "El Simposio es un evento B2B con aforo limitado. Cada registro es revisado por nuestro equipo para garantizar una audiencia cualificada de profesionales del canal dermocosmético.",
+    dudasLabel: "¿Tienes dudas?",
+    dudasLinkText: "Consulta nuestras preguntas frecuentes",
+    submitButtonText: "Enviar mi registro",
+  },
+  footer: {
+    description:
+      "El encuentro comercial más relevante de la industria dermocosmética en México.",
+    copyright: "© 2026 Simposio Dermocosmético. Todos los derechos reservados.",
+    logoUrl:
+      "https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg",
+    privacyLinkText: "Aviso de privacidad",
+    privacyLinkUrl: "#",
+    eventLinks: [
+      { label: "Acerca del Simposio", href: "#acerca" },
+      { label: "Ediciones anteriores", href: "#ediciones" },
+      { label: "Ejes temáticos", href: "#ejes-tematicos" },
+      { label: "Preguntas frecuentes", href: "#faq" },
+    ],
+    participateLinks: [
+      { label: "Registro de asistentes", href: "#registro" },
+      { label: "Ser expositor", href: "#para-labs" },
+      { label: "Patrocinadores", href: "#para-labs" },
+    ],
+    contactLinks: [
+      { label: "contacto@simposiodermocosmetico.com", href: "mailto:contacto@simposiodermocosmetico.com" },
+      { label: "LinkedIn", href: "#" },
+      { label: "Instagram", href: "#" },
+    ],
   },
 };

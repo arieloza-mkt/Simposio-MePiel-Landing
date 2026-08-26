@@ -1,6 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -68,6 +67,7 @@ const stringArray = z.string().transform((raw) => {
 
 export type ContentKey =
   | "site"
+  | "seo"
   | "hero"
   | "queEs"
   | "mepielAlianza"
@@ -75,7 +75,19 @@ export type ContentKey =
   | "labFeatures"
   | "attendeeTypes"
   | "tracks"
-  | "ctaCierre";
+  | "ctaCierre"
+  | "logoSpin"
+  | "editionsModal"
+  | "editionsPanel"
+  | "labsSection"
+  | "expositoresSection"
+  | "registroSection"
+  | "footer";
+
+const linkItem = z.object({
+  label: z.string().trim().min(1),
+  href: z.string().trim().min(1),
+});
 
 const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
   site: z.object({
@@ -85,16 +97,26 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
     tagline: z.string(),
     description: z.string(),
   }),
+  seo: z.object({
+    title: z.string().trim().min(1),
+    siteName: z.string().trim().min(1),
+    keywords: z.string(),
+    description: z.string(),
+  }),
   hero: z.object({
+    headline: z.string().trim().min(1),
     videoId: z.string().trim().max(120),
     metrics: pairLines,
   }),
   queEs: z.object({
+    eyebrow: z.string().trim(),
     title: z.string().trim().min(2),
     highlight: z.string().trim(),
     intro: z.string(),
     experienceIntro: z.string(),
     experienceItems: stringArray,
+    imageUrl: z.string().trim(),
+    imageAlt: z.string(),
   }),
   mepielAlianza: z.object({
     eyebrow: z.string().trim(),
@@ -102,6 +124,7 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
     highlight: z.string().trim(),
     paragraphs: stringArray,
     imageUrl: z.string().trim(),
+    imageAlt: z.string(),
   }),
   benefits: z.object({ items: benefitLines }),
   labFeatures: z.object({ items: benefitLines }),
@@ -148,6 +171,45 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
   ctaCierre: z.object({
     description: z.string().trim().min(2),
   }),
+  logoSpin: z.object({
+    logoUrl: z.string().trim(),
+  }),
+  editionsModal: z.object({
+    speakersTitle: z.string().trim().min(1),
+    speakersDescription: z.string(),
+    labsTitle: z.string().trim().min(1),
+    labsDescription: z.string(),
+  }),
+  editionsPanel: z.object({
+    viewMoreText: z.string().trim().min(1),
+  }),
+  labsSection: z.object({
+    eyebrow: z.string().trim(),
+    title: z.string().trim().min(1),
+  }),
+  expositoresSection: z.object({
+    eyebrow: z.string().trim(),
+    title: z.string().trim().min(1),
+  }),
+  registroSection: z.object({
+    eyebrow: z.string().trim(),
+    title: z.string().trim().min(1),
+    description: z.string(),
+    validationText: z.string(),
+    dudasLabel: z.string().trim(),
+    dudasLinkText: z.string().trim(),
+    submitButtonText: z.string().trim().min(1),
+  }),
+  footer: z.object({
+    description: z.string(),
+    copyright: z.string(),
+    logoUrl: z.string().trim(),
+    privacyLinkText: z.string().trim(),
+    privacyLinkUrl: z.string().trim(),
+    eventLinks: z.array(linkItem),
+    participateLinks: z.array(linkItem),
+    contactLinks: z.array(linkItem),
+  }),
 };
 
 function isContentKey(key: string): key is ContentKey {
@@ -181,8 +243,6 @@ export async function saveContentSetting(
       set: { value: parsed.data },
     });
 
-  revalidatePath("/");
-  revalidatePath("/admin/contenido");
   return { ok: true };
 }
 

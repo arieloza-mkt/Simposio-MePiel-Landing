@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import type { Edition, Speaker } from "@/lib/content";
+import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { Modal } from "@/components/ui/Modal";
 import { LogoCarousel } from "./LogoCarousel";
 
@@ -142,6 +142,7 @@ interface EditionDetailModalProps {
   onClose: () => void;
   edition: Edition;
   speakers: Speaker[];
+  modalSettings?: EditionsModalSettings;
 }
 
 export function EditionDetailModal({
@@ -149,6 +150,7 @@ export function EditionDetailModal({
   onClose,
   edition,
   speakers,
+  modalSettings,
 }: EditionDetailModalProps) {
   const editionSpeakers = edition.speakerIds
     .map((id) => speakers.find((speaker) => speaker.id === id))
@@ -162,10 +164,10 @@ export function EditionDetailModal({
       className="max-w-3xl"
     >
       <h3 className="m-0 font-display text-xl font-bold tracking-tight text-fg">
-        Ponentes de la edición
+        {modalSettings?.speakersTitle ?? "Ponentes de la edición"}
       </h3>
       <p className="mb-5 mt-1 text-sm text-muted">
-        Especialistas y líderes que compartieron su experiencia en escenario.
+        {modalSettings?.speakersDescription ?? "Especialistas y líderes que compartieron su experiencia en escenario."}
       </p>
       {editionSpeakers.length > 0 ? (
         <SpeakersCarousel speakers={editionSpeakers} />
@@ -178,13 +180,13 @@ export function EditionDetailModal({
       <hr className="my-7 border-t border-border" />
 
       <h3 className="m-0 font-display text-xl font-bold tracking-tight text-fg">
-        Laboratorios participantes
+        {modalSettings?.labsTitle ?? "Laboratorios participantes"}
       </h3>
       <p className="mb-4 mt-1 text-sm text-muted">
-        Las marcas que exhibieron su portafolio en el recinto.
+        {modalSettings?.labsDescription ?? "Las marcas que exhibieron su portafolio en el recinto."}
       </p>
       {edition.labs.length > 0 ? (
-        <LogoCarousel items={edition.labs} label="Laboratorios participantes" />
+        <LogoCarousel items={edition.labs} label={modalSettings?.labsTitle ?? "Laboratorios participantes"} />
       ) : (
         <div className="grid h-28 place-items-center rounded-[var(--radius-lg)] border border-dashed border-border bg-bg font-mono text-xs uppercase tracking-widest text-muted">
           [PENDIENTE: logos de laboratorios de esta edición]

@@ -1,70 +1,5 @@
+import type { FooterSettings } from "@/lib/content";
 import { Container } from "./Container";
-
-const EVENT_LINKS = [
-  { label: "Acerca del Simposio", href: "#acerca" },
-  { label: "Ediciones anteriores", href: "#ediciones" },
-  { label: "Ejes temáticos", href: "#ejes-tematicos" },
-  { label: "Preguntas frecuentes", href: "#faq" },
-];
-
-const PARTICIPATE_LINKS = [
-  { label: "Registro de asistentes", href: "#registro" },
-  { label: "Ser expositor", href: "#para-labs" },
-  { label: "Patrocinadores", href: "#para-labs" },
-];
-
-const CONTACT_LINKS = [
-  { label: "contacto@simposiodermocosmetico.com", href: "mailto:contacto@simposiodermocosmetico.com" },
-  { label: "LinkedIn", href: "#" },
-  { label: "Instagram", href: "#" },
-];
-
-export function Footer() {
-  return (
-    <footer className="relative overflow-hidden border-t border-white/8 bg-dark py-[clamp(40px,6vw,56px)] text-[13px] text-muted">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.1]"
-        style={{
-          backgroundImage:
-            "url('https://res.cloudinary.com/cc4tium7/image/upload/v1787613333/bg-footer-decor.svg')",
-          backgroundRepeat: "repeat",
-        }}
-      />
-      <Container className="relative z-10">
-        <div className="mb-[40px] grid gap-[40px] text-[14px] sm:grid-cols-2 md:grid-cols-4 md:gap-[56px]">
-          <div className="sm:col-span-2 md:col-span-1">
-            <div className="mb-5 flex items-center gap-2.5">
-              <img
-                src="https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg"
-                alt="Simposio Dermocosmético"
-                height={44}
-                className="h-11 w-auto"
-                loading="lazy"
-              />
-            </div>
-            <p className="max-w-[32ch] text-[14px] leading-relaxed text-white/55">
-              El encuentro comercial más relevante de la industria dermocosmética en México.
-            </p>
-          </div>
-
-          <FooterColumn title="Evento" links={EVENT_LINKS} />
-          <FooterColumn title="Participa" links={PARTICIPATE_LINKS} />
-          <FooterColumn title="Contacto" links={CONTACT_LINKS} />
-        </div>
-
-        <div className="flex flex-wrap items-center justify-between gap-5 border-t border-white/8 pt-8">
-          <span className="text-[13px] text-white/35">
-            © 2026 Simposio Dermocosmético. Todos los derechos reservados.
-          </span>
-          <a href="#" className="text-[13px] text-white/35 transition-colors hover:text-white">
-            Aviso de privacidad
-          </a>
-        </div>
-      </Container>
-    </footer>
-  );
-}
 
 function FooterColumn({
   title,
@@ -90,5 +25,54 @@ function FooterColumn({
         ))}
       </nav>
     </div>
+  );
+}
+
+export function Footer({ settings }: { settings: FooterSettings }) {
+  return (
+    <footer className="relative overflow-hidden border-t border-white/8 bg-dark py-[clamp(40px,6vw,56px)] text-[13px] text-muted">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.1]"
+        style={{
+          backgroundImage:
+            "url('https://res.cloudinary.com/cc4tium7/image/upload/v1787613333/bg-footer-decor.svg')",
+          backgroundRepeat: "repeat",
+        }}
+      />
+      <Container className="relative z-10">
+        <div className="mb-[40px] grid gap-[40px] text-[14px] sm:grid-cols-2 md:grid-cols-4 md:gap-[56px]">
+          <div className="sm:col-span-2 md:col-span-1">
+            <div className="mb-5 flex items-center gap-2.5">
+              {settings.logoUrl && (
+                <img
+                  src={settings.logoUrl}
+                  alt="Simposio Dermocosmético"
+                  height={44}
+                  className="h-11 w-auto"
+                  loading="lazy"
+                />
+              )}
+            </div>
+            <p className="max-w-[32ch] text-[14px] leading-relaxed text-white/55">
+              {settings.description}
+            </p>
+          </div>
+
+          <FooterColumn title="Evento" links={settings.eventLinks} />
+          <FooterColumn title="Participa" links={settings.participateLinks} />
+          <FooterColumn title="Contacto" links={settings.contactLinks} />
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-5 border-t border-white/8 pt-8">
+          <span className="text-[13px] text-white/35">
+            {settings.copyright}
+          </span>
+          <a href={settings.privacyLinkUrl} className="text-[13px] text-white/35 transition-colors hover:text-white">
+            {settings.privacyLinkText}
+          </a>
+        </div>
+      </Container>
+    </footer>
   );
 }

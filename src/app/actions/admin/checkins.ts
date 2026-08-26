@@ -1,7 +1,6 @@
 "use server";
 
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -39,8 +38,6 @@ export async function toggleRegistrationCheckIn(
     });
   }
 
-  revalidatePath("/admin/asistencia");
-  revalidatePath("/admin");
   return { ok: true };
 }
 
@@ -69,7 +66,5 @@ export async function toggleSpeakerCheckIn(
     .set({ checkedInAt: speaker.checkedInAt ? null : new Date() })
     .where(eq(speakers.id, speakerId));
 
-  revalidatePath("/admin/ponentes");
-  revalidatePath("/admin");
   return { ok: true };
 }

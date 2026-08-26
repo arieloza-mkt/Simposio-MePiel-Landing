@@ -14,7 +14,7 @@ interface FormData {
   perfil: string;
 }
 
-export function RegistrationForm() {
+export function RegistrationForm({ submitButtonText = "Enviar mi registro" }: { submitButtonText?: string }) {
   const [result, setResult] = useState<{
     folio?: string;
     qrDataUrl?: string;
@@ -199,7 +199,7 @@ export function RegistrationForm() {
             disabled={submitting}
             className="mt-2 w-full justify-center sm:col-span-2"
           >
-            {submitting ? "Enviando…" : "Enviar mi registro"}
+            {submitting ? "Enviando…" : submitButtonText}
           </Button>
         </div>
       </form>

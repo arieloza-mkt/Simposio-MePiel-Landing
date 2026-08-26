@@ -2,7 +2,6 @@ import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LogoSpin } from "@/components/features/LogoSpin";
-//import { QueEs } from "@/components/sections/QueEs";
 import { QueEsPreview } from "@/components/sections/QueEsPreview";
 import { MepielAlianza } from "@/components/sections/MepielAlianza";
 import { Laboratorios } from "@/components/sections/Laboratorios";
@@ -22,17 +21,29 @@ export default async function Home() {
       <main id="content">
         <Hero site={content.site} hero={content.hero} />
         <MepielAlianza alianza={content.mepielAlianza} />
-        <LogoSpin nextPreview={<QueEsPreview queEs={content.queEs} />} />
-        {/* <QueEs queEs={content.queEs} /> */}
+        <LogoSpin
+          logoUrl={content.logoSpin.logoUrl}
+          nextPreview={<QueEsPreview queEs={content.queEs} />}
+        />
         <ScrollPinnedEditions
           editions={content.editions}
           speakers={content.speakers}
+          viewMoreText={content.editionsPanel.viewMoreText}
+          modalSettings={content.editionsModal}
         />
-        <Laboratorios labsList={content.labsList} />
-        <Expositores speakers={content.speakers} />
-        <Registro />
+        <Laboratorios
+          labsList={content.labsList}
+          eyebrow={content.labsSection.eyebrow}
+          title={content.labsSection.title}
+        />
+        <Expositores
+          speakers={content.speakers}
+          eyebrow={content.expositoresSection.eyebrow}
+          title={content.expositoresSection.title}
+        />
+        <Registro settings={content.registroSection} />
       </main>
-      <Footer />
+      <Footer settings={content.footer} />
     </>
   );
 }

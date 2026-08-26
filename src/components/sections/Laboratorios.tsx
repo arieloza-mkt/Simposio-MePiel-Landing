@@ -6,7 +6,15 @@ import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { LogoCarousel } from "@/components/features/LogoCarousel";
 
-export function Laboratorios({ labsList }: { labsList: Lab[] }) {
+export function Laboratorios({
+  labsList,
+  eyebrow,
+  title,
+}: {
+  labsList: Lab[];
+  eyebrow: string;
+  title: string;
+}) {
   return (
     <Section id="laboratorios" fullHeight className="relative overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -20,10 +28,10 @@ export function Laboratorios({ labsList }: { labsList: Lab[] }) {
       <Container className="relative z-10">
         <div className="mb-[56px] mx-auto text-center">
           <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
-            Laboratorios participantes
+            {eyebrow}
           </p>
           <h2 className="font-display text-[clamp(30px,4vw,48px)] font-bold leading-[1.1] tracking-tight">
-            Las marcas que lideran la categoría
+            {title}
           </h2>
         </div>
 
@@ -33,7 +41,7 @@ export function Laboratorios({ labsList }: { labsList: Lab[] }) {
               name: lab.name,
               image: lab.imageUrl,
             }))}
-            label="Laboratorios participantes"
+            label={eyebrow}
           />
         </AnimatedSection>
       </Container>

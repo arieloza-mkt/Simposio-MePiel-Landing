@@ -1,4 +1,4 @@
-import { asc } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { getDbReady } from "./db/client";
 import { ensureDb } from "./db/init";
 import * as schema from "./db/schema";
@@ -32,7 +32,15 @@ export interface SiteInfo {
   description: string;
 }
 
+export interface SeoSettings {
+  title: string;
+  siteName: string;
+  keywords: string;
+  description: string;
+}
+
 export interface HeroSettings {
+  headline: string;
   metrics: { value: string; label: string }[];
   videoId: string;
 }
@@ -63,11 +71,14 @@ export interface Track {
 }
 
 export interface QueEsSettings {
+  eyebrow: string;
   title: string;
   highlight: string;
   intro: string;
   experienceIntro: string;
   experienceItems: string[];
+  imageUrl: string;
+  imageAlt: string;
 }
 
 export interface MepielAlianzaSettings {
@@ -76,6 +87,7 @@ export interface MepielAlianzaSettings {
   highlight: string;
   paragraphs: string[];
   imageUrl: string;
+  imageAlt: string;
 }
 
 export interface CtaCierreSettings {
@@ -90,8 +102,50 @@ export interface EventConfig {
   venueLabel: string;
 }
 
+export interface LogoSpinSettings {
+  logoUrl: string;
+}
+
+export interface EditionsModalSettings {
+  speakersTitle: string;
+  speakersDescription: string;
+  labsTitle: string;
+  labsDescription: string;
+}
+
+export interface EditionsPanelSettings {
+  viewMoreText: string;
+}
+
+export interface SectionHeader {
+  eyebrow: string;
+  title: string;
+}
+
+export interface RegistroSettings {
+  eyebrow: string;
+  title: string;
+  description: string;
+  validationText: string;
+  dudasLabel: string;
+  dudasLinkText: string;
+  submitButtonText: string;
+}
+
+export interface FooterSettings {
+  description: string;
+  copyright: string;
+  logoUrl: string;
+  privacyLinkText: string;
+  privacyLinkUrl: string;
+  eventLinks: { label: string; href: string }[];
+  participateLinks: { label: string; href: string }[];
+  contactLinks: { label: string; href: string }[];
+}
+
 export interface LandingContent {
   site: SiteInfo;
+  seo: SeoSettings;
   hero: HeroSettings;
   transmision: TransmisionSettings;
   benefits: Benefit[];
@@ -102,6 +156,13 @@ export interface LandingContent {
   mepielAlianza: MepielAlianzaSettings;
   ctaCierre: CtaCierreSettings;
   eventConfig: EventConfig;
+  logoSpin: LogoSpinSettings;
+  editionsModal: EditionsModalSettings;
+  editionsPanel: EditionsPanelSettings;
+  labsSection: SectionHeader;
+  expositoresSection: SectionHeader;
+  registroSection: RegistroSettings;
+  footer: FooterSettings;
   editions: Edition[];
   speakers: Speaker[];
   labsList: Lab[];
@@ -146,6 +207,7 @@ export async function getLandingContent(): Promise<LandingContent> {
     void error;
     return {
       site: SETTINGS_SEED.site as SiteInfo,
+      seo: SETTINGS_SEED.seo as SeoSettings,
       hero: SETTINGS_SEED.hero as HeroSettings,
       transmision: SETTINGS_SEED.transmision as TransmisionSettings,
       benefits: SETTINGS_SEED.benefits as Benefit[],
@@ -156,6 +218,13 @@ export async function getLandingContent(): Promise<LandingContent> {
       mepielAlianza: SETTINGS_SEED.mepielAlianza as MepielAlianzaSettings,
       ctaCierre: SETTINGS_SEED.ctaCierre as CtaCierreSettings,
       eventConfig: SETTINGS_SEED.eventConfig as EventConfig,
+      logoSpin: SETTINGS_SEED.logoSpin as LogoSpinSettings,
+      editionsModal: SETTINGS_SEED.editionsModal as EditionsModalSettings,
+      editionsPanel: SETTINGS_SEED.editionsPanel as EditionsPanelSettings,
+      labsSection: SETTINGS_SEED.labsSection as SectionHeader,
+      expositoresSection: SETTINGS_SEED.expositoresSection as SectionHeader,
+      registroSection: SETTINGS_SEED.registroSection as RegistroSettings,
+      footer: SETTINGS_SEED.footer as FooterSettings,
       editions: EDITION_SEED as unknown as Edition[],
       speakers: SPEAKER_SEED as unknown as Speaker[],
       labsList: LAB_SEED as unknown as Lab[],
@@ -170,6 +239,7 @@ export async function getLandingContent(): Promise<LandingContent> {
 
   return {
     site: s<SiteInfo>("site"),
+    seo: s<SeoSettings>("seo"),
     hero: s<HeroSettings>("hero"),
     transmision: s<TransmisionSettings>("transmision"),
     benefits: s<Benefit[]>("benefits"),
@@ -180,10 +250,32 @@ export async function getLandingContent(): Promise<LandingContent> {
     mepielAlianza: s<MepielAlianzaSettings>("mepielAlianza"),
     ctaCierre: s<CtaCierreSettings>("ctaCierre"),
     eventConfig: s<EventConfig>("eventConfig"),
+    logoSpin: s<LogoSpinSettings>("logoSpin"),
+    editionsModal: s<EditionsModalSettings>("editionsModal"),
+    editionsPanel: s<EditionsPanelSettings>("editionsPanel"),
+    labsSection: s<SectionHeader>("labsSection"),
+    expositoresSection: s<SectionHeader>("expositoresSection"),
+    registroSection: s<RegistroSettings>("registroSection"),
+    footer: s<FooterSettings>("footer"),
     editions: editionRows,
     speakers: speakerRows,
     labsList: labRows,
     schedule: scheduleRows,
     faq: faqRows,
   };
+}
+
+export async function getSeoSettings(): Promise<SeoSettings> {
+  const seed = SETTINGS_SEED.seo as SeoSettings;
+  try {
+    await ensureDb();
+    const db = await getDbReady();
+    const rows = await db
+      .select({ value: schema.siteSettings.value })
+      .from(schema.siteSettings)
+      .where(eq(schema.siteSettings.key, "seo"))
+      .limit(1);
+    if (rows[0]?.value) return rows[0].value as SeoSettings;
+  } catch {}
+  return seed;
 }

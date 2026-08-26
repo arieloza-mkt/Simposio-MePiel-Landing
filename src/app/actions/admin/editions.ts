@@ -1,7 +1,6 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -13,18 +12,6 @@ const urlOrNull = z
   .refine((v) => v === "" || /^https?:\/\//.test(v), "Debe ser URL http(s)")
   .transform((v) => v || null);
 
-const pipeLines = <T,>(parse: (parts: string[]) => T | null) =>
-  z
-    .string()
-    .transform((raw) =>
-      raw
-        .split("\n")
-        .map((line) => line.trim())
-        .filter(Boolean)
-        .map((line) => parse(line.split("|").map((p) => p.trim())))
-        .filter((v): v is T => v !== null),
-    );
-
 const editionSchema = z.object({
   id: z.string().uuid().optional(),
   ordinal: z.string().trim().min(1).max(4),
@@ -35,19 +22,68 @@ const editionSchema = z.object({
   backdropUrl: urlOrNull,
   logoUrl: urlOrNull,
   videoId: z.string().trim().max(120).transform((v) => v || null),
-  stats: pipeLines((parts) =>
-    parts.length >= 1 && parts[0]
-      ? { value: parts[0], label: parts[1] ?? "" }
-      : null,
-  ),
-  images: pipeLines((parts) =>
-    parts[0]
-      ? { src: parts[0], alt: parts.slice(1).join(" | ") || "Foto de la edición" }
-      : null,
-  ),
-  labs: pipeLines((parts) =>
-    parts[0] ? { name: parts[0], image: parts[1] ?? "" } : null,
-  ),
+  stats: z
+    .union([z.string(), z.array(z.object({ value: z.string(), label: z.string() }))])
+    .transform((v) => {
+      if (typeof v === "string") {
+        try {
+          const parsed = JSON.parse(v);
+          if (Array.isArray(parsed)) return parsed as { value: string; label: string }[];
+        } catch {}
+        return v
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .map((l) => {
+            const parts = l.split("|").map((p) => p.trim());
+            return parts[0] ? { value: parts[0], label: parts[1] ?? "" } : null;
+          })
+          .filter((x): x is { value: string; label: string } => x !== null);
+      }
+      return v;
+    }),
+  images: z
+    .union([z.string(), z.array(z.object({ src: z.string(), alt: z.string() }))])
+    .transform((v) => {
+      if (typeof v === "string") {
+        try {
+          const parsed = JSON.parse(v);
+          if (Array.isArray(parsed)) return parsed as { src: string; alt: string }[];
+        } catch {}
+        return v
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .map((l) => {
+            const parts = l.split("|").map((p) => p.trim());
+            return parts[0]
+              ? { src: parts[0], alt: parts.slice(1).join(" | ") || "Foto de la edición" }
+              : null;
+          })
+          .filter((x): x is { src: string; alt: string } => x !== null);
+      }
+      return v;
+    }),
+  labs: z
+    .union([z.string(), z.array(z.object({ name: z.string(), image: z.string() }))])
+    .transform((v) => {
+      if (typeof v === "string") {
+        try {
+          const parsed = JSON.parse(v);
+          if (Array.isArray(parsed)) return parsed as { name: string; image: string }[];
+        } catch {}
+        return v
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .map((l) => {
+            const parts = l.split("|").map((p) => p.trim());
+            return parts[0] ? { name: parts[0], image: parts[1] ?? "" } : null;
+          })
+          .filter((x): x is { name: string; image: string } => x !== null);
+      }
+      return v;
+    }),
   speakerIds: z.array(z.string().uuid()).default([]),
 });
 
@@ -93,8 +129,6 @@ export async function saveEdition(
     return { ok: false, error: "No se pudo guardar. ¿El año ya existe?" };
   }
 
-  revalidatePath("/admin/ediciones");
-  revalidatePath("/");
   return { ok: true };
 }
 
@@ -109,7 +143,5 @@ export async function deleteEdition(
   const db = await getDbReady();
   await db.delete(editions).where(eq(editions.id, id));
 
-  revalidatePath("/admin/ediciones");
-  revalidatePath("/");
   return { ok: true };
 }

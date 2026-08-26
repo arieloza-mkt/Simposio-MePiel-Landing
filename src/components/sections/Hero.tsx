@@ -45,13 +45,25 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           className="absolute inset-0"
         >
           <div className="absolute inset-0 overflow-hidden">
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${heroVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroVideoId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
-              title="Video de fondo del Simposio Dermocosmético"
-              allow="autoplay; encrypted-media"
-              referrerPolicy="strict-origin-when-cross-origin"
-              className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.55]"
-            />
+            {heroVideoId ? (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute top-1/2 left-1/2 h-full min-h-full w-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover brightness-[0.55]"
+              >
+                <source src={heroVideoId} type="video/mp4" />
+              </video>
+            ) : (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${heroVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroVideoId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+                title="Video de fondo del Simposio Dermocosmético"
+                allow="autoplay; encrypted-media"
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.55]"
+              />
+            )}
           </div>
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/45 to-dark" />
@@ -89,8 +101,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
             variants={heroChild}
             className="mb-5 font-display text-[clamp(44px,6vw,76px)] font-bold leading-[1.04] tracking-tight text-white"
           >
-            Una alianza que impulsa tu práctica. Una experiencia que reconoce tu
-            confianza.
+            {hero.headline}
           </motion.h1>
           <motion.p
             variants={heroChild}
@@ -130,4 +141,3 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
     </section>
   );
 }
-

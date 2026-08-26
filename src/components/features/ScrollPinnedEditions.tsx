@@ -1,15 +1,19 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Edition, Speaker } from "@/lib/content";
+import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { EdicionPanel } from "./EdicionPanel";
 
 export function ScrollPinnedEditions({
   editions,
   speakers,
+  viewMoreText,
+  modalSettings,
 }: {
   editions: Edition[];
   speakers: Speaker[];
+  viewMoreText?: string;
+  modalSettings?: EditionsModalSettings;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -71,11 +75,11 @@ export function ScrollPinnedEditions({
             >
               {isActive && (
                 <div className="pointer-events-auto">
-                  <EdicionPanel edition={edition} speakers={speakers} />
+                  <EdicionPanel edition={edition} speakers={speakers} viewMoreText={viewMoreText} modalSettings={modalSettings} />
                 </div>
               )}
               {!isActive && (
-                <EdicionPanel edition={edition} speakers={speakers} />
+                <EdicionPanel edition={edition} speakers={speakers} viewMoreText={viewMoreText} modalSettings={modalSettings} />
               )}
             </div>
           );

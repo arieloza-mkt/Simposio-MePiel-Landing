@@ -1,7 +1,6 @@
 "use server";
 
 import { eq, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -55,8 +54,6 @@ export async function saveScheduleItem(
     await db.insert(scheduleItems).values({ ...values, sortOrder: maxOrder + 1 });
   }
 
-  revalidatePath("/admin/cronograma");
-  revalidatePath("/");
   return { ok: true };
 }
 
@@ -71,7 +68,5 @@ export async function deleteScheduleItem(
   const db = await getDbReady();
   await db.delete(scheduleItems).where(eq(scheduleItems.id, id));
 
-  revalidatePath("/admin/cronograma");
-  revalidatePath("/");
   return { ok: true };
 }

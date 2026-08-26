@@ -1,7 +1,6 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -29,8 +28,6 @@ export async function setRegistrationStatus(
     .set({ status: parsed.data.status })
     .where(eq(registrations.id, parsed.data.id));
 
-  revalidatePath("/admin/registros");
-  revalidatePath("/admin");
   return { ok: true };
 }
 
@@ -45,8 +42,6 @@ export async function deleteRegistration(
   const db = await getDbReady();
   await db.delete(registrations).where(eq(registrations.id, id));
 
-  revalidatePath("/admin/registros");
-  revalidatePath("/admin");
   return { ok: true };
 }
 
@@ -73,7 +68,5 @@ export async function regenerateRegistrationCode(
     return { ok: false, error: "Registro no encontrado." };
   }
 
-  revalidatePath("/admin/registros");
-  revalidatePath("/admin");
   return { ok: true };
 }

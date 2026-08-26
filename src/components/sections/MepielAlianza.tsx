@@ -26,7 +26,7 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={alianza.imageUrl}
-                  alt="Mepiel distribuidores especializados"
+                  alt={alianza.imageAlt}
                   loading="lazy"
                   className="aspect-[3/4] w-full rounded-[var(--radius-lg)] border border-border object-cover"
                 />

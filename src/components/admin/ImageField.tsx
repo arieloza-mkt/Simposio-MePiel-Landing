@@ -7,11 +7,13 @@ export function ImageField({
   label,
   hint,
   defaultValue = "",
+  onChange,
 }: {
   name: string;
   label: string;
   hint?: string;
   defaultValue?: string;
+  onChange?: (url: string) => void;
 }) {
   const [url, setUrl] = useState(defaultValue);
 
@@ -26,7 +28,10 @@ export function ImageField({
         id={name}
         name={name}
         value={url}
-        onChange={(e) => setUrl(e.target.value)}
+        onChange={(e) => {
+          setUrl(e.target.value);
+          onChange?.(e.target.value);
+        }}
         placeholder="https://res.cloudinary.com/..."
         className="w-full rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm text-fg outline-none transition placeholder:text-muted/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/15"
       />

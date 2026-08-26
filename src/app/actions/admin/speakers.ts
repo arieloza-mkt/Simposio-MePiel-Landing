@@ -1,7 +1,7 @@
 "use server";
 
 import { eq, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -74,8 +74,6 @@ export async function saveSpeaker(
     await db.insert(speakers).values({ ...values, sortOrder: maxOrder + 1 });
   }
 
-  revalidatePath("/admin/ponentes");
-  revalidatePath("/");
   return { ok: true };
 }
 
@@ -90,7 +88,5 @@ export async function deleteSpeaker(
   const db = await getDbReady();
   await db.delete(speakers).where(eq(speakers.id, id));
 
-  revalidatePath("/admin/ponentes");
-  revalidatePath("/");
   return { ok: true };
 }

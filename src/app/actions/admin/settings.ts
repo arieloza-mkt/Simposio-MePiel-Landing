@@ -1,7 +1,6 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
@@ -45,8 +44,6 @@ export async function saveTransmision(
       set: { value: parsed.data },
     });
 
-  revalidatePath("/");
-  revalidatePath("/admin/transmision");
   return { ok: true };
 }
 
@@ -81,8 +78,6 @@ export async function saveEventScheduleWindow(
       set: { value: { ...currentResult, ...parsed.data } },
     });
 
-  revalidatePath("/");
-  revalidatePath("/admin/transmision");
   return { ok: true };
 }
 

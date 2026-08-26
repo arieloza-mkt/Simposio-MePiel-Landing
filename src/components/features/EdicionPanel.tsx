@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Edition, Speaker } from "@/lib/content";
+import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { PhotoCarousel } from "./PhotoCarousel";
 import { EditionDetailModal } from "./EditionDetailModal";
@@ -9,9 +9,11 @@ import { EditionDetailModal } from "./EditionDetailModal";
 interface EdicionPanelProps {
   edition: Edition;
   speakers: Speaker[];
+  viewMoreText?: string;
+  modalSettings?: EditionsModalSettings;
 }
 
-export function EdicionPanel({ edition, speakers }: EdicionPanelProps) {
+export function EdicionPanel({ edition, speakers, viewMoreText = "Ver más", modalSettings }: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);
 
   return (
@@ -70,7 +72,7 @@ export function EdicionPanel({ edition, speakers }: EdicionPanelProps) {
               onClick={() => setDetailOpen(true)}
               className="group mt-[clamp(24px,3vw,40px)] inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
             >
-              Ver más
+              {viewMoreText}
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -112,6 +114,7 @@ export function EdicionPanel({ edition, speakers }: EdicionPanelProps) {
         onClose={() => setDetailOpen(false)}
         edition={edition}
         speakers={speakers}
+        modalSettings={modalSettings}
       />
     </div>
   );
