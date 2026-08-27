@@ -14,7 +14,7 @@ export function Section({ children, className, id, dark, fullHeight }: SectionPr
     <section
       id={id}
       className={cn(
-        fullHeight ? "min-h-screen flex flex-col justify-center py-[clamp(48px,8vw,96px)]" : "py-[clamp(48px,8vw,96px)]",
+        fullHeight ? "min-h-screen flex flex-col md:justify-center py-[clamp(48px,8vw,96px)]" : "py-[clamp(48px,8vw,96px)]",
         dark
           ? "bg-dark text-white"
           : "bg-bg text-fg",

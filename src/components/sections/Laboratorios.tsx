@@ -16,7 +16,7 @@ export function Laboratorios({
   title: string;
 }) {
   return (
-    <Section id="laboratorios" fullHeight className="relative overflow-hidden">
+    <Section id="laboratorios" fullHeight className="relative overflow-hidden justify-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="https://res.cloudinary.com/cc4tium7/image/upload/v1787613326/bg-decor-2.svg"

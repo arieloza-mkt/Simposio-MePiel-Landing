@@ -33,13 +33,18 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
 
     let ticking = false;
     let rafId = 0;
-    let slideDistance = 800;
+    let slideDistance = 1000;
 
     const computeSlideDistance = () => {
-      const ideal =
-        window.innerWidth / 2 + circle.offsetWidth / 2 + SLIDE_BUFFER;
-      // En pantallas pequeñas evitamos que el círculo salga por completo
-      slideDistance = Math.min(ideal, window.innerWidth - circle.offsetWidth);
+      const circleW = circle.offsetWidth;
+      const vw = window.innerWidth;
+      const ideal = vw / 2 + circleW / 2 + SLIDE_BUFFER;
+      if (vw < 768) {
+        // Móvil/tablet: deja margen para no pegar el círculo al borde
+        slideDistance = Math.min(ideal, vw - circleW - 24);
+      } else {
+        slideDistance = Math.min(ideal, vw - circleW);
+      }
     };
 
     const update = () => {
@@ -120,9 +125,11 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
         {nextPreview && (
           <div
             ref={previewRef}
-            className="absolute inset-0 z-10 flex items-center justify-center px-8 text-center opacity-1 pointer-events-none dark:bg-[#0a1330]"
+            className="absolute inset-0 z-10 overflow-y-auto text-center opacity-1 pointer-events-none dark:bg-[#0a1330]"
           >
-            <div className="w-full max-w-[1440px]">{nextPreview}</div>
+            <div className="flex min-h-full items-center justify-center px-5 py-10 pb-16 sm:px-8">
+              <div className="w-full max-w-[1440px]">{nextPreview}</div>
+            </div>
           </div>
         )}
 

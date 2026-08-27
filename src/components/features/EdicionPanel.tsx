@@ -25,7 +25,7 @@ export function EdicionPanel({
   const hasImages = edition.images.length > 0;
 
   return (
-    <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-start py-[clamp(48px,8vw,96px)]">
+    <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-center py-[clamp(48px,8vw,96px)]">
       {edition.backdropUrl ? (
         <>
           <img
