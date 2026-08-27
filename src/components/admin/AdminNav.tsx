@@ -10,6 +10,7 @@ import {
   BookOpen,
   FileText,
 } from "lucide-react";
+import { cn } from "@/lib/cn";
 
 const LINKS = [
   { href: "/admin", label: "Resumen", icon: LayoutDashboard },
@@ -20,12 +21,12 @@ const LINKS = [
   { href: "/admin/contenido", label: "Contenido", icon: FileText },
 ];
 
-export function AdminNav() {
+export function AdminNav({ collapsed = false }: { collapsed?: boolean }) {
   const pathname = usePathname();
 
   return (
     <nav aria-label="Panel de administración">
-      <ul className="flex gap-1 overflow-x-auto lg:flex-col lg:gap-0.5">
+      <ul className="flex flex-col gap-1">
         {LINKS.map((link) => {
           const active =
             link.href === "/admin"
@@ -36,15 +37,21 @@ export function AdminNav() {
             <li key={link.href}>
               <Link
                 href={link.href}
+                title={link.label}
                 aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2 text-sm transition ${
+                className={cn(
+                  "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
                   active
-                    ? "bg-accent/10 font-medium text-accent"
-                    : "text-muted hover:bg-fg/5 hover:text-fg"
-                }`}
+                    ? "bg-primary/90 text-primary-foreground"
+                    : "text-white/70 hover:bg-white/10 hover:text-white",
+                  collapsed && "justify-center px-0",
+                )}
               >
-                <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} />
-                {link.label}
+                <Icon
+                  className="h-[18px] w-[18px] shrink-0"
+                  strokeWidth={1.8}
+                />
+                {!collapsed && <span className="truncate">{link.label}</span>}
               </Link>
             </li>
           );

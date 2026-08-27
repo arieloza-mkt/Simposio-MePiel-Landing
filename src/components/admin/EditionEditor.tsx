@@ -328,10 +328,11 @@ function EditionForm({
             placeholder="https://…"
           />
         </Field>
-        <Field label="ID de YouTube" htmlFor={`video-${edition.id}`}>
+        <Field label="URL del video" htmlFor={`video-${edition.id}`} hint="URL del video (uploadcare, YouTube, etc.)">
           <TextInput
             id={`video-${edition.id}`}
             name="videoId"
+            placeholder="https://…"
             defaultValue={edition.videoId ?? ""}
           />
         </Field>

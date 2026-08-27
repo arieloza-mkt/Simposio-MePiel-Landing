@@ -2,14 +2,24 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { and, desc, ilike, or, sql, type SQL } from "drizzle-orm";
-import { getDbReady } from "@/lib/db/client";
-import { ensureDb } from "@/lib/db/init";
-import { registrations, checkins } from "@/lib/db/schema";
 import { RegistrationActions } from "@/components/admin/RegistrationActions";
 import { RegistrationCheckInButton } from "@/components/admin/CheckInButtons";
-import { Badge, EmptyState } from "@/components/admin/ui";
+import {
+  Badge,
+  Button,
+  EmptyState,
+  Select,
+  TextInput,
+} from "@/components/admin/ui";
 import { PROFILE_OPTIONS } from "@/lib/constants";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/shadcn/table";
 
 function profileLabel(value: string): string {
   return PROFILE_OPTIONS.find((o) => o.value === value)?.label ?? value;
@@ -144,84 +154,76 @@ function RegistrosTab({
         className="mb-5 flex flex-wrap gap-3"
       >
         <input type="hidden" name="tab" value="registros" />
-        <input
+        <TextInput
           type="search"
           name="q"
           defaultValue={q}
           placeholder="Buscar por nombre, email, empresa o folio…"
-          className="min-w-[240px] flex-1 rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm text-fg outline-none transition placeholder:text-muted/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/15"
+          className="min-w-[240px] flex-1"
         />
-        <select
+        <Select
           name="status"
           defaultValue={status}
-          className="rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm text-fg outline-none focus:border-accent/60"
+          className="w-auto"
         >
           <option value="">Todos los estados</option>
           <option value="pendiente">Pendientes</option>
           <option value="aprobado">Aprobados</option>
           <option value="rechazado">Rechazados</option>
-        </select>
-        <button
-          type="submit"
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-dark transition hover:brightness-110"
-        >
-          Filtrar
-        </button>
+        </Select>
+        <Button type="submit">Filtrar</Button>
       </form>
 
       {data.length === 0 ? (
         <EmptyState message="No hay registros que coincidan con la búsqueda." />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-border">
-          <table className="w-full min-w-[860px] text-left text-sm">
-            <thead>
-              <tr className="border-b border-border bg-surface/40 text-xs uppercase tracking-wide text-muted">
-                <th className="px-4 py-3 font-medium">Asistente</th>
-                <th className="px-4 py-3 font-medium">Empresa</th>
-                <th className="px-4 py-3 font-medium">Perfil</th>
-                <th className="px-4 py-3 font-medium">Folio</th>
-                <th className="px-4 py-3 font-medium">Fecha</th>
-                <th className="px-4 py-3 font-medium">Estado</th>
-                <th className="px-4 py-3 font-medium">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="overflow-hidden rounded-xl border border-border">
+          <Table className="min-w-[860px]">
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Asistente</TableHead>
+                <TableHead>Empresa</TableHead>
+                <TableHead>Perfil</TableHead>
+                <TableHead>Folio</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Estado</TableHead>
+                <TableHead>Acciones</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {data.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b border-border/60 last:border-0 hover:bg-surface/30"
-                >
-                  <td className="px-4 py-3">
+                <TableRow key={row.id}>
+                  <TableCell>
                     <p className="font-medium">{row.nombre}</p>
-                    <p className="text-xs text-muted">{row.email}</p>
-                  </td>
-                  <td className="px-4 py-3">
+                    <p className="text-xs text-muted-foreground">{row.email}</p>
+                  </TableCell>
+                  <TableCell>
                     <p>{row.empresa}</p>
-                    <p className="text-xs text-muted">{row.telefono}</p>
-                  </td>
-                  <td className="max-w-[200px] px-4 py-3 text-xs text-muted">
+                    <p className="text-xs text-muted-foreground">{row.telefono}</p>
+                  </TableCell>
+                  <TableCell className="max-w-[200px] text-xs text-muted-foreground">
                     {profileLabel(row.perfil)}
-                  </td>
-                  <td className="px-4 py-3">
-                    <code className="rounded bg-fg/5 px-1.5 py-0.5 font-mono text-xs">
+                  </TableCell>
+                  <TableCell>
+                    <code className="rounded bg-secondary px-1.5 py-0.5 font-mono text-xs">
                       {row.id.slice(0, 8)}
                     </code>
                     <Link
                       href={`/entrada/${row.accessCode ?? ""}`}
                       target="_blank"
-                      className="ml-2 text-xs text-accent underline-offset-2 hover:underline"
+                      className="ml-2 text-xs text-primary underline-offset-2 hover:underline"
                     >
                       Ver QR
                     </Link>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-muted">
+                  </TableCell>
+                  <TableCell className="text-xs text-muted-foreground">
                     {new Intl.DateTimeFormat("es-MX", {
                       dateStyle: "short",
                       timeStyle: "short",
                       timeZone: "America/Mexico_City",
                     }).format(row.createdAt)}
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <Badge
                       tone={
                         row.status as
@@ -232,14 +234,14 @@ function RegistrosTab({
                     >
                       {row.status}
                     </Badge>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <RegistrationActions id={row.id} status={row.status as "pendiente" | "aprobado" | "rechazado"} />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
 
@@ -289,20 +291,15 @@ function AsistenciaTab({
         className="mb-5 flex flex-wrap gap-3"
       >
         <input type="hidden" name="tab" value="asistencia" />
-        <input
+        <TextInput
           type="search"
           name="q"
           defaultValue={q}
           autoFocus
           placeholder="Nombre, email o folio…"
-          className="min-w-[240px] flex-1 rounded-lg border border-border bg-surface/60 px-4 py-2.5 text-base text-fg outline-none transition placeholder:text-muted/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/15"
+          className="min-w-[240px] flex-1"
         />
-        <button
-          type="submit"
-          className="rounded-lg bg-accent px-5 py-2.5 text-sm font-medium text-dark transition hover:brightness-110"
-        >
-          Buscar
-        </button>
+        <Button type="submit">Buscar</Button>
       </form>
 
       {data.length === 0 ? (
@@ -325,7 +322,7 @@ function AsistenciaTab({
                   <p className="font-medium">{row.nombre}</p>
                   <Badge tone={row.status as "pendiente" | "aprobado" | "rechazado"}>{row.status}</Badge>
                   {row.checkinAt && (
-                    <span className="text-xs text-emerald-300">
+                    <span className="text-xs text-emerald-600 dark:text-emerald-400">
                       ✓{" "}
                       {new Intl.DateTimeFormat("es-MX", {
                         timeStyle: "short",

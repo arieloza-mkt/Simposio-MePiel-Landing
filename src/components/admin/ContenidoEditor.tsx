@@ -3,7 +3,6 @@
 import { useState, useTransition } from "react";
 import { saveContentSetting } from "@/app/actions/admin/content";
 import { saveLabsList } from "@/app/actions/admin/labs";
-import { SectionTabs, type TabDef } from "@/components/admin/SectionTabs";
 import { FieldArray } from "@/components/admin/FieldArray";
 import { ImageField } from "@/components/admin/ImageField";
 import { Button, Field, TextInput, TextArea } from "@/components/admin/ui";
@@ -32,7 +31,7 @@ function SaveButton({ pending, message }: { pending: boolean; message: string | 
         {pending ? "Guardando…" : "Guardar"}
       </Button>
       {message && (
-        <p className={`text-sm ${message.includes("✓") ? "text-emerald-300" : "text-error"}`}>
+        <p className={`text-sm ${message.includes("✓") ? "text-emerald-600 dark:text-emerald-400" : "text-error"}`}>
           {message}
         </p>
       )}
@@ -55,9 +54,14 @@ function useSave(key: string) {
   return { message, pending, save };
 }
 
-function SeoSection({ data }: { data: SeoSettings }) {
+export function SeoEditor({ data }: { data: SeoSettings }) {
   const { message, pending, save } = useSave("seo");
-  const [form, setForm] = useState(data);
+  const [form, setForm] = useState({
+    title: data.title ?? "",
+    siteName: data.siteName ?? "",
+    keywords: data.keywords ?? "",
+    description: data.description ?? "",
+  });
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); save(form as unknown as Record<string, unknown>); }} className="grid gap-4">
@@ -78,9 +82,15 @@ function SeoSection({ data }: { data: SeoSettings }) {
   );
 }
 
-function SiteSection({ data }: { data: SiteInfo }) {
+export function SiteEditor({ data }: { data: SiteInfo }) {
   const { message, pending, save } = useSave("site");
-  const [form, setForm] = useState(data);
+  const [form, setForm] = useState({
+    name: data.name ?? "",
+    edition: data.edition ?? "",
+    year: Number(data.year) || 0,
+    tagline: data.tagline ?? "",
+    description: data.description ?? "",
+  });
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); save(form as unknown as Record<string, unknown>); }} className="grid gap-4 sm:grid-cols-2">
@@ -106,11 +116,14 @@ function SiteSection({ data }: { data: SiteInfo }) {
   );
 }
 
-function HeroSection({ data }: { data: HeroSettings }) {
+export function HeroEditor({ data }: { data: HeroSettings }) {
   const { message, pending, save } = useSave("hero");
-  const [form, setForm] = useState(data);
+  const [form, setForm] = useState({
+    headline: data.headline ?? "",
+    videoId: data.videoId ?? "",
+  });
   const [metrics, setMetrics] = useState(() =>
-    data.metrics.map((m) => ({ ...m, id: uid() }))
+    (data.metrics ?? []).map((m) => ({ ...m, id: uid() }))
   );
 
   return (
@@ -151,17 +164,17 @@ function HeroSection({ data }: { data: HeroSettings }) {
   );
 }
 
-function AlianzaSection({ data }: { data: MepielAlianzaSettings }) {
+export function AlianzaEditor({ data }: { data: MepielAlianzaSettings }) {
   const { message, pending, save } = useSave("mepielAlianza");
   const [form, setForm] = useState({
-    eyebrow: data.eyebrow,
-    title: data.title,
-    highlight: data.highlight,
-    imageUrl: data.imageUrl,
-    imageAlt: data.imageAlt,
+    eyebrow: data.eyebrow ?? "",
+    title: data.title ?? "",
+    highlight: data.highlight ?? "",
+    imageUrl: data.imageUrl ?? "",
+    imageAlt: data.imageAlt ?? "",
   });
   const [paragraphs, setParagraphs] = useState(() =>
-    data.paragraphs.map((text) => ({ id: uid(), text }))
+    (data.paragraphs ?? []).map((text) => ({ id: uid(), text }))
   );
 
   return (
@@ -202,6 +215,7 @@ function AlianzaSection({ data }: { data: MepielAlianzaSettings }) {
         name="imageUrl"
         label="Imagen (URL Cloudinary)"
         defaultValue={form.imageUrl}
+        onChange={(url) => setForm({ ...form, imageUrl: url })}
       />
 
       <SaveButton pending={pending} message={message} />
@@ -209,9 +223,9 @@ function AlianzaSection({ data }: { data: MepielAlianzaSettings }) {
   );
 }
 
-function LogoSpinSection({ data }: { data: LogoSpinSettings }) {
+export function LogoSpinEditor({ data }: { data: LogoSpinSettings }) {
   const { message, pending, save } = useSave("logoSpin");
-  const [form, setForm] = useState(data);
+  const [form, setForm] = useState({ logoUrl: data.logoUrl ?? "" });
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); save(form as unknown as Record<string, unknown>); }} className="grid gap-4">
@@ -219,25 +233,26 @@ function LogoSpinSection({ data }: { data: LogoSpinSettings }) {
         name="logoUrl"
         label="Logo del spinner"
         defaultValue={form.logoUrl}
+        onChange={(url) => setForm({ ...form, logoUrl: url })}
       />
       <SaveButton pending={pending} message={message} />
     </form>
   );
 }
 
-function QueEsSection({ data }: { data: QueEsSettings }) {
+export function QueEsEditor({ data }: { data: QueEsSettings }) {
   const { message, pending, save } = useSave("queEs");
   const [form, setForm] = useState({
-    eyebrow: data.eyebrow,
-    title: data.title,
-    highlight: data.highlight,
-    intro: data.intro,
-    experienceIntro: data.experienceIntro,
-    imageUrl: data.imageUrl,
-    imageAlt: data.imageAlt,
+    eyebrow: data.eyebrow ?? "",
+    title: data.title ?? "",
+    highlight: data.highlight ?? "",
+    intro: data.intro ?? "",
+    experienceIntro: data.experienceIntro ?? "",
+    imageUrl: data.imageUrl ?? "",
+    imageAlt: data.imageAlt ?? "",
   });
   const [experienceItems, setExperienceItems] = useState(() =>
-    data.experienceItems.map((text) => ({ id: uid(), text }))
+    (data.experienceItems ?? []).map((text) => ({ id: uid(), text }))
   );
 
   return (
@@ -283,6 +298,7 @@ function QueEsSection({ data }: { data: QueEsSettings }) {
         name="imageUrl"
         label="Imagen de la sección"
         defaultValue={form.imageUrl}
+        onChange={(url) => setForm({ ...form, imageUrl: url })}
       />
 
       <SaveButton pending={pending} message={message} />
@@ -290,7 +306,7 @@ function QueEsSection({ data }: { data: QueEsSettings }) {
   );
 }
 
-function EditionsSection({
+export function EditionsEditor({
   modalData,
   panelData,
 }: {
@@ -299,8 +315,13 @@ function EditionsSection({
 }) {
   const modalSave = useSave("editionsModal");
   const panelSave = useSave("editionsPanel");
-  const [modal, setModal] = useState(modalData);
-  const [panel, setPanel] = useState(panelData);
+  const [modal, setModal] = useState({
+    speakersTitle: modalData.speakersTitle ?? "",
+    speakersDescription: modalData.speakersDescription ?? "",
+    labsTitle: modalData.labsTitle ?? "",
+    labsDescription: modalData.labsDescription ?? "",
+  });
+  const [panel, setPanel] = useState({ viewMoreText: panelData.viewMoreText ?? "" });
 
   return (
     <div className="grid gap-6">
@@ -334,9 +355,12 @@ function EditionsSection({
   );
 }
 
-function SectionHeaderEditor({ data, settingKey }: { data: SectionHeader; settingKey: string }) {
+export function SectionHeaderEditor({ data, settingKey }: { data: SectionHeader; settingKey: string }) {
   const { message, pending, save } = useSave(settingKey);
-  const [form, setForm] = useState(data);
+  const [form, setForm] = useState({
+    eyebrow: data.eyebrow ?? "",
+    title: data.title ?? "",
+  });
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); save(form as unknown as Record<string, unknown>); }} className="grid gap-4 sm:grid-cols-2">
@@ -351,9 +375,17 @@ function SectionHeaderEditor({ data, settingKey }: { data: SectionHeader; settin
   );
 }
 
-function RegistroSection({ data }: { data: RegistroSettings }) {
+export function RegistroEditor({ data }: { data: RegistroSettings }) {
   const { message, pending, save } = useSave("registroSection");
-  const [form, setForm] = useState(data);
+  const [form, setForm] = useState({
+    eyebrow: data.eyebrow ?? "",
+    title: data.title ?? "",
+    description: data.description ?? "",
+    validationText: data.validationText ?? "",
+    dudasLabel: data.dudasLabel ?? "",
+    dudasLinkText: data.dudasLinkText ?? "",
+    submitButtonText: data.submitButtonText ?? "",
+  });
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); save(form as unknown as Record<string, unknown>); }} className="grid gap-4">
@@ -387,23 +419,23 @@ function RegistroSection({ data }: { data: RegistroSettings }) {
   );
 }
 
-function FooterSection({ data }: { data: FooterSettings }) {
+export function FooterEditor({ data }: { data: FooterSettings }) {
   const { message, pending, save } = useSave("footer");
   const [form, setForm] = useState({
-    description: data.description,
-    copyright: data.copyright,
-    logoUrl: data.logoUrl,
-    privacyLinkText: data.privacyLinkText,
-    privacyLinkUrl: data.privacyLinkUrl,
+    description: data.description ?? "",
+    copyright: data.copyright ?? "",
+    logoUrl: data.logoUrl ?? "",
+    privacyLinkText: data.privacyLinkText ?? "",
+    privacyLinkUrl: data.privacyLinkUrl ?? "",
   });
   const [eventLinks, setEventLinks] = useState(() =>
-    data.eventLinks.map((l) => ({ ...l, id: uid() }))
+    (data.eventLinks ?? []).map((l) => ({ ...l, id: uid() }))
   );
   const [participateLinks, setParticipateLinks] = useState(() =>
-    data.participateLinks.map((l) => ({ ...l, id: uid() }))
+    (data.participateLinks ?? []).map((l) => ({ ...l, id: uid() }))
   );
   const [contactLinks, setContactLinks] = useState(() =>
-    data.contactLinks.map((l) => ({ ...l, id: uid() }))
+    (data.contactLinks ?? []).map((l) => ({ ...l, id: uid() }))
   );
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -418,7 +450,7 @@ function FooterSection({ data }: { data: FooterSettings }) {
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
-      <ImageField name="logoUrl" label="Logo del footer" defaultValue={form.logoUrl} />
+      <ImageField name="logoUrl" label="Logo del footer" defaultValue={form.logoUrl} onChange={(url) => setForm({ ...form, logoUrl: url })} />
       <Field label="Descripción" htmlFor="footer-desc">
         <TextArea id="footer-desc" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
       </Field>
@@ -484,7 +516,7 @@ function FooterSection({ data }: { data: FooterSettings }) {
   );
 }
 
-function LabsListSection({ data }: { data: Lab[] }) {
+export function LabsListEditor({ data }: { data: Lab[] }) {
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const [items, setItems] = useState(() =>
@@ -534,68 +566,41 @@ function LabsListSection({ data }: { data: Lab[] }) {
   );
 }
 
-const TABS: TabDef[] = [
-  { key: "seo", label: "SEO" },
-  { key: "sitio", label: "Sitio" },
-  { key: "hero", label: "Hero" },
-  { key: "alianza", label: "Alianza" },
-  { key: "logoSpin", label: "Logo Spinner" },
-  { key: "queEs", label: "Acerca de" },
-  { key: "ediciones", label: "Ediciones" },
-  { key: "labsSection", label: "Laboratorios" },
-  { key: "expositores", label: "Ponentes" },
-  { key: "registro", label: "Registro" },
-  { key: "footer", label: "Footer" },
-  { key: "labsList", label: "Lista Labs" },
-];
-
-export function ContenidoEditor({
-  seo,
-  site,
-  hero,
-  queEs,
-  mepielAlianza,
-  logoSpin,
-  editionsModal,
-  editionsPanel,
-  labsSection,
-  expositoresSection,
-  registroSection,
-  footer,
-  labsList,
+export function ContenidoSectionEditor({
+  slug,
+  content,
 }: {
-  seo: SeoSettings;
-  site: SiteInfo;
-  hero: HeroSettings;
-  queEs: QueEsSettings;
-  mepielAlianza: MepielAlianzaSettings;
-  logoSpin: LogoSpinSettings;
-  editionsModal: EditionsModalSettings;
-  editionsPanel: EditionsPanelSettings;
-  labsSection: SectionHeader;
-  expositoresSection: SectionHeader;
-  registroSection: RegistroSettings;
-  footer: FooterSettings;
-  labsList: Lab[];
+  slug: string;
+  content: {
+    seo: SeoSettings;
+    site: SiteInfo;
+    hero: HeroSettings;
+    queEs: QueEsSettings;
+    mepielAlianza: MepielAlianzaSettings;
+    logoSpin: LogoSpinSettings;
+    editionsModal: EditionsModalSettings;
+    editionsPanel: EditionsPanelSettings;
+    labsSection: SectionHeader;
+    expositoresSection: SectionHeader;
+    registroSection: RegistroSettings;
+    footer: FooterSettings;
+    labsList: Lab[];
+  };
 }) {
   return (
-    <SectionTabs tabs={TABS}>
-      {(active) => (
-        <div className="rounded-2xl border border-border bg-surface/20 p-6">
-          {active === "seo" && <SeoSection data={seo} />}
-          {active === "sitio" && <SiteSection data={site} />}
-          {active === "hero" && <HeroSection data={hero} />}
-          {active === "alianza" && <AlianzaSection data={mepielAlianza} />}
-          {active === "logoSpin" && <LogoSpinSection data={logoSpin} />}
-          {active === "queEs" && <QueEsSection data={queEs} />}
-          {active === "ediciones" && <EditionsSection modalData={editionsModal} panelData={editionsPanel} />}
-          {active === "labsSection" && <SectionHeaderEditor data={labsSection} settingKey="labsSection" />}
-          {active === "expositores" && <SectionHeaderEditor data={expositoresSection} settingKey="expositoresSection" />}
-          {active === "registro" && <RegistroSection data={registroSection} />}
-          {active === "footer" && <FooterSection data={footer} />}
-          {active === "labsList" && <LabsListSection data={labsList} />}
-        </div>
-      )}
-    </SectionTabs>
+    <div className="rounded-2xl border border-border bg-surface/20 p-6">
+      {slug === "seo" && <SeoEditor data={content.seo} />}
+      {slug === "sitio" && <SiteEditor data={content.site} />}
+      {slug === "hero" && <HeroEditor data={content.hero} />}
+      {slug === "alianza" && <AlianzaEditor data={content.mepielAlianza} />}
+      {slug === "logoSpin" && <LogoSpinEditor data={content.logoSpin} />}
+      {slug === "queEs" && <QueEsEditor data={content.queEs} />}
+      {slug === "ediciones" && <EditionsEditor modalData={content.editionsModal} panelData={content.editionsPanel} />}
+      {slug === "labsSection" && <SectionHeaderEditor data={content.labsSection} settingKey="labsSection" />}
+      {slug === "expositores" && <SectionHeaderEditor data={content.expositoresSection} settingKey="expositoresSection" />}
+      {slug === "registro" && <RegistroEditor data={content.registroSection} />}
+      {slug === "footer" && <FooterEditor data={content.footer} />}
+      {slug === "labsList" && <LabsListEditor data={content.labsList} />}
+    </div>
   );
 }

@@ -1,4 +1,15 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/cn";
+import {
+  Card as ShadcnCard,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/shadcn/card";
+import { Button as ShadcnButton } from "@/components/shadcn/button";
+import { Input as ShadcnInput } from "@/components/shadcn/input";
+import { Badge as ShadcnBadge } from "@/components/shadcn/badge";
 
 export function Card({
   title,
@@ -12,24 +23,20 @@ export function Card({
   actions?: ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-border bg-surface/30 p-6">
+    <ShadcnCard>
       {(title || actions) && (
-        <div className="mb-5 flex items-start justify-between gap-4">
+        <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
           <div>
-            {title && (
-              <h2 className="font-display text-lg font-semibold text-fg">
-                {title}
-              </h2>
-            )}
+            {title && <CardTitle>{title}</CardTitle>}
             {description && (
-              <p className="mt-1 text-sm text-muted">{description}</p>
+              <CardDescription className="mt-1">{description}</CardDescription>
             )}
           </div>
           {actions}
-        </div>
+        </CardHeader>
       )}
-      {children}
-    </section>
+      <CardContent>{children}</CardContent>
+    </ShadcnCard>
   );
 }
 
@@ -48,36 +55,40 @@ export function Field({
     <div className="min-w-0">
       <label
         htmlFor={htmlFor}
-        className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted"
+        className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted-foreground"
       >
         {label}
       </label>
       {children}
-      {hint && <p className="mt-1 text-xs text-muted/80">{hint}</p>}
+      {hint && <p className="mt-1 text-xs text-muted-foreground/80">{hint}</p>}
     </div>
   );
 }
 
-const inputClass =
-  "w-full rounded-lg border border-border bg-surface/60 px-3 py-2 text-sm text-fg outline-none transition placeholder:text-muted/60 focus:border-accent/60 focus:ring-2 focus:ring-accent/15";
+const inputClass = "h-9 w-full";
 
 export function TextInput(props: React.ComponentProps<"input">) {
   const { className = "", ...rest } = props;
-  return <input {...rest} className={`${inputClass} ${className}`} />;
+  return <ShadcnInput {...rest} className={cn(inputClass, className)} />;
 }
 
 export function TextArea(props: React.ComponentProps<"textarea">) {
   const { className = "", ...rest } = props;
-  return <textarea {...rest} className={`${inputClass} min-h-[90px] ${className}`} />;
+  return <textarea {...rest} className={cn("h-auto min-h-[90px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm", className)} />;
 }
 
 export function Select(props: React.ComponentProps<"select">) {
   const { className = "", ...rest } = props;
-  return <select {...rest} className={`${inputClass} ${className}`} />;
+  return (
+    <select
+      {...rest}
+      className={cn(
+        "h-9 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+    />
+  );
 }
-
-const buttonBase =
-  "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-60";
 
 export function Button({
   variant = "primary",
@@ -86,17 +97,14 @@ export function Button({
 }: React.ComponentProps<"button"> & {
   variant?: "primary" | "ghost" | "danger" | "subtle";
 }) {
-  const variants = {
-    primary: "bg-accent text-dark hover:brightness-110",
-    ghost: "border border-border text-fg hover:bg-fg/5",
-    danger: "bg-error/15 text-error hover:bg-error/25",
-    subtle: "bg-surface/70 text-fg hover:bg-fg/10",
-  };
+  const variantMap = {
+    primary: "default",
+    ghost: "ghost",
+    danger: "destructive",
+    subtle: "secondary",
+  } as const;
   return (
-    <button
-      {...rest}
-      className={`${buttonBase} ${variants[variant]} ${className}`}
-    />
+    <ShadcnButton variant={variantMap[variant]} className={className} {...rest} />
   );
 }
 
@@ -115,12 +123,12 @@ export function SubmitButton({
 }
 
 const badgeTones = {
-  pendiente: "bg-amber-400/10 text-amber-300 border-amber-400/20",
-  aprobado: "bg-emerald-400/10 text-emerald-300 border-emerald-400/20",
-  rechazado: "bg-red-400/10 text-red-300 border-red-400/20",
-  neutral: "bg-fg/5 text-muted border-border",
-  accent: "bg-accent/10 text-accent border-accent/20",
-};
+  pendiente: "bg-amber-500/10 text-amber-600 border-amber-500/20 dark:text-amber-400",
+  aprobado: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 dark:text-emerald-400",
+  rechazado: "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400",
+  neutral: "bg-secondary text-muted-foreground border-transparent",
+  accent: "bg-primary/10 text-primary border-transparent",
+} as const;
 
 export function Badge({
   tone = "neutral",
@@ -130,18 +138,22 @@ export function Badge({
   children: ReactNode;
 }) {
   return (
-    <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize ${badgeTones[tone]}`}
+    <ShadcnBadge
+      variant="outline"
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium capitalize",
+        badgeTones[tone],
+      )}
     >
       {children}
-    </span>
+    </ShadcnBadge>
   );
 }
 
 export function EmptyState({ message }: { message: string }) {
   return (
-    <p className="rounded-xl border border-dashed border-border px-4 py-8 text-center text-sm text-muted">
+    <div className="rounded-xl border border-dashed border-border px-4 py-10 text-center text-sm text-muted-foreground">
       {message}
-    </p>
+    </div>
   );
 }

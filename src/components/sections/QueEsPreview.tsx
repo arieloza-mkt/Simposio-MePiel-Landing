@@ -51,7 +51,7 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
         </p>
 
         <ul className="m-0 mt-4 grid list-none gap-3 p-0 sm:grid-cols-2">
-          {queEs.experienceItems.slice(0, 4).map((text, i) => (
+          {queEs.experienceItems.map((text, i) => (
             <li
               key={i}
               className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4"

@@ -44,7 +44,7 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
 
   return (
     <div
-      className="group relative flex items-center gap-4"
+      className="group relative flex items-center gap-4 max-sm:gap-2"
       role="region"
       aria-label={label}
     >
@@ -52,7 +52,7 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
       <button
         onClick={scrollPrev}
         aria-label="Anterior"
-        className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-accent"
+        className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-accent sm:h-10 sm:w-10"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
           <path d="M15 18l-6-6 6-6" />
@@ -65,13 +65,13 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
           {items.map((item) => (
             <div
               key={item.name}
-              className="min-w-0 shrink-0 basis-1/5 px-3"
+              className="min-w-0 shrink-0 basis-1/2 sm:basis-1/3 md:basis-1/4 px-3"
             >
               <div className="flex items-center justify-center py-4">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="max-h-16 max-w-[160px] object-contain dark:brightness-0 dark:invert"
+                  className="max-h-24 max-w-[200px] object-contain dark:brightness-0 dark:invert"
                   loading="lazy"
                 />
               </div>
@@ -84,7 +84,7 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
       <button
         onClick={scrollNext}
         aria-label="Siguiente"
-        className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-accent"
+        className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-border bg-surface text-muted transition-colors hover:border-accent hover:text-accent sm:h-10 sm:w-10"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
           <path d="M9 18l6-6-6-6" />

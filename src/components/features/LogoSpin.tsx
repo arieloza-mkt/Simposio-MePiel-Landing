@@ -36,8 +36,10 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
     let slideDistance = 800;
 
     const computeSlideDistance = () => {
-      slideDistance =
+      const ideal =
         window.innerWidth / 2 + circle.offsetWidth / 2 + SLIDE_BUFFER;
+      // En pantallas pequeñas evitamos que el círculo salga por completo
+      slideDistance = Math.min(ideal, window.innerWidth - circle.offsetWidth);
     };
 
     const update = () => {

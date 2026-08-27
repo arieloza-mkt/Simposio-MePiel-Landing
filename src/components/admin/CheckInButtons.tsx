@@ -26,8 +26,8 @@ export function RegistrationCheckInButton({
       }
       className={`rounded-lg border px-4 py-2 text-sm font-medium transition disabled:opacity-50 ${
         checkedIn
-          ? "border-emerald-400/40 bg-emerald-400/15 text-emerald-200"
-          : "border-accent/40 bg-accent text-dark hover:brightness-110"
+          ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+          : "bg-primary text-primary-foreground hover:bg-primary/90"
       }`}
     >
       {pending ? "…" : checkedIn ? "✓ Ingresó — deshacer" : "Registrar entrada"}
@@ -55,8 +55,8 @@ export function SpeakerCheckInButton({
       }
       className={`shrink-0 rounded-md border px-2.5 py-1 text-xs font-medium transition disabled:opacity-50 ${
         checkedIn
-          ? "border-accent/40 bg-accent/20 text-accent"
-          : "border-border bg-surface/50 text-muted hover:bg-fg/10 hover:text-fg"
+          ? "bg-primary/15 text-primary border-primary/40"
+          : "border-border text-muted-foreground hover:bg-secondary hover:text-foreground"
       }`}
     >
       {pending ? "…" : checkedIn ? "✓ En backstage" : "Entrada expo"}

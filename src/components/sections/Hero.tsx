@@ -38,7 +38,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   const heroVideoId = hero.videoId;
 
   return (
-    <section id="inicio" className="relative overflow-hidden bg-dark px-8 pt-[clamp(120px,18vw,180px)] pb-[clamp(56px,10vw,120px)] text-white">
+    <section id="inicio" className="relative overflow-hidden bg-dark pt-[clamp(120px,18vw,180px)] pb-[clamp(56px,10vw,120px)] text-white">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <motion.div
           style={reducedMotion ? undefined : { y: backdropY }}
@@ -99,7 +99,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
         >
           <motion.h1
             variants={heroChild}
-            className="mb-5 font-display text-[clamp(44px,6vw,76px)] font-bold leading-[1.04] tracking-tight text-white"
+            className="mb-5 font-display text-[clamp(38px,6vw,76px)] font-bold leading-[1.04] tracking-tight text-white"
           >
             {hero.headline}
           </motion.h1>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark ([data-theme="dark"] &);
 
@@ -37,6 +38,76 @@
   --color-fg: #E8E4DF;
   --color-muted: #8891A0;
   --color-border: #1A2540;
+}
+
+/* ===== Design system shadcn ===== */
+:root {
+  --background: #F5F3EF;
+  --foreground: #1C1C22;
+  --card: #FFFFFF;
+  --card-foreground: #1C1C22;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1C22;
+  --primary: #2EC5E8;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F1EFEA;
+  --secondary-foreground: #1C1C22;
+  --muted: #F1F0EC;
+  --muted-foreground: #7A7A82;
+  --accent: #F1EFEA;
+  --accent-foreground: #1C1C22;
+  --destructive: #e6394a;
+  --destructive-foreground: #FFFFFF;
+  --border: #DDD9D3;
+  --input: #DDD9D3;
+  --ring: #2EC5E8;
+  --radius: 0.75rem;
+}
+
+[data-theme="dark"] {
+  --background: #080E1A;
+  --foreground: #E8E4DF;
+  --card: #0F1A2E;
+  --card-foreground: #E8E4DF;
+  --popover: #0F1A2E;
+  --popover-foreground: #E8E4DF;
+  --primary: #2EC5E8;
+  --primary-foreground: #0B1426;
+  --secondary: #111D33;
+  --secondary-foreground: #E8E4DF;
+  --muted: #111D33;
+  --muted-foreground: #8891A0;
+  --accent: #111D33;
+  --accent-foreground: #E8E4DF;
+  --destructive: #e6394a;
+  --destructive-foreground: #FFFFFF;
+  --border: #1A2540;
+  --input: #1A2540;
+  --ring: #2EC5E8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
 }
 
 [data-theme="dark"] body {

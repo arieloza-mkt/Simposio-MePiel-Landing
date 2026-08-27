@@ -21,6 +21,11 @@ import {
   BookOpen,
   FlaskConical,
 } from "lucide-react";
+import {
+  Card,
+  CardContent,
+} from "@/components/shadcn/card";
+import { cn } from "@/lib/cn";
 
 async function getCounts() {
   await ensureDb();
@@ -68,27 +73,39 @@ function StatCard({
   accent?: boolean;
 }) {
   const content = (
-    <div
-      className={`flex items-start gap-4 rounded-2xl border p-5 transition ${
-        accent
-          ? "border-accent/25 bg-accent/[0.05] shadow-sm shadow-accent/5"
-          : "border-border bg-surface/30 hover:border-border hover:bg-surface/50"
-      } ${href ? "cursor-pointer" : ""}`}
+    <Card
+      className={cn(
+        "h-full transition-colors",
+        accent ? "border-primary/25" : "hover:border-border/80",
+      )}
     >
-      <div
-        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
-          accent ? "bg-accent/15 text-accent" : "bg-fg/5 text-muted"
-        }`}
-      >
-        <Icon className="h-5 w-5" strokeWidth={1.8} />
-      </div>
-      <div>
-        <p className="font-display text-2xl font-bold tracking-tight">{value}</p>
-        <p className="mt-0.5 text-sm text-muted">{label}</p>
-      </div>
-    </div>
+      <CardContent className="flex items-start gap-4 p-5">
+        <div
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
+            accent
+              ? "bg-primary/15 text-primary"
+              : "bg-secondary text-muted-foreground",
+          )}
+        >
+          <Icon className="h-5 w-5" strokeWidth={1.8} />
+        </div>
+        <div>
+          <p className="font-display text-2xl font-bold leading-none tracking-tight">
+            {value}
+          </p>
+          <p className="mt-1.5 text-sm text-muted-foreground">{label}</p>
+        </div>
+      </CardContent>
+    </Card>
   );
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? (
+    <Link href={href} className="block h-full">
+      {content}
+    </Link>
+  ) : (
+    content
+  );
 }
 
 export default async function AdminResumenPage() {

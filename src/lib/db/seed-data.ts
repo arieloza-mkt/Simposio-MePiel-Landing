@@ -148,7 +148,8 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
       { value: "+60", label: "Laboratorios" },
       { value: "+80", label: "Conferencias" },
     ],
-    videoId: "SShlS6r6ZRg",
+    videoId:
+      "https://1t0z4lon9s.ucarecd.net/fe7e3a99-507a-4c7d-b87c-becccf561016/simposio.mp4",
     backdropUrl:
       "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
     images: [

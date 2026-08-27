@@ -13,11 +13,19 @@ interface EdicionPanelProps {
   modalSettings?: EditionsModalSettings;
 }
 
-export function EdicionPanel({ edition, speakers, viewMoreText = "Ver más", modalSettings }: EdicionPanelProps) {
+export function EdicionPanel({
+  edition,
+  speakers,
+  viewMoreText = "Ver más",
+  modalSettings,
+}: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);
 
+  const hasVideo = Boolean(edition.videoId);
+  const hasImages = edition.images.length > 0;
+
   return (
-    <div className="absolute inset-0 flex items-center py-[clamp(48px,8vw,96px)]">
+    <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-start py-[clamp(48px,8vw,96px)]">
       {edition.backdropUrl ? (
         <>
           <img
@@ -56,9 +64,9 @@ export function EdicionPanel({ edition, speakers, viewMoreText = "Ver más", mod
             <p className="mt-6 mb-0 text-[17px] leading-relaxed text-white/55">
               {edition.description}
             </p>
-            <div className="mt-[clamp(32px,4vw,56px)] grid grid-cols-3 gap-5 max-sm:gap-3">
+            <div className="mt-[clamp(32px,4vw,56px)] grid grid-cols-3 gap-4 sm:gap-5">
               {edition.stats.map((s) => (
-                <div key={s.label}>
+                <div key={s.label} className="min-w-0">
                   <div className="font-display text-[clamp(24px,3vw,32px)] font-bold leading-none text-accent">
                     {s.value}
                   </div>
@@ -88,24 +96,38 @@ export function EdicionPanel({ edition, speakers, viewMoreText = "Ver más", mod
             </button>
           </div>
 
-          {edition.videoId ? (
-            <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/40">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${edition.videoId}?rel=0`}
-                title={`Video de la ${edition.ordinal} edición`}
-                className="absolute inset-0 h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-                loading="lazy"
-              />
-            </div>
-          ) : (
-            <PhotoCarousel
-              images={edition.images}
-              className="max-md:aspect-[16/10]"
-            />
-          )}
+          <div className="min-w-0 flex flex-col gap-[clamp(20px,3vw,32px)]">
+            {hasVideo ? (
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/40">
+                {edition.videoId!.startsWith("http") ? (
+                  <video
+                    src={edition.videoId!}
+                    title={`Video de la ${edition.ordinal} edición`}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    controls={false}
+                  />
+                ) : (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${edition.videoId}?rel=0`}
+                    title={`Video de la ${edition.ordinal} edición`}
+                    className="absolute inset-0 h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    loading="lazy"
+                  />
+                )}
+              </div>
+            ) : null}
+
+            {hasImages ? (
+              <PhotoCarousel images={edition.images} className="max-md:aspect-[16/10]" />
+            ) : null}
+          </div>
         </div>
       </Container>
 
