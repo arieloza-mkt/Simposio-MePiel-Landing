@@ -10,6 +10,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { CronogramaModal } from "@/components/features/CronogramaModal";
+import { getYoutubeId } from "@/lib/video";
 
 function LiveBadge({ isLive }: { isLive: boolean }) {
   return (
@@ -45,7 +46,8 @@ export function Transmision({
   eventConfig: EventConfig;
 }) {
   const [scheduleOpen, setScheduleOpen] = useState(false);
-  const hasStream = Boolean(transmision.videoId) && transmision.isLive;
+  const streamId = transmision.videoId ? getYoutubeId(transmision.videoId) : null;
+  const hasStream = Boolean(streamId) && transmision.isLive;
 
   return (
     <Section id="transmision" dark className="relative overflow-hidden">
@@ -86,7 +88,7 @@ export function Transmision({
           {hasStream ? (
             <div className="relative aspect-video overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/50">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${transmision.videoId}?rel=0`}
+                src={`https://www.youtube-nocookie.com/embed/${streamId}?rel=0`}
                 title="Transmisión en vivo del Simposio Dermocosmético"
                 className="absolute inset-0 h-full w-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -123,7 +125,7 @@ export function Transmision({
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             {hasStream ? (
               <a
-                href={`https://www.youtube.com/watch?v=${transmision.videoId}`}
+                href={`https://www.youtube.com/watch?v=${streamId}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={DARK_BUTTON}

@@ -5,6 +5,7 @@ import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { PhotoCarousel } from "./PhotoCarousel";
 import { EditionDetailModal } from "./EditionDetailModal";
+import { getYoutubeId } from "@/lib/video";
 
 interface EdicionPanelProps {
   edition: Edition;
@@ -23,6 +24,7 @@ export function EdicionPanel({
 
   const hasVideo = Boolean(edition.videoId);
   const hasImages = edition.images.length > 0;
+  const editionYoutubeId = edition.videoId ? getYoutubeId(edition.videoId) : null;
 
   return (
     <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-center py-[clamp(48px,8vw,96px)]">
@@ -99,9 +101,9 @@ export function EdicionPanel({
           <div className="min-w-0 flex flex-col gap-[clamp(20px,3vw,32px)]">
             {hasVideo ? (
               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/40">
-                {edition.videoId!.startsWith("http") ? (
+                {edition.videoId && !editionYoutubeId ? (
                   <video
-                    src={edition.videoId!}
+                    src={edition.videoId}
                     title={`Video de la ${edition.ordinal} edición`}
                     className="absolute inset-0 h-full w-full object-cover"
                     autoPlay
@@ -112,7 +114,7 @@ export function EdicionPanel({
                   />
                 ) : (
                   <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${edition.videoId}?rel=0`}
+                    src={`https://www.youtube-nocookie.com/embed/${editionYoutubeId}?rel=0`}
                     title={`Video de la ${edition.ordinal} edición`}
                     className="absolute inset-0 h-full w-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

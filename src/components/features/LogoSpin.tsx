@@ -113,6 +113,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
 
   return (
     <div
+      id="acerca"
       ref={wrapperRef}
       aria-hidden
       className="relative h-[260vh] select-none"

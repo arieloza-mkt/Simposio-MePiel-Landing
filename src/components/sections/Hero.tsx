@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import type { HeroSettings, SiteInfo } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
+import { getYoutubeId } from "@/lib/video";
 
 const heroChildren = {
   hidden: {},
@@ -36,6 +37,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   const { scrollY } = useScroll();
   const backdropY = useTransform(scrollY, [0, 900], [0, 240]);
   const heroVideoId = hero.videoId;
+  const heroYoutubeId = heroVideoId ? getYoutubeId(heroVideoId) : null;
 
   return (
     <section id="inicio" className="relative overflow-hidden bg-dark pt-[clamp(120px,18vw,180px)] pb-[clamp(56px,10vw,120px)] text-white">
@@ -45,7 +47,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           className="absolute inset-0"
         >
           <div className="absolute inset-0 overflow-hidden">
-            {heroVideoId ? (
+            {heroVideoId && !heroYoutubeId ? (
               <video
                 autoPlay
                 loop
@@ -55,15 +57,15 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
               >
                 <source src={heroVideoId} type="video/mp4" />
               </video>
-            ) : (
+            ) : heroYoutubeId ? (
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${heroVideoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroVideoId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+                src={`https://www.youtube-nocookie.com/embed/${heroYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
                 title="Video de fondo del Simposio Dermocosmético"
                 allow="autoplay; encrypted-media"
                 referrerPolicy="strict-origin-when-cross-origin"
                 className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.55]"
               />
-            )}
+            ) : null}
           </div>
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/45 to-dark" />
