@@ -40,7 +40,10 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   const heroYoutubeId = heroVideoId ? getYoutubeId(heroVideoId) : null;
 
   return (
-    <section id="inicio" className="relative overflow-hidden bg-dark pt-[clamp(120px,18vw,180px)] pb-[clamp(56px,10vw,120px)] text-white">
+    <section
+      id="inicio"
+      className="relative flex min-h-svh flex-col overflow-hidden bg-dark pt-[clamp(96px,14vw,140px)] pb-[clamp(40px,8vw,88px)] text-white"
+    >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <motion.div
           style={reducedMotion ? undefined : { y: backdropY }}
@@ -103,7 +106,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
         className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-[0.05]"
       />
 
-      <Container className="relative">
+      <Container className="relative flex flex-1 flex-col justify-center">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -128,26 +131,43 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.6 }}
-          className="flex justify-center mt-12"
+          className="relative mt-12 flex flex-wrap justify-start gap-4"
         >
           <button
-            onClick={() => scrollTo("#alianza")}
-            aria-label="Scroll hacia abajo"
-            className="group rounded-full border border-white/15 p-3 transition-colors hover:border-accent hover:text-accent text-white/40"
+            onClick={() => scrollTo("#programa")}
+            className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3 text-sm font-semibold tracking-wide text-white transition hover:brightness-110 active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
           >
-            <motion.svg
+            Ver programa
+            <svg
+              aria-hidden
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-6 w-6"
-              animate={reducedMotion ? undefined : { y: [0, 6, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              className="h-4 w-4"
             >
-              <path d="M12 5v14M5 12l7 7 7-7" />
-            </motion.svg>
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </button>
+          <button
+            onClick={() => scrollTo("#ediciones")}
+            className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
+          >
+            Ver ediciones
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-4 w-4"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
           </button>
         </motion.div>
       </Container>
