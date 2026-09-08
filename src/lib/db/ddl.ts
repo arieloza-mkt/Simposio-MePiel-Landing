@@ -77,8 +77,25 @@ export const DDL_STATEMENTS: string[] = [
   )`,
   `ALTER TABLE registrations ADD COLUMN IF NOT EXISTS access_code TEXT`,
   `ALTER TABLE editions ADD COLUMN IF NOT EXISTS logo_url TEXT`,
+  `ALTER TABLE schedule_items ADD COLUMN IF NOT EXISTS day INTEGER NOT NULL DEFAULT 1`,
   `CREATE UNIQUE INDEX IF NOT EXISTS registrations_access_code_unique ON registrations (access_code)`,
   `ALTER TABLE speakers ADD COLUMN IF NOT EXISTS bio TEXT`,
   `ALTER TABLE speakers ADD COLUMN IF NOT EXISTS linkedin_url TEXT`,
   `ALTER TABLE speakers ADD COLUMN IF NOT EXISTS website_url TEXT`,
+  `CREATE TABLE IF NOT EXISTS programa_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    day INTEGER NOT NULL DEFAULT 2,
+    start_time TEXT NOT NULL DEFAULT '',
+    end_time TEXT NOT NULL DEFAULT '',
+    title TEXT NOT NULL,
+    speakers JSONB NOT NULL DEFAULT '[]'::jsonb,
+    salon TEXT,
+    nota TEXT,
+    kind TEXT NOT NULL DEFAULT 'conferencia',
+    modo TEXT,
+    sort_order INTEGER NOT NULL DEFAULT 0
+  )`,
+  // La tabla de logística ya no se usa (los recuadros del top se eliminaron).
+  `DROP TABLE IF EXISTS programa_logistica`,
+  `ALTER TABLE programa_items ADD COLUMN IF NOT EXISTS modo TEXT`,
 ];

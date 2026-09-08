@@ -15,6 +15,7 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
       Autoplay({
         delay: 2000,
         stopOnInteraction: false,
+        stopOnMouseEnter: true,
       }),
     [],
   );
@@ -47,6 +48,8 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
       className="group relative flex items-center gap-4 max-sm:gap-2"
       role="region"
       aria-label={label}
+      onMouseEnter={() => autoplay.stop()}
+      onMouseLeave={() => autoplay.play()}
     >
       {/* Arrow left */}
       <button
@@ -67,11 +70,11 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
               key={item.name}
               className="min-w-0 shrink-0 basis-1/2 sm:basis-1/3 md:basis-1/4 px-3"
             >
-              <div className="flex items-center justify-center py-4">
+              <div className="flex h-16 w-full max-w-[200px] items-center justify-center">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="max-h-24 max-w-[200px] object-contain dark:brightness-0 dark:invert"
+                  className="h-full w-full object-contain dark:brightness-0 dark:invert"
                   loading="lazy"
                 />
               </div>

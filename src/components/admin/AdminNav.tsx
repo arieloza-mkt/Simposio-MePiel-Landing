@@ -9,6 +9,7 @@ import {
   Calendar,
   BookOpen,
   FileText,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -16,6 +17,7 @@ const LINKS = [
   { href: "/admin", label: "Resumen", icon: LayoutDashboard },
   { href: "/admin/asistentes", label: "Asistentes", icon: Users },
   { href: "/admin/ponentes", label: "Ponentes", icon: Mic2 },
+  { href: "/admin/programa", label: "Programa", icon: ClipboardList },
   { href: "/admin/cronograma", label: "Cronograma", icon: Calendar },
   { href: "/admin/ediciones", label: "Ediciones", icon: BookOpen },
   { href: "/admin/contenido", label: "Contenido", icon: FileText },

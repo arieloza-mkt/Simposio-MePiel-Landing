@@ -13,7 +13,7 @@ export default async function AdminCronogramaPage() {
   const rows = await db
     .select()
     .from(scheduleItems)
-    .orderBy(scheduleItems.sortOrder, scheduleItems.time);
+    .orderBy(scheduleItems.day, scheduleItems.sortOrder, scheduleItems.time);
 
   return (
     <>
@@ -23,8 +23,8 @@ export default async function AdminCronogramaPage() {
             Cronograma
           </h1>
           <p className="mt-1 text-sm text-muted">
-            Actividades del día del evento. Se ordenan por hora de inicio y
-            alimentan el modal en la landing.
+            Programa del evento por día. Alimenta la sección Programa en la
+            landing.
           </p>
         </div>
         <NewScheduleItemForm />

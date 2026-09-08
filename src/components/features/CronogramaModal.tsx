@@ -12,9 +12,9 @@ const TAG_COLOR: Record<string, string> = {
   Cierre: "bg-fg",
 };
 
-type ItemStatus = "pasado" | "actual" | "proximo";
+export type ItemStatus = "pasado" | "actual" | "proximo";
 
-function zonedNow(tz: string): { date: string; minutes: number } {
+export function zonedNow(tz: string): { date: string; minutes: number } {
   const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: tz,
     hourCycle: "h23",
@@ -56,7 +56,7 @@ export function getItemStatuses(
   });
 }
 
-function ScheduleRow({
+export function ScheduleRow({
   item,
   status,
 }: {

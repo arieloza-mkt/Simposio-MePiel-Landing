@@ -65,10 +65,21 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
                 referrerPolicy="strict-origin-when-cross-origin"
                 className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.55]"
               />
-            ) : null}
+) : null}
           </div>
+          <div className="absolute inset-0" aria-hidden>
+            <div className="animate-aurora absolute -left-[22%] -top-[18%] h-[70vmax] w-[70vmax] rounded-full bg-[radial-gradient(circle,rgba(46,197,232,0.28),transparent_62%)] blur-3xl mix-blend-screen" />
+            <div
+              style={{ animationDelay: "-9s" }}
+              className="animate-aurora absolute -right-[18%] -top-[8%] h-[64vmax] w-[64vmax] rounded-full bg-[radial-gradient(circle,rgba(230,57,155,0.2),transparent_62%)] blur-3xl mix-blend-screen"
+            />
+            <div
+              style={{ animationDelay: "-17s" }}
+              className="animate-aurora absolute -bottom-[30%] left-[22%] h-[60vmax] w-[60vmax] rounded-full bg-[radial-gradient(circle,rgba(123,63,228,0.18),transparent_62%)] blur-3xl mix-blend-screen"
+            />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/45 to-dark" />
         </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/45 to-dark" />
         <div
           className="pointer-events-none absolute inset-0"
           style={{
@@ -132,7 +143,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
               strokeLinecap="round"
               strokeLinejoin="round"
               className="h-6 w-6"
-              animate={{ y: [0, 6, 0] }}
+              animate={reducedMotion ? undefined : { y: [0, 6, 0] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
             >
               <path d="M12 5v14M5 12l7 7 7-7" />

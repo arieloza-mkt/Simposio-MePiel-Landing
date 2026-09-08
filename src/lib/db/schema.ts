@@ -76,10 +76,25 @@ export const labs = pgTable("labs", {
 
 export const scheduleItems = pgTable("schedule_items", {
   id: uuid("id").primaryKey().defaultRandom(),
+  day: integer("day").notNull().default(1),
   time: text("time").notNull(),
   title: text("title").notNull(),
   description: text("description"),
   tag: text("tag").notNull().default("Conferencia"),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
+export const programaItems = pgTable("programa_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  day: integer("day").notNull().default(2),
+  start: text("start_time").notNull().default(""),
+  end: text("end_time").notNull().default(""),
+  title: text("title").notNull(),
+  speakers: jsonb("speakers").$type<string[]>().notNull().default([]),
+  salon: text("salon"),
+  nota: text("nota"),
+  kind: text("kind").notNull().default("conferencia"),
+  modo: text("modo"),
   sortOrder: integer("sort_order").notNull().default(0),
 });
 

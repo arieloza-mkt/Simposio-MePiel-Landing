@@ -5,7 +5,6 @@ import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { PhotoCarousel } from "./PhotoCarousel";
 import { EditionDetailModal } from "./EditionDetailModal";
-import { getYoutubeId } from "@/lib/video";
 
 interface EdicionPanelProps {
   edition: Edition;
@@ -22,9 +21,15 @@ export function EdicionPanel({
 }: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);
 
-  const hasVideo = Boolean(edition.videoId);
-  const hasImages = edition.images.length > 0;
-  const editionYoutubeId = edition.videoId ? getYoutubeId(edition.videoId) : null;
+  const slides = edition.videoId
+    ? [
+        {
+          src: edition.videoId,
+          alt: `Video de la ${edition.ordinal} edición`,
+        },
+        ...edition.images,
+      ]
+    : edition.images;
 
   return (
     <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-center py-[clamp(48px,8vw,96px)]">
@@ -99,35 +104,8 @@ export function EdicionPanel({
           </div>
 
           <div className="min-w-0 flex flex-col gap-[clamp(20px,3vw,32px)]">
-            {hasVideo ? (
-              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-lg)] border border-white/8 bg-black shadow-2xl shadow-black/40">
-                {edition.videoId && !editionYoutubeId ? (
-                  <video
-                    src={edition.videoId}
-                    title={`Video de la ${edition.ordinal} edición`}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    controls={false}
-                  />
-                ) : (
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${editionYoutubeId}?rel=0`}
-                    title={`Video de la ${edition.ordinal} edición`}
-                    className="absolute inset-0 h-full w-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    loading="lazy"
-                  />
-                )}
-              </div>
-            ) : null}
-
-            {hasImages ? (
-              <PhotoCarousel images={edition.images} className="max-md:aspect-[16/10]" />
+            {slides.length > 0 ? (
+              <PhotoCarousel images={slides} className="max-md:aspect-[16/10]" />
             ) : null}
           </div>
         </div>

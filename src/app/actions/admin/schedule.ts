@@ -8,6 +8,7 @@ import { scheduleItems } from "@/lib/db/schema";
 
 const scheduleItemSchema = z.object({
   id: z.string().uuid().optional(),
+  day: z.coerce.number().int().min(1).max(30).default(1),
   title: z.string().trim().min(2, "El título es obligatorio"),
   time: z
     .string()
@@ -34,6 +35,7 @@ export async function saveScheduleItem(
   const db = await getDbReady();
 
   const values = {
+    day: data.day,
     title: data.title,
     time: data.time,
     description: data.description || null,

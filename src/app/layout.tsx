@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Bebas_Neue, Montserrat } from "next/font/google";
+import { MotionConfig } from "framer-motion";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { getSeoSettings } from "@/lib/content";
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const bebas = Bebas_Neue({
+  variable: "--font-bebas",
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500", "600", "700"],
@@ -36,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${poppins.variable}`}
+      className={`${bebas.variable} ${montserrat.variable}`}
       data-theme="dark"
       suppressHydrationWarning
     >
@@ -48,7 +56,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <MotionConfig reducedMotion="user">
+          <ThemeProvider>{children}</ThemeProvider>
+        </MotionConfig>
       </body>
     </html>
   );

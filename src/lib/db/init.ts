@@ -6,6 +6,7 @@ import {
   EDITION_SEED,
   FAQ_SEED,
   LAB_SEED,
+  PROGRAMA_ITEM_SEED,
   SCHEDULE_SEED,
   SETTINGS_SEED,
   SPEAKER_SEED,
@@ -51,6 +52,19 @@ async function init(): Promise<void> {
   }
 
   // Backfill: código de acceso para registros creados antes de la migración.
+  // Programa (3 días): se siembra solo si la tabla está vacía,
+  // para no pisar las ediciones hechas desde /admin/programa.
+  const programCount = await db
+    .select({ id: schema.programaItems.id })
+    .from(schema.programaItems)
+    .limit(1);
+  if (programCount.length === 0) {
+    await db
+      .insert(schema.programaItems)
+      .values(PROGRAMA_ITEM_SEED)
+      .onConflictDoNothing();
+  }
+
   for (;;) {
     const missing = await db
       .select({ id: schema.registrations.id })

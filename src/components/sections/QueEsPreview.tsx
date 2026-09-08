@@ -1,6 +1,21 @@
 "use client";
 
+import { motion } from "framer-motion";
 import type { QueEsSettings } from "@/lib/content";
+
+const listVariant = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.06 } },
+};
+
+const itemVariant = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
 
 const EXPERIENCE_ICONS = [
   <>
@@ -50,11 +65,18 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
           {queEs.experienceIntro}
         </p>
 
-        <ul className="m-0 mt-4 grid list-none gap-3 p-0 sm:grid-cols-2">
+        <motion.ul
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={listVariant}
+          className="m-0 mt-4 grid list-none gap-3 p-0 sm:grid-cols-2"
+        >
           {queEs.experienceItems.map((text, i) => (
-            <li
+            <motion.li
               key={i}
-              className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4"
+              variants={itemVariant}
+              className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-transform duration-200 ease-[var(--ease-out-expo)] hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]"
             >
               <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#38bdf8]/15 text-[#38bdf8]">
                 <svg
@@ -73,9 +95,9 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
               <span className="pt-0.5 text-sm leading-snug">
                 {text}
               </span>
-            </li>
+            </motion.li>
           ))}
-        </ul>
+        </motion.ul>
       </div>
 
       {/* Columna derecha: imagen */}

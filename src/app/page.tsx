@@ -6,18 +6,20 @@ import { QueEsPreview } from "@/components/sections/QueEsPreview";
 import { MepielAlianza } from "@/components/sections/MepielAlianza";
 import { Laboratorios } from "@/components/sections/Laboratorios";
 import { Expositores } from "@/components/sections/Expositores";
-import { Registro } from "@/components/sections/Registro";
+import { Programa } from "@/components/sections/Programa";
 import { ScrollPinnedEditions } from "@/components/features/ScrollPinnedEditions";
 import { getLandingContent } from "@/lib/content";
+import { getProgramaData } from "@/lib/programa-store";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const content = await getLandingContent();
+  const programa = await getProgramaData();
 
   return (
     <>
-      <TopNav />
+      <TopNav editions={content.editions} />
       <main id="content">
         <Hero site={content.site} hero={content.hero} />
         <MepielAlianza alianza={content.mepielAlianza} />
@@ -31,6 +33,7 @@ export default async function Home() {
           viewMoreText={content.editionsPanel.viewMoreText}
           modalSettings={content.editionsModal}
         />
+        <Programa items={programa.items} />
         <Laboratorios
           labsList={content.labsList}
           eyebrow={content.labsSection.eyebrow}
@@ -41,7 +44,6 @@ export default async function Home() {
           eyebrow={content.expositoresSection.eyebrow}
           title={content.expositoresSection.title}
         />
-        <Registro settings={content.registroSection} />
       </main>
       <Footer settings={content.footer} />
     </>

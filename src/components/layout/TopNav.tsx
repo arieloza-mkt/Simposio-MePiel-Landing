@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { NAV_LINKS } from "@/lib/constants";
 import { useTheme } from "@/lib/theme-provider";
+import { scrollToEdition } from "@/lib/editions-nav";
 import { Container } from "./Container";
 
-export function TopNav() {
+export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("");
@@ -37,6 +38,11 @@ export function TopNav() {
         behavior: "smooth",
       });
     }
+  };
+
+  const goToEdition = (index: number) => {
+    setMobileOpen(false);
+    scrollToEdition(index);
   };
 
   const overDarkHero = !scrolled && resolved === "dark";
@@ -74,6 +80,52 @@ export function TopNav() {
             <nav className="hidden gap-8 md:flex">
             {NAV_LINKS.map((link) => {
               const isActive = activeHref === link.href;
+              if (link.href === "#ediciones") {
+                return (
+                  <div key={link.href} className="group relative">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        scrollTo(link.href);
+                      }}
+                      aria-current={isActive ? "true" : undefined}
+                      className={`flex items-center gap-1 py-1 text-sm transition-colors ${
+                        isActive
+                          ? "text-accent"
+                          : overDarkHero
+                            ? "text-white/70 hover:text-accent"
+                            : "text-fg hover:text-accent"
+                      }`}
+                    >
+                      {link.label}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-3.5 w-3.5 transition-transform duration-200 group-hover:rotate-180" aria-hidden>
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </button>
+                    <div className="pointer-events-none absolute left-1/2 top-full -translate-x-1/2 pt-2 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100">
+                      <div className="min-w-[190px] overflow-hidden rounded-xl border border-border bg-surface p-1.5 shadow-xl shadow-black/20">
+                        {editions && editions.length > 0 ? (
+                          editions.map((edition, index) => (
+                            <button
+                              key={index}
+                              type="button"
+                              onClick={() => goToEdition(index)}
+                              className="block w-full rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent/10 hover:text-accent"
+                            >
+                              {edition.ordinal} edición
+                            </button>
+                          ))
+                        ) : (
+                          <span className="block px-3 py-2 text-sm text-muted">
+                            Sin ediciones
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
               return (
                 <a
                   key={link.href}
@@ -172,7 +224,24 @@ export function TopNav() {
                 {link.label}
               </a>
             );
-          })}        </nav>
+          })}
+          {editions && editions.length > 0 && (
+            <div>
+              <p className="mb-1 mt-3 block border-t border-border px-0 pt-3 font-mono text-xs uppercase tracking-widest text-muted">
+                Ediciones
+              </p>
+              {editions.map((edition, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => goToEdition(index)}
+                  className="block w-full border-b border-border py-3 text-left text-base transition-colors last:border-b-0 hover:text-accent"
+                >
+                  {edition.ordinal} edición
+                </button>
+              ))}
+            </div>
+          )}        </nav>
       )}
     </header>
   );

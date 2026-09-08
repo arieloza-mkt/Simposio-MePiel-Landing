@@ -22,14 +22,27 @@
   --color-error: #e6394a;
   --color-live: #FF4D5E;
 
-  --font-display: var(--font-poppins), "Poppins", system-ui, sans-serif;
-  --font-body: var(--font-poppins), "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-bebas), "Bebas Neue", system-ui, sans-serif;
+  --font-body: var(--font-montserrat), "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
 
   --radius: 9999px;
   --radius-lg: 16px;
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Paleta del programa (referencias póster Foráneos / Local) */
+  --color-program-navy: #00104F;
+  --color-program-navy-dark: #011049;
+  --color-program-blue: #162D6E;
+  --color-program-purple: #8D53FC;
+  --color-program-purple-dark: #7C3AED;
+  --color-program-lilac: #DBD1EA;
+  --color-program-lilac-text: #B0A4D3;
+  --color-program-cyan: #12BDF2;
+  --color-program-turquoise: #49D5C9;
+  --color-program-white: #FEFEFF;
+  --color-program-orange: #FA6E67;
 }
 
 [data-theme="dark"] {
@@ -113,6 +126,13 @@
 [data-theme="dark"] body {
   background: var(--color-bg);
   color: var(--color-fg);
+}
+
+/* Bebas Neue solo tiene un peso (400) y necesita algo de aire:
+   neutraliza font-bold / tracking-tight heredados de Poppins. */
+.font-display {
+  font-weight: 400;
+  letter-spacing: 0.02em;
 }
 
 *,
@@ -205,6 +225,44 @@ h4 {
 
 .btn:focus-visible {
   outline-offset: 3px;
+}
+
+/* ===== Motion system =====
+   Aurora ambiental: manchas de gradiente de marca que derivan lentamente.
+   Línea de gradiente en movimiento (motivo: el ecosistema en circulación). */
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-10%, -8%, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(9%, 11%, 0) rotate(14deg);
+  }
+  100% {
+    transform: translate3d(-10%, -8%, 0) rotate(0deg);
+  }
+}
+
+.animate-aurora {
+  animation: aurora-drift 26s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-flow {
+  background-size: 220% 220%;
+  animation: gradient-flow 9s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

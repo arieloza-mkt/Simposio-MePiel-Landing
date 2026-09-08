@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { EdicionPanel } from "./EdicionPanel";
+import {
+  registerScrollToEdition,
+  unregisterScrollToEdition,
+} from "@/lib/editions-nav";
 
 export function ScrollPinnedEditions({
   editions,
@@ -54,6 +58,11 @@ export function ScrollPinnedEditions({
       wrapper.offsetTop + (idx * scrollable) / (editions.length - 1);
     window.scrollTo({ top: target, behavior: "smooth" });
   };
+
+  useEffect(() => {
+    registerScrollToEdition(goTo);
+    return () => unregisterScrollToEdition();
+  });
 
   return (
     <div ref={wrapperRef} id="ediciones" className="relative" style={{ height: "300vh" }}>

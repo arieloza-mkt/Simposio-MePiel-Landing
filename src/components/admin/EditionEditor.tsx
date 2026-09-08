@@ -9,6 +9,7 @@ import {
 import { Button, Field, TextArea, TextInput } from "@/components/admin/ui";
 import { FieldArray } from "@/components/admin/FieldArray";
 import { ImageField } from "@/components/admin/ImageField";
+import { getYoutubeId } from "@/lib/video";
 
 export interface EditionRowData {
   id: string;
@@ -121,9 +122,15 @@ function ImageGallery({
             <ImageField
               name={`img-${item.id}`}
               label="URL de imagen"
+              hint="Pega también un enlace de YouTube (youtube.com/watch…, youtu.be/…) para crear un slide de video."
               defaultValue={item.src}
               onChange={(url) => updateItem(i, "src", url)}
             />
+            {getYoutubeId(item.src) && (
+              <p className="rounded-md bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent">
+                Se mostrará como video de YouTube
+              </p>
+            )}
             <TextInput
               placeholder="Texto alternativo (alt)"
               value={item.alt}

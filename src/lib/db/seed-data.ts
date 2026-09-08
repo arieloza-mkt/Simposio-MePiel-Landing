@@ -3,9 +3,14 @@ import type {
   editions,
   faqItems,
   labs,
+  programaItems,
   scheduleItems,
   speakers,
 } from "./schema";
+import {
+  PROGRAMA_BY_DAY,
+  type ProgramaItem,
+} from "@/lib/programa";
 
 const sp = (n: number) =>
   `00000000-0000-4000-a000-${String(n).padStart(12, "0")}`;
@@ -17,6 +22,8 @@ const sch = (n: number) =>
   `00000000-0000-4000-d000-${String(n).padStart(12, "0")}`;
 const faq = (n: number) =>
   `00000000-0000-4000-e000-${String(n).padStart(12, "0")}`;
+const prog = (n: number) =>
+  `00000000-0000-4000-f000-${String(n).padStart(12, "0")}`;
 
 export const SPEAKER_SEED: (InferInsertModel<typeof speakers> & {
   id: string;
@@ -192,14 +199,55 @@ export const LAB_SEED: (InferInsertModel<typeof labs> & { id: string })[] =
 export const SCHEDULE_SEED: (InferInsertModel<typeof scheduleItems> & {
   id: string;
 })[] = [
-  { id: sch(1), time: "09:00", title: "Registro y check-in", description: "Acreditación de asistentes y acceso al recinto.", tag: "Activo", sortOrder: 1 },
-  { id: sch(2), time: "10:00", title: "[PENDIENTE: conferencia de apertura]", description: "Keynote de bienvenida a cargo de [PENDIENTE: nombre del ponente].", tag: "Conferencia", sortOrder: 2 },
-  { id: sch(3), time: "11:00", title: "[PENDIENTE: bloque de conferencias]", tag: "Conferencia", sortOrder: 3 },
-  { id: sch(4), time: "12:30", title: "Networking y descanso", description: "Coffee break y recorrido por los stands de exhibición.", tag: "Networking", sortOrder: 4 },
-  { id: sch(5), time: "13:30", title: "[PENDIENTE: panel de expertos]", description: "Mesa redonda con [PENDIENTE: nombres de los panelistas].", tag: "Panel", sortOrder: 5 },
-  { id: sch(6), time: "15:00", title: "[PENDIENTE: taller o actividad]", tag: "Activo", sortOrder: 6 },
-  { id: sch(7), time: "17:00", title: "[PENDIENTE: cierre del evento]", tag: "Cierre", sortOrder: 7 },
+  // Día 1 — Arranque y contexto de categoría
+  { id: sch(1), day: 1, time: "08:30", title: "Registro y check-in", description: "Acreditación de asistentes, entrega de gafete y acceso al recinto.", tag: "Activo", sortOrder: 1 },
+  { id: sch(2), day: 1, time: "09:30", title: "Conferencia de apertura", description: "Bienvenida institucional y presentación de la agenda del evento.", tag: "Conferencia", sortOrder: 2 },
+  { id: sch(3), day: 1, time: "10:15", title: "Panorama de la dermocosmética en México", description: "Datos de mercado, tendencias y proyecciones de la categoría para el año.", tag: "Conferencia", sortOrder: 3 },
+  { id: sch(4), day: 1, time: "11:15", title: "Coffee break y recorrido por stands", description: "Networking con laboratorios participantes y visita a la zona de exhibición.", tag: "Networking", sortOrder: 4 },
+  { id: sch(5), day: 1, time: "12:00", title: "Innovación en dermocosmética", description: "Casos de éxito en el desarrollo de productos y tecnologías de vanguardia.", tag: "Conferencia", sortOrder: 5 },
+  { id: sch(6), day: 1, time: "13:15", title: "Panel: el rol de la farmacia en la categoría", description: "Mesa redonda con líderes de canal y expertos de laboratorio.", tag: "Panel", sortOrder: 6 },
+  { id: sch(7), day: 1, time: "14:15", title: "Almuerzo de networking", description: "Comida en red con ponentes, laboratorios y asistentes.", tag: "Networking", sortOrder: 7 },
+  { id: sch(8), day: 1, time: "16:00", title: "Taller: tendencias de punto de venta", description: "Sesión práctica sobre surtido, exhibición y experiencia en anaquel.", tag: "Activo", sortOrder: 8 },
+  { id: sch(9), day: 1, time: "17:30", title: "Cierre del día 1", description: "Resumen de jornada y agenda del segundo día.", tag: "Cierre", sortOrder: 9 },
+
+  // Día 2 — Estrategia, marca y consumidor
+  { id: sch(10), day: 2, time: "09:00", title: "Registro y café de bienvenida", description: "Acreditación del segundo día y café de bienvenida.", tag: "Activo", sortOrder: 10 },
+  { id: sch(11), day: 2, time: "09:45", title: "Consumer health y cuidado de la piel", description: "El comportamiento del consumidor frente al cuidado de la piel.", tag: "Conferencia", sortOrder: 11 },
+  { id: sch(12), day: 2, time: "10:45", title: "Estrategias de marca y comunicación", description: "Cómo construir y comunicar marcas dermocosméticas relevantes.", tag: "Conferencia", sortOrder: 12 },
+  { id: sch(13), day: 2, time: "12:00", title: "Coffee break y zona de exhibición", description: "Pausa de networking y visita a stands.", tag: "Networking", sortOrder: 13 },
+  { id: sch(14), day: 2, time: "12:45", title: "Panel: omnicanalidad en dermocosmética", description: "Farmacias, clínicas y e-commerce: cómo integrar los canales.", tag: "Panel", sortOrder: 14 },
+  { id: sch(15), day: 2, time: "13:45", title: "Almuerzo de networking", description: "Comida en red con los participantes.", tag: "Networking", sortOrder: 15 },
+  { id: sch(16), day: 2, time: "15:30", title: "Taller: merchandising y anaquel", description: "Buenas prácticas para destacar la categoría en punto de venta.", tag: "Activo", sortOrder: 16 },
+  { id: sch(17), day: 2, time: "17:00", title: "Cierre del día 2", description: "Resumen de jornada y agenda del tercer día.", tag: "Cierre", sortOrder: 17 },
+
+  // Día 3 — Comunidad y cierre
+  { id: sch(18), day: 3, time: "09:00", title: "Registro y café de bienvenida", description: "Acreditación del tercer día y café de bienvenida.", tag: "Activo", sortOrder: 18 },
+  { id: sch(19), day: 3, time: "09:45", title: "Construyendo comunidad en la categoría", description: "Programas de fidelización y comunidades de profesionales.", tag: "Conferencia", sortOrder: 19 },
+  { id: sch(20), day: 3, time: "10:45", title: "El futuro del cuidado de la piel", description: "Sostenibilidad, personalización y nuevas tecnologías.", tag: "Conferencia", sortOrder: 20 },
+  { id: sch(21), day: 3, time: "11:45", title: "Coffee break y zona de exhibición", description: "Última oportunidad de networking con laboratorios.", tag: "Networking", sortOrder: 21 },
+  { id: sch(22), day: 3, time: "12:30", title: "Panel: líderes de la industria", description: "Conversación de cierre con directivos de los laboratorios participantes.", tag: "Panel", sortOrder: 22 },
+  { id: sch(23), day: 3, time: "13:45", title: "Almuerzo de cierre", description: "Comida final de networking entre asistentes y expositores.", tag: "Networking", sortOrder: 23 },
+  { id: sch(24), day: 3, time: "15:30", title: "Activación de cierre", description: "Experiencia final diseñada para reconocer a los aliados del evento.", tag: "Activo", sortOrder: 24 },
+  { id: sch(25), day: 3, time: "17:00", title: "Clausura oficial", description: "Mensaje de agradecimiento y anuncio de la próxima edición.", tag: "Cierre", sortOrder: 25 },
 ];
+
+export const PROGRAMA_ITEM_SEED: (InferInsertModel<typeof programaItems> & {
+  id: string;
+})[] = (Object.values(PROGRAMA_BY_DAY) as ProgramaItem[][])
+  .flat()
+  .map((item, i) => ({
+    id: prog(i + 1),
+    day: item.day,
+    start: item.start,
+    end: item.end,
+    title: item.title,
+    speakers: item.speakers ?? [],
+    salon: item.salon ?? null,
+    nota: item.nota ?? null,
+    kind: item.kind,
+    modo: item.modo ?? null,
+    sortOrder: i + 1,
+  }));
 
 export const FAQ_SEED: (InferInsertModel<typeof faqItems> & {
   id: string;

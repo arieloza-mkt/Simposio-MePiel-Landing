@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -48,7 +47,6 @@ function NavButtons() {
 }
 
 export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
-  const [activeIndex, setActiveIndex] = useState(0);
 
   if (speakers.length === 0) {
     return (
@@ -75,33 +73,31 @@ export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
           }}
           breakpoints={{
             640: { slidesPerView: 2 },
-            1024: { slidesPerView: 4 },
-            1280: { slidesPerView: 5 },
-            1536: { slidesPerView: 6 },
+            1024: { slidesPerView: 3 },
+            1280: { slidesPerView: 4 },
           }}
-          onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
           className="w-full"
         >
           {speakers.map((speaker) => (
             <SwiperSlide key={speaker.id} className="h-auto py-1">
-              <figure className="m-0 flex h-full w-full flex-col">
+              <figure className="group m-0 flex h-full w-full flex-col transition-all duration-300 ease-[var(--ease-out-expo)] hover:-translate-y-1.5">
                 {speaker.imageUrl ? (
                   <img
                     src={speaker.imageUrl}
                     alt={`Retrato de ${speaker.name}`}
                     loading="lazy"
-                    className="mb-4 aspect-[4/5] w-full rounded-[var(--radius-lg)] border border-border object-cover"
+                    className="mb-4 aspect-[4/5] w-full rounded-[var(--radius-lg)] border border-border object-cover transition-colors duration-300 group-hover:border-accent/50"
                   />
                 ) : (
                   <div
                     aria-hidden
-                    className="mb-4 grid aspect-[4/5] w-full place-items-center rounded-[var(--radius-lg)] border border-border bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_12%,transparent),color-mix(in_srgb,var(--color-fg)_6%,transparent))] font-display text-[clamp(28px,3vw,40px)] font-bold text-accent/70"
+                    className="mb-4 grid aspect-[4/5] w-full place-items-center rounded-[var(--radius-lg)] border border-border bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent)_12%,transparent),color-mix(in_srgb,var(--color-fg)_6%,transparent))] font-display text-[clamp(28px,3vw,40px)] font-bold text-accent/70 transition-colors duration-300 group-hover:border-accent/50"
                   >
                     {initials(speaker.name)}
                   </div>
                 )}
                 <figcaption>
-                  <div className="mb-1 text-[15px] font-semibold leading-snug">
+                  <div className="mb-1 text-[15px] font-semibold leading-snug transition-colors duration-300 group-hover:text-accent">
                     {speaker.name}
                   </div>
                   {speaker.role ? (
@@ -116,19 +112,6 @@ export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
           ))}
         </Swiper>
         <NavButtons />
-      </div>
-
-      <div className="mt-8 flex items-center justify-center">
-        <div className="flex gap-1.5">
-          {speakers.map((_, i) => (
-            <span
-              key={i}
-              className={`h-2 w-2 rounded-full transition-colors ${
-                i === activeIndex ? "bg-accent" : "bg-border"
-              }`}
-            />
-          ))}
-        </div>
       </div>
     </div>
   );

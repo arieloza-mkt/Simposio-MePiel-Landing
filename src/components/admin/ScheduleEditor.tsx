@@ -10,6 +10,7 @@ import { Button, Field, Select, TextArea, TextInput } from "@/components/admin/u
 
 export interface ScheduleRowData {
   id: string;
+  day: number;
   title: string;
   time: string;
   description: string | null;
@@ -17,6 +18,7 @@ export interface ScheduleRowData {
 }
 
 const TAGS = ["Conferencia", "Panel", "Networking", "Activo", "Cierre"] as const;
+const DAYS = [1, 2, 3] as const;
 
 function ScheduleFields({
   idPrefix,
@@ -24,6 +26,7 @@ function ScheduleFields({
 }: {
   idPrefix: string;
   defaults: {
+    day: number;
     title: string;
     time: string;
     description: string | null;
@@ -53,6 +56,15 @@ function ScheduleFields({
           required
         />
       </Field>
+      <Field label="Día" htmlFor={`${idPrefix}-day`}>
+        <Select id={`${idPrefix}-day`} name="day" defaultValue={String(defaults.day)}>
+          {DAYS.map((day) => (
+            <option key={day} value={day}>
+              Día {day}
+            </option>
+          ))}
+        </Select>
+      </Field>
       <Field label="Tipo" htmlFor={`${idPrefix}-tag`}>
         <Select id={`${idPrefix}-tag`} name="tag" defaultValue={defaults.tag}>
           {TAGS.map((tag) => (
@@ -77,6 +89,7 @@ function ScheduleFields({
 function parseInput(formData: FormData, id?: string): ScheduleItemInput {
   return {
     ...(id ? { id } : {}),
+    day: Number(formData.get("day") ?? 1),
     title: String(formData.get("title") ?? ""),
     time: String(formData.get("time") ?? "").slice(0, 5),
     description: String(formData.get("description") ?? "") || null,
@@ -101,6 +114,9 @@ export function ScheduleEditor({ item }: { item: ScheduleRowData }) {
         }`} />
         <span className="w-14 shrink-0 font-mono text-sm tabular-nums text-muted">
           {item.time}
+        </span>
+        <span className="w-12 shrink-0 rounded-md bg-surface/70 px-1.5 py-0.5 text-center font-mono text-xs text-muted">
+          Día {item.day}
         </span>
         <p className="min-w-0 flex-1 truncate font-medium">{item.title}</p>
         <span className="hidden text-xs text-muted sm:block">{item.tag}</span>
@@ -176,7 +192,7 @@ export function NewScheduleItemForm() {
     >
       <ScheduleFields
         idPrefix="new"
-        defaults={{ title: "", time: "09:00", description: null, tag: "Conferencia" }}
+        defaults={{ day: 1, title: "", time: "09:00", description: null, tag: "Conferencia" }}
       />
       <div className="mt-4 flex items-center gap-3">
         <Button type="submit" disabled={pending}>
