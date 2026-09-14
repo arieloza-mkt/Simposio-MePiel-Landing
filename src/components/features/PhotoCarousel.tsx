@@ -43,7 +43,10 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (mq.matches) return;
     const interval = setInterval(() => {
+      if (document.hidden) return;
       const current = emblaApi.selectedScrollSnap();
       if (images.length <= 1) return;
       // Pausa el autoplay mientras se muestra un video para poder verlo.
@@ -66,7 +69,7 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
                 <>
                   {i === selectedIndex ? (
                     <iframe
-                      src={`https://www.youtube-nocookie.com/embed/${youtubeIds[i]}?autoplay=1&mute=1&rel=0&playsinline=1`}
+                      src={`https://www.youtube-nocookie.com/embed/${youtubeIds[i]}?autoplay=1&mute=1&rel=0&playsinline=1&loop=1&playlist=${youtubeIds[i]}`}
                       title={slide.alt || `Video ${i + 1}`}
                       className="absolute inset-0 h-full w-full border-0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -103,7 +106,7 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
 
       <button
         onClick={scrollPrev}
-        className="absolute left-3 top-1/2 z-2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border-none bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white"
+        className="absolute left-3 top-1/2 z-2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border-none bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white max-md:h-11 max-md:w-11"
         aria-label="Anterior"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
@@ -113,7 +116,7 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
 
       <button
         onClick={scrollNext}
-        className="absolute right-3 top-1/2 z-2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border-none bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white"
+        className="absolute right-3 top-1/2 z-2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border-none bg-black/40 text-white/80 backdrop-blur-sm transition-colors hover:bg-black/60 hover:text-white max-md:h-11 max-md:w-11"
         aria-label="Siguiente"
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
@@ -125,12 +128,19 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
         {images.map((_, i) => (
           <button
             key={i}
+            type="button"
             onClick={() => scrollTo(i)}
-            className={`h-2 w-2 rounded-full border-none p-0 transition-colors ${
-              i === selectedIndex ? "bg-accent" : "bg-white/40"
-            }`}
+            className="grid h-6 w-6 place-items-center rounded-full border-none p-0 transition-colors"
             aria-label={`Foto ${i + 1}`}
-          />
+            aria-current={i === selectedIndex}
+          >
+            <span
+              aria-hidden
+              className={`block h-2 w-2 rounded-full transition-colors ${
+                i === selectedIndex ? "bg-accent" : "bg-white/40"
+              }`}
+            />
+          </button>
         ))}
       </div>
     </div>

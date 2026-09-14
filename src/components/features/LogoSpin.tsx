@@ -29,7 +29,11 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
     const preview = previewRef.current;
     if (!wrapper || !pin || !circle || !logo || !preview) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      preview.style.opacity = "1";
+      preview.style.pointerEvents = "auto";
+      return;
+    }
 
     let ticking = false;
     let rafId = 0;

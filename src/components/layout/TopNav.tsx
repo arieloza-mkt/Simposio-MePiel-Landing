@@ -54,30 +54,30 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
   const isDark = resolved === "dark";
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-surface/95 backdrop-blur-xl border-b border-border shadow-sm"
-          : overDarkHero
-            ? "bg-transparent"
-            : "bg-surface"
-      }`}
-    >
+    <header className="fixed top-0 left-0 right-0 z-50">
       <Container>
-        <div className="flex items-center justify-between py-3.5">
+<div
+  className={`flex items-center justify-between transition-all duration-500 ease-[var(--ease-out-expo)] ${
+    scrolled
+      ? "mx-auto mt-2 w-[80%] rounded-2xl border border-border bg-surface/60 px-8 py-3 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-2xl backdrop-saturate-150 animate-[nav-island_0.5s_var(--ease-out-expo)]"
+      : overDarkHero
+        ? "w-full bg-transparent px-6 py-4 sm:px-8"
+        : "w-full bg-surface px-6 py-4 sm:px-8"
+  }`}
+>
           <a href="#" className="flex items-center gap-2.5">
             <img
               src={isDark
                 ? "https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg"
                 : "https://res.cloudinary.com/cc4tium7/image/upload/v1787681794/logo-color.svg"}
               alt="Simposio Dermocosmético"
-              height={56}
-              className="h-12 w-auto transition-all duration-300 md:h-14"
+              height={96}
+              className="h-20 w-auto transition-all duration-300 md:h-24"
             />
           </a>
 
           <div className="flex items-center gap-2">
-            <nav className="hidden gap-8 md:flex">
+            <nav className="hidden items-center gap-1.5 md:flex">
             {NAV_LINKS.map((link) => {
               const isActive = activeHref === link.href;
               if (link.href === "#ediciones") {
@@ -90,12 +90,12 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                         scrollTo(link.href);
                       }}
                       aria-current={isActive ? "true" : undefined}
-                      className={`flex items-center gap-1 py-1 text-sm transition-colors ${
+                      className={`flex items-center gap-1 rounded-full px-4 py-2 text-base transition-all duration-300 ${
                         isActive
-                          ? "text-accent"
+                          ? "bg-accent/15 font-medium text-accent"
                           : overDarkHero
-                            ? "text-white/70 hover:text-accent"
-                            : "text-fg hover:text-accent"
+                            ? "text-white/70 hover:bg-white/10 hover:text-white"
+                            : "text-fg hover:bg-accent/10 hover:text-accent"
                       }`}
                     >
                       {link.label}
@@ -111,7 +111,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                               key={index}
                               type="button"
                               onClick={() => goToEdition(index)}
-                              className="block w-full rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-accent/10 hover:text-accent"
+                              className="block w-full rounded-lg px-3 py-2 text-left text-base transition-colors hover:bg-accent/10 hover:text-accent"
                             >
                               {edition.ordinal} edición
                             </button>
@@ -135,11 +135,13 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                     scrollTo(link.href);
                   }}
                   aria-current={isActive ? "true" : undefined}
-                  className={`group relative py-1 text-sm transition-colors after:absolute after:-bottom-0.5 after:left-0 after:h-[2px] after:w-full after:origin-left after:rounded-full after:bg-accent after:transition-transform after:duration-300 after:ease-[var(--ease-out-expo)] after:content-[''] ${
+                  className={`rounded-full px-4 py-2 text-base transition-all duration-300 ${
                     isActive
-                      ? "text-accent after:scale-x-100"
-                      : `after:scale-x-0 hover:text-accent hover:after:scale-x-100 ${
-                          overDarkHero ? "text-white/70" : "text-fg"
+                      ? "bg-accent/15 font-medium text-accent"
+                      : `${
+                          overDarkHero
+                            ? "text-white/70 hover:bg-white/10 hover:text-white"
+                            : "text-fg hover:bg-accent/10 hover:text-accent"
                         }`
                   }`}
                 >
@@ -151,7 +153,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
 
             <button
               onClick={toggleTheme}
-              className={`grid h-9 w-9 place-items-center rounded-full border transition-colors ${
+              className={`grid h-9 w-9 place-items-center rounded-full border transition-colors max-md:h-11 max-md:w-11 ${
                 overDarkHero
                   ? "border-white/15 text-white/70 hover:border-accent hover:text-accent"
                   : "border-border text-muted hover:border-accent hover:text-accent"

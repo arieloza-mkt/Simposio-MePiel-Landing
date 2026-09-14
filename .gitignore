@@ -27,6 +27,8 @@
 # tooling local
 /.impeccable/
 /.opencode/
+/.kilo/
+/.tmpdbg/
 .vscode/
 .idea/
 

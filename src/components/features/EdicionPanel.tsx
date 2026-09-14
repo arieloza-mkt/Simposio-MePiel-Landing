@@ -85,7 +85,7 @@ export function EdicionPanel({
             </div>
             <button
               onClick={() => setDetailOpen(true)}
-              className="group mt-[clamp(24px,3vw,40px)] inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
+              className="group mt-[clamp(24px,3vw,40px)] inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
             >
               {viewMoreText}
               <svg

@@ -265,6 +265,18 @@ h4 {
   animation: gradient-flow 9s ease-in-out infinite;
 }
 
+/* Nav tipo isla flotante */
+@keyframes nav-island {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -246,6 +246,7 @@ export const PROGRAMA_ITEM_SEED: (InferInsertModel<typeof programaItems> & {
     nota: item.nota ?? null,
     kind: item.kind,
     modo: item.modo ?? null,
+    icon: item.icon ?? "",
     sortOrder: i + 1,
   }));
 

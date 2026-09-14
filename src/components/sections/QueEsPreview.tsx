@@ -39,17 +39,17 @@ const EXPERIENCE_ICONS = [
 
 export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
   return (
-    <div className="grid grid-cols-12 items-center gap-x-[clamp(32px,5vw,72px)] gap-y-8 rounded-3xl border border-white/15 bg-white/[0.06] p-[clamp(24px,4vw,56px)] backdrop-blur-sm dark:border-0 dark:bg-[#0a1330]/90 text-left">
+    <div className="grid grid-cols-12 items-center gap-x-[clamp(32px,5vw,72px)] gap-y-8 rounded-3xl border border-white/15 bg-white/[0.06] p-[clamp(24px,4vw,56px)] backdrop-blur-sm dark:border-0 dark:bg-dark/90 text-left">
       {/* Columna izquierda: texto + íconos */}
       <div className="col-span-12 flex flex-col lg:col-span-7">
-        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-[#38bdf8]">
+        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-accent">
           {queEs.eyebrow}
         </p>
         <h2 className="m-0 font-display text-[clamp(22px,4vw,44px)] font-bold leading-[1.1] tracking-tight">
           {queEs.highlight ? (
             <>
               {queEs.title.split(queEs.highlight)[0]}
-              <span className="text-[#38bdf8]">{queEs.highlight}</span>
+              <span className="text-accent">{queEs.highlight}</span>
               {queEs.title.split(queEs.highlight)[1]}
             </>
           ) : (
@@ -78,7 +78,7 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
               variants={itemVariant}
               className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-transform duration-200 ease-[var(--ease-out-expo)] hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.07]"
             >
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#38bdf8]/15 text-[#38bdf8]">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-accent/15 text-accent">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"

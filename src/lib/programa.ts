@@ -1,3 +1,21 @@
+import {
+  BusFront,
+  ClipboardCheck,
+  Coffee,
+  Handshake,
+  Hotel,
+  Info,
+  MessagesSquare,
+  Music,
+  Plane,
+  Presentation,
+  Sparkles,
+  Sunset,
+  UtensilsCrossed,
+  Wrench,
+  type LucideIcon,
+} from "lucide-react";
+
 export type ProgramaItemKind =
   | "conferencia"
   | "conversatorio"
@@ -21,6 +39,8 @@ export type ProgramaItem = {
   kind: ProgramaItemKind;
   // Solo si el item aplica a una modalidad; vacío = ambas.
   modo?: ProgramaModo;
+  // Icono elegido en el admin; vacío = automático por tipo.
+  icon?: string;
   // [PENDIENTE CONFIRMAR] campos cuyo valor se leyó parcialmente del póster
   confirm?: string;
 };
@@ -29,12 +49,21 @@ export const PROGRAMA_MODO_FORANEOS = "FORÁNEOS";
 export const PROGRAMA_MODO_LOCALES = "LOCALES";
 export type ProgramaModo = typeof PROGRAMA_MODO_FORANEOS | typeof PROGRAMA_MODO_LOCALES;
 
+export const PROGRAMA_MODOS: { value: ProgramaModo; label: string }[] = [
+  { value: PROGRAMA_MODO_FORANEOS, label: "Foráneos" },
+  { value: PROGRAMA_MODO_LOCALES, label: "Locales" },
+];
+
 // 1 = Lunes 12 (llegada) · 2 = Martes 13 · 3 = Miércoles 14
 export const PROGRAMA_DIA_LABEL: Record<1 | 2 | 3, string> = {
   1: "LUNES 12",
   2: "MARTES 13",
   3: "MIÉRCOLES 14",
 };
+
+// Días visibles públicamente. El Miércoles 14 está oculto hasta habilitarlo
+// (basta con añadir 3 a esta lista).
+export const PUBLIC_DAYS: readonly (1 | 2 | 3)[] = [1, 2];
 
 export const PROGRAMA_VENUE = "La Casa de los Abanicos";
 export const PROGRAMA_VENUE_DIRECCION =
@@ -51,6 +80,47 @@ export const PROGRAMA_KINDS: { value: ProgramaItemKind; label: string }[] = [
   { value: "evento", label: "Evento especial" },
   { value: "logistica", label: "Logística / Llegada" },
 ];
+
+// Catálogo de iconos disponibles desde el admin (lucide-react).
+// "Automático" (vacío) asigna un icono según el tipo de la actividad.
+export const PROGRAMA_ICONS: {
+  value: string;
+  label: string;
+  Icon: LucideIcon;
+}[] = [
+  { value: "conferencia", label: "Conferencia", Icon: Presentation },
+  { value: "conversatorio", label: "Conversatorio", Icon: MessagesSquare },
+  { value: "taller", label: "Taller", Icon: Wrench },
+  { value: "negocios", label: "Rueda de negocios", Icon: Handshake },
+  { value: "break", label: "Break / Coffee", Icon: Coffee },
+  { value: "comida", label: "Comida", Icon: UtensilsCrossed },
+  { value: "libre", label: "Tiempo libre", Icon: Sunset },
+  { value: "evento", label: "Evento especial", Icon: Sparkles },
+  { value: "logistica", label: "Logística / Llegada", Icon: Info },
+  { value: "traslado", label: "Traslado", Icon: BusFront },
+  { value: "vuelo", label: "Vuelo / Aeropuerto", Icon: Plane },
+  { value: "hotel", label: "Hotel", Icon: Hotel },
+  { value: "celebracion", label: "Celebración", Icon: Music },
+  { value: "registro", label: "Registro", Icon: ClipboardCheck },
+];
+
+export const PROGRAMA_ICON_BY_KIND: Record<ProgramaItemKind, string> = {
+  conferencia: "conferencia",
+  conversatorio: "conversatorio",
+  taller: "taller",
+  negocios: "negocios",
+  break: "break",
+  comida: "comida",
+  libre: "libre",
+  evento: "evento",
+  logistica: "logistica",
+};
+
+export function getProgramaIcon(
+  value: string | null | undefined,
+): LucideIcon {
+  return PROGRAMA_ICONS.find((i) => i.value === value)?.Icon ?? Info;
+}
 
 // ---------------------------------------------------------------
 // DATOS EXTRAÍDOS DE LOS PÓSTERS DE REFERENCIA:

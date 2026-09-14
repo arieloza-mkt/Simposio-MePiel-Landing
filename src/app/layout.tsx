@@ -1,22 +1,26 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Montserrat } from "next/font/google";
+import Script from "next/script";
+import localFont from "next/font/local";
 import { MotionConfig } from "framer-motion";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { getSeoSettings } from "@/lib/content";
 
-const bebas = Bebas_Neue({
+const bebas = localFont({
+  src: [{ path: "./fonts/bebas-neue-400.woff2", weight: "400" }],
   variable: "--font-bebas",
-  subsets: ["latin"],
-  weight: ["400"],
   display: "swap",
 });
 
-const montserrat = Montserrat({
+const montserrat = localFont({
+  src: [
+    { path: "./fonts/montserrat-400.woff2", weight: "400" },
+    { path: "./fonts/montserrat-500.woff2", weight: "500" },
+    { path: "./fonts/montserrat-600.woff2", weight: "600" },
+    { path: "./fonts/montserrat-700.woff2", weight: "700" },
+  ],
   variable: "--font-montserrat",
-  subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -49,7 +53,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var h=document.documentElement;var s=localStorage.getItem("admin-theme");if(s==="light"||s==="dark"){h.setAttribute("data-theme",s);return}var p=new Intl.DateTimeFormat("en-GB",{timeZone:"America/Mexico_City",hour:"2-digit",hourCycle:"h23"}).format(new Date());var hour=parseInt(p,10);var dark=hour>=19||hour<7;h.setAttribute("data-theme",dark?"dark":"light")}catch(e){}})();`,
           }}

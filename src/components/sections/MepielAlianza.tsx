@@ -62,7 +62,7 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
 
           <div className="col-span-12 lg:col-span-7">
             <AnimatedSection animation="fade-up">
-              <h2 className="m-0 max-w-[22ch] font-display text-[clamp(32px,4.4vw,56px)] font-bold leading-[1.06] tracking-tight">
+              <h2 className="m-0 sm:max-w-lg max-w-xl font-display text-[clamp(32px,4.4vw,56px)] font-bold leading-[1.06] tracking-tight">
                 {alianza.highlight && title.length > 1 ? (
                   <>
                     {title[0]}
@@ -76,7 +76,7 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
             </AnimatedSection>
 
             <AnimatedSection animation="fade-up" className="mt-[clamp(28px,3vw,44px)]">
-              <div className="flex max-w-[58ch] flex-col gap-5">
+              <div className="flex sm:max-w-lg max-w-lg flex-col gap-5">
                 {alianza.paragraphs.map((text, i) => (
                   <p key={i} className={`m-0 leading-relaxed ${i === 0 ? "text-[19px]" : "text-muted text-[17px]"}`}>
                     {text}
