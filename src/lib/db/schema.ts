@@ -95,6 +95,7 @@ export const programaItems = pgTable("programa_items", {
   nota: text("nota"),
   kind: text("kind").notNull().default("conferencia"),
   modo: text("modo"),
+  icon: text("icon").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
 });
 

@@ -3,7 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LogoSpin } from "@/components/features/LogoSpin";
 import { QueEsPreview } from "@/components/sections/QueEsPreview";
-import { MepielAlianza } from "@/components/sections/MepielAlianza";
+import { SimposioDermocosmetico } from "@/components/sections/SimposioDermocosmetico";
 import { Laboratorios } from "@/components/sections/Laboratorios";
 import { Expositores } from "@/components/sections/Expositores";
 import { Programa } from "@/components/sections/Programa";
@@ -22,7 +22,7 @@ export default async function Home() {
       <TopNav editions={content.editions} />
       <main id="content">
         <Hero site={content.site} hero={content.hero} />
-        <MepielAlianza alianza={content.mepielAlianza} />
+        <SimposioDermocosmetico alianza={content.mepielAlianza} />
         <LogoSpin
           logoUrl={content.logoSpin.logoUrl}
           nextPreview={<QueEsPreview queEs={content.queEs} />}

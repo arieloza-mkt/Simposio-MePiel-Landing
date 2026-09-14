@@ -19,6 +19,7 @@ function mapItem(row: {
   nota: string | null;
   kind: string;
   modo: string | null;
+  icon: string;
 }): ProgramaItem {
   const day = row.day === 1 || row.day === 2 || row.day === 3 ? row.day : 2;
   return {
@@ -35,6 +36,7 @@ function mapItem(row: {
       row.modo === "FORÁNEOS" || row.modo === "LOCALES"
         ? row.modo
         : undefined,
+    icon: row.icon || undefined,
   };
 }
 

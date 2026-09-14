@@ -40,6 +40,11 @@ export function getDb(): Db {
   return globalForDb.__simposioDb;
 }
 
+export function resetDb(): void {
+  globalForDb.__simposioDb = undefined;
+  globalForDb.__simposioDbReady = undefined;
+}
+
 export async function getDbReady(): Promise<Db> {
   const db = getDb();
   await globalForDb.__simposioDbReady;

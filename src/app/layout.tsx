@@ -1,22 +1,25 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import { MotionConfig } from "framer-motion";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
 import { getSeoSettings } from "@/lib/content";
 
-const bebas = Bebas_Neue({
+const bebas = localFont({
+  src: [{ path: "./fonts/bebas-neue-400.woff2", weight: "400" }],
   variable: "--font-bebas",
-  subsets: ["latin"],
-  weight: ["400"],
   display: "swap",
 });
 
-const montserrat = Montserrat({
+const montserrat = localFont({
+  src: [
+    { path: "./fonts/montserrat-400.woff2", weight: "400" },
+    { path: "./fonts/montserrat-500.woff2", weight: "500" },
+    { path: "./fonts/montserrat-600.woff2", weight: "600" },
+    { path: "./fonts/montserrat-700.woff2", weight: "700" },
+  ],
   variable: "--font-montserrat",
-  subsets: ["latin"],
   display: "swap",
-  weight: ["400", "500", "600", "700"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {

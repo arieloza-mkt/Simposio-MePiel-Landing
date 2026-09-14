@@ -2,22 +2,25 @@
 
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { getYoutubeId } from "@/lib/video";
+import { cn } from "@/lib/cn";
 
-interface PhotoSlide {
-  src: string;
+interface ImageCarouselProps {
+  slides: string[];
   alt: string;
-}
-
-interface PhotoCarouselProps {
-  images: readonly PhotoSlide[];
+  aspectClassName?: string;
   className?: string;
+  autoplayIntervalMs?: number;
 }
 
-export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
+export function ImageCarousel({
+  slides,
+  alt,
+  aspectClassName = "aspect-[3/4]",
+  className,
+  autoplayIntervalMs = 4500,
+}: ImageCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const youtubeIds = images.map((slide) => getYoutubeId(slide.src));
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -44,61 +47,35 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
   useEffect(() => {
     if (!emblaApi) return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mq.matches) return;
+    if (mq.matches || slides.length <= 1) return;
     const interval = setInterval(() => {
       if (document.hidden) return;
-      const current = emblaApi.selectedScrollSnap();
-      if (images.length <= 1) return;
-      // Pausa el autoplay mientras se muestra un video para poder verlo.
-      if (current < youtubeIds.length && youtubeIds[current]) return;
       emblaApi.scrollNext();
-    }, 5000);
+    }, autoplayIntervalMs);
     return () => clearInterval(interval);
-  }, [emblaApi, images, youtubeIds]);
+  }, [emblaApi, slides.length, autoplayIntervalMs]);
 
   return (
-    <div className={`relative overflow-hidden rounded-[var(--radius-lg)] bg-dark-s ${className ?? ""}`}>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-[var(--radius-lg)] bg-dark-s",
+        className,
+      )}
+    >
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
-          {images.map((slide, i) => (
+          {slides.map((src, i) => (
             <div
               key={i}
-              className="min-w-full shrink-0 aspect-[16/10] relative"
+              className={`relative min-w-full shrink-0 ${aspectClassName}`}
             >
-              {youtubeIds[i] ? (
-                <>
-                  {i === selectedIndex ? (
-                    <iframe
-                      src={`https://www.youtube-nocookie.com/embed/${youtubeIds[i]}?autoplay=1&mute=1&rel=0&playsinline=1&loop=1&playlist=${youtubeIds[i]}`}
-                      title={slide.alt || `Video ${i + 1}`}
-                      className="absolute inset-0 h-full w-full border-0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      referrerPolicy="strict-origin-when-cross-origin"
-                    />
-                  ) : (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={`https://i.ytimg.com/vi/${youtubeIds[i]}/hqdefault.jpg`}
-                      alt={slide.alt || `Video ${i + 1}`}
-                      className="absolute inset-0 h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  )}
-                  <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-white/90 backdrop-blur-sm">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-3 w-3" aria-hidden>
-                      <path d="M8 5.5v13l11-6.5z" />
-                    </svg>
-                    Video
-                  </span>
-                </>
-              ) : (
-                <img
-                  src={slide.src}
-                  alt={slide.alt}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt={i === 0 ? alt : `${alt} ${i + 1}`}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             </div>
           ))}
         </div>
@@ -125,7 +102,7 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
       </button>
 
       <div className="absolute bottom-3 left-1/2 z-2 flex -translate-x-1/2 gap-1.5">
-        {images.map((_, i) => (
+        {slides.map((_, i) => (
           <button
             key={i}
             type="button"
@@ -136,9 +113,10 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
           >
             <span
               aria-hidden
-              className={`block h-2 w-2 rounded-full transition-colors ${
-                i === selectedIndex ? "bg-accent" : "bg-white/40"
-              }`}
+              className={cn(
+                "block h-2 w-2 rounded-full transition-colors",
+                i === selectedIndex ? "bg-accent" : "bg-white/40",
+              )}
             />
           </button>
         ))}

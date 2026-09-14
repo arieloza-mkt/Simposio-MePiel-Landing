@@ -36,6 +36,7 @@ const programaItemSchema = z.object({
   salon: z.string().trim().nullable(),
   nota: z.string().trim().nullable(),
   kind: z.enum(PROGRAMA_KIND_VALUES).default("conferencia"),
+  icon: z.string().trim().max(40).default(""),
   // "" = todas las modalidades; si no es un modo válido se guarda NULL.
   modo: z.string().trim().transform((v) =>
     PROGRAMA_MODOS.includes(v as (typeof PROGRAMA_MODOS)[number])
@@ -71,6 +72,7 @@ export async function saveProgramaItem(
     nota: data.nota || null,
     kind: data.kind,
     modo: data.modo,
+    icon: data.icon,
   };
 
   if (data.id) {

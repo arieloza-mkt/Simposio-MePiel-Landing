@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -19,7 +20,7 @@ const AUTOPLAY_DELAY = 3500;
 function NavButtons() {
   const swiper = useSwiper();
   const base =
-    "absolute top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent max-md:h-8 max-md:w-8";
+    "absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent max-md:h-11 max-md:w-11";
   return (
     <>
       <button
@@ -44,6 +45,29 @@ function NavButtons() {
       </button>
     </>
   );
+}
+
+function AutoplayGuard() {
+  const swiper = useSwiper();
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const clamp = () => {
+      if (swiper.autoplay) {
+        if (mq.matches || document.hidden) swiper.autoplay.stop();
+        else swiper.autoplay.start();
+      }
+    };
+    mq.addEventListener?.("change", clamp);
+    document.addEventListener("visibilitychange", clamp);
+    clamp();
+    return () => {
+      mq.removeEventListener?.("change", clamp);
+      document.removeEventListener("visibilitychange", clamp);
+    };
+  }, [swiper]);
+
+  return null;
 }
 
 export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
@@ -110,8 +134,9 @@ export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
               </figure>
             </SwiperSlide>
           ))}
+          <AutoplayGuard />
+          <NavButtons />
         </Swiper>
-        <NavButtons />
       </div>
     </div>
   );

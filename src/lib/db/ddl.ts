@@ -93,9 +93,11 @@ export const DDL_STATEMENTS: string[] = [
     nota TEXT,
     kind TEXT NOT NULL DEFAULT 'conferencia',
     modo TEXT,
+    icon TEXT NOT NULL DEFAULT '',
     sort_order INTEGER NOT NULL DEFAULT 0
   )`,
   // La tabla de logística ya no se usa (los recuadros del top se eliminaron).
   `DROP TABLE IF EXISTS programa_logistica`,
   `ALTER TABLE programa_items ADD COLUMN IF NOT EXISTS modo TEXT`,
+  `ALTER TABLE programa_items ADD COLUMN IF NOT EXISTS icon TEXT NOT NULL DEFAULT ''`,
 ];

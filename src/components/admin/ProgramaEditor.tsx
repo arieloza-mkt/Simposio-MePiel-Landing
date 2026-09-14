@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   deleteProgramaItem,
   saveProgramaItem,
@@ -8,6 +9,7 @@ import {
 } from "@/app/actions/admin/programa";
 import {
   PROGRAMA_DIA_LABEL,
+  PROGRAMA_ICONS,
   PROGRAMA_KINDS,
   PROGRAMA_MODO_FORANEOS,
   PROGRAMA_MODO_LOCALES,
@@ -27,6 +29,7 @@ export interface ProgramaItemRow {
   nota: string | null;
   kind: ProgramaItemKind;
   modo: string | null;
+  icon: string;
 }
 
 const DAYS = [1, 2, 3] as const;
@@ -50,6 +53,7 @@ function ProgramItemFields({
     nota: string | null;
     kind: ProgramaItemKind;
     modo: string | null;
+    icon: string;
   };
 }) {
   return (
@@ -106,6 +110,19 @@ function ProgramItemFields({
           ))}
         </Select>
       </Field>
+      <Field
+        label="Ícono"
+        htmlFor={`${idPrefix}-icon`}
+        hint="Automático asigna uno según el tipo.">
+        <Select id={`${idPrefix}-icon`} name="icon" defaultValue={defaults.icon}>
+          <option value="">Automático (por tipo)</option>
+          {PROGRAMA_ICONS.map((ic) => (
+            <option key={ic.value} value={ic.value}>
+              {ic.label}
+            </option>
+          ))}
+        </Select>
+      </Field>
       <Field label="Salón" htmlFor={`${idPrefix}-salon`}>
         <TextInput
           id={`${idPrefix}-salon`}
@@ -149,6 +166,7 @@ function parseProgramaItem(formData: FormData, id?: string): ProgramaItemInput {
     nota: String(formData.get("nota") ?? "").trim() || null,
     kind: String(formData.get("kind") ?? "conferencia") as ProgramaItemKind,
     modo: String(formData.get("modo") ?? "").trim(),
+    icon: String(formData.get("icon") ?? "").trim(),
   };
 }
 
@@ -156,12 +174,14 @@ export function ProgramaItemEditor({ item }: { item: ProgramaItemRow }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   return (
     <li className="rounded-xl border border-border bg-surface/30">
       <div className="flex flex-wrap items-center gap-3 p-4">
-        <span className="w-14 shrink-0 font-mono text-sm tabular-nums text-muted">
+        <span className="w-24 shrink-0 font-mono text-sm tabular-nums text-muted">
           {item.start}
+          {item.end ? ` – ${item.end}` : ""}
         </span>
         <span className="w-24 shrink-0 rounded-md bg-surface/70 px-1.5 py-0.5 text-center font-mono text-xs text-muted">
           {PROGRAMA_DIA_LABEL[item.day as 1 | 2 | 3] ?? `Día ${item.day}`}
@@ -183,8 +203,10 @@ export function ProgramaItemEditor({ item }: { item: ProgramaItemRow }) {
               const result = await saveProgramaItem(
                 parseProgramaItem(formData, item.id),
               );
-              if (result.ok) setOpen(false);
-              else setMessage(result.error ?? "Error al guardar.");
+              if (result.ok) {
+                setOpen(false);
+                router.refresh();
+              } else setMessage(result.error ?? "Error al guardar.");
             });
           }}
           className="border-t border-border/60 p-4"
@@ -205,6 +227,7 @@ export function ProgramaItemEditor({ item }: { item: ProgramaItemRow }) {
                 if (confirm(`¿Eliminar "${item.title}"? No se puede deshacer.`)) {
                   startTransition(async () => {
                     await deleteProgramaItem(item.id);
+                    router.refresh();
                   });
                 }
               }}
@@ -223,6 +246,7 @@ export function NewProgramaItemForm() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   if (!open) {
     return <Button onClick={() => setOpen(true)}>+ Agregar actividad</Button>;
@@ -234,8 +258,10 @@ export function NewProgramaItemForm() {
         setMessage(null);
         startTransition(async () => {
           const result = await saveProgramaItem(parseProgramaItem(formData));
-          if (result.ok) setOpen(false);
-          else setMessage(result.error ?? "Error al guardar.");
+          if (result.ok) {
+            setOpen(false);
+            router.refresh();
+          } else setMessage(result.error ?? "Error al guardar.");
         });
       }}
       className="rounded-xl border border-accent/30 bg-accent/[0.04] p-4"
@@ -252,6 +278,7 @@ export function NewProgramaItemForm() {
           nota: null,
           kind: "conferencia",
           modo: null,
+          icon: "",
         }}
       />
       <div className="mt-4 flex items-center gap-3">

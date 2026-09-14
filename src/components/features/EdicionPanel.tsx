@@ -5,6 +5,7 @@ import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { PhotoCarousel } from "./PhotoCarousel";
 import { EditionDetailModal } from "./EditionDetailModal";
+import { getYoutubeId } from "@/lib/video";
 
 interface EdicionPanelProps {
   edition: Edition;
@@ -21,19 +22,39 @@ export function EdicionPanel({
 }: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);
 
-  const slides = edition.videoId
-    ? [
-        {
-          src: edition.videoId,
-          alt: `Video de la ${edition.ordinal} edición`,
-        },
-        ...edition.images,
-      ]
-    : edition.images;
+  const slides = edition.images;
+  const videoYoutubeId = edition.videoId ? getYoutubeId(edition.videoId) : null;
 
   return (
     <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-center py-[clamp(48px,8vw,96px)]">
-      {edition.backdropUrl ? (
+      {edition.videoId ? (
+        <>
+          {videoYoutubeId ? (
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${videoYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+              title={`Video de fondo — ${edition.eyebrow} ${edition.ordinal}`}
+              allow="autoplay; encrypted-media"
+              referrerPolicy="strict-origin-when-cross-origin"
+              className="pointer-events-none absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.42]"
+            />
+          ) : (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-hidden
+              className="pointer-events-none absolute inset-0 h-full w-full object-cover brightness-[0.42]"
+            >
+              <source src={edition.videoId} type="video/mp4" />
+            </video>
+          )}
+          <div
+            className="pointer-events-none absolute inset-0 bg-dark/60"
+            aria-hidden
+          />
+        </>
+      ) : edition.backdropUrl ? (
         <>
           <img
             src={edition.backdropUrl}
@@ -85,7 +106,7 @@ export function EdicionPanel({
             </div>
             <button
               onClick={() => setDetailOpen(true)}
-              className="group mt-[clamp(24px,3vw,40px)] inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-2.5 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
+              className="group mt-[clamp(24px,3vw,40px)] inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
             >
               {viewMoreText}
               <svg

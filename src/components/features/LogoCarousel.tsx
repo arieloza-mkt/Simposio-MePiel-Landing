@@ -68,16 +68,16 @@ export function LogoCarousel({ items, label }: LogoCarouselProps) {
           {items.map((item) => (
             <div
               key={item.name}
-              className="min-w-0 shrink-0 basis-1/2 sm:basis-1/3 md:basis-1/4 px-3"
-            >
-              <div className="flex h-16 w-full max-w-[200px] items-center justify-center">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="h-full w-full object-contain dark:brightness-0 dark:invert"
-                  loading="lazy"
-                />
-              </div>
+className="min-w-0 shrink-0 basis-1/2 sm:basis-1/3 md:basis-1/4 px-3"
+              >
+                <div className="flex h-12 w-full max-w-[200px] items-center justify-center">
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="max-h-full w-auto max-w-full object-contain dark:brightness-0 dark:invert"
+                    loading="lazy"
+                  />
+                </div>
             </div>
           ))}
         </div>

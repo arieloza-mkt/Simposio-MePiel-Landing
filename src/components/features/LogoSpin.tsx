@@ -6,9 +6,9 @@ const NAVY = [10, 19, 48];
 const NEXT_BG = [255, 255, 255];
 
 const SPIN_END = 0.5;
-const TOTAL_ROTATION_DEG = 1440;
-const SLIDE_BUFFER = 100;
-const PREVIEW_FADE_START = 0.5;
+const TOTAL_ROTATION_DEG = 360;
+const MAX_ZOOM = 3;
+const PREVIEW_FADE_START = 0.55;
 
 function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
@@ -27,25 +27,18 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
     const circle = circleRef.current;
     const logo = logoRef.current;
     const preview = previewRef.current;
-    if (!wrapper || !pin || !circle || !logo || !preview) return;
+    if (!wrapper || !pin || !circle || !logo) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (preview) {
+        preview.style.opacity = "1";
+        preview.style.pointerEvents = "auto";
+      }
+      return;
+    }
 
     let ticking = false;
     let rafId = 0;
-    let slideDistance = 1000;
-
-    const computeSlideDistance = () => {
-      const circleW = circle.offsetWidth;
-      const vw = window.innerWidth;
-      const ideal = vw / 2 + circleW / 2 + SLIDE_BUFFER;
-      if (vw < 768) {
-        // Móvil/tablet: deja margen para no pegar el círculo al borde
-        slideDistance = Math.min(ideal, vw - circleW - 24);
-      } else {
-        slideDistance = Math.min(ideal, vw - circleW);
-      }
-    };
 
     const update = () => {
       ticking = false;
@@ -56,30 +49,31 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       let progress = -rect.top / scrollableDistance;
       progress = Math.min(Math.max(progress, 0), 1);
 
-      // FASE 1 (0–50%): solo gira
+      // FASE 1 (0–50%): una vuelta completa
       const spinProgress = Math.min(progress / SPIN_END, 1);
       const rotation = spinProgress * TOTAL_ROTATION_DEG;
 
-      // FASE 2 (50–100%): se desliza a la derecha
-      let slideProgress =
+      // FASE 2 (50–100%): zoom in y fade out (sin deslizar a la derecha)
+      const zoomProgress =
         progress <= SPIN_END ? 0 : (progress - SPIN_END) / (1 - SPIN_END);
-      slideProgress = Math.min(Math.max(slideProgress, 0), 1);
-      const translateX = slideProgress * slideDistance;
+      const zoom = 1 + zoomProgress * (MAX_ZOOM - 1);
 
-      circle.style.transform = `translateX(${translateX}px) rotate(${rotation}deg)`;
+      circle.style.transform = `scale(${zoom.toFixed(4)}) rotate(${rotation.toFixed(2)}deg)`;
 
-      // Logo siempre visible
+      // Logo siempre visible dentro del círculo (el círculo controla el fade)
       logo.style.opacity = "1";
 
-      // Círculo siempre visible
-      circle.style.opacity = "1";
+      // Círculo: se desvanece progresivamente con el zoom
+      circle.style.opacity = String(1 - zoomProgress);
 
-      // Preview de la siguiente sección: fade in desde 50%
+      // Preview de la siguiente sección: fade in desde 80%
       let previewFade =
         (progress - PREVIEW_FADE_START) / (1 - PREVIEW_FADE_START);
       previewFade = Math.min(Math.max(previewFade, 0), 1);
-      preview.style.opacity = String(previewFade);
-      preview.style.pointerEvents = previewFade > 0.1 ? "auto" : "none";
+      if (preview) {
+        preview.style.opacity = String(previewFade);
+        preview.style.pointerEvents = previewFade > 0.1 ? "auto" : "none";
+      }
 
       // Background crossfade: navy → siguiente sección (0–100%)
       const r = lerp(NAVY[0], NEXT_BG[0], progress);
@@ -95,18 +89,10 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       }
     };
 
-    const onResize = () => {
-      computeSlideDistance();
-      update();
-    };
-
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onResize);
-    computeSlideDistance();
     update();
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onResize);
       if (ticking) window.cancelAnimationFrame(rafId);
     };
   }, []);
@@ -116,7 +102,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       id="acerca"
       ref={wrapperRef}
       aria-hidden
-      className="relative h-[260vh] select-none"
+      className="relative h-[200vh] select-none"
     >
       <div
         ref={pinRef}

@@ -82,14 +82,9 @@ export function ScrollPinnedEditions({
                 willChange: "transform",
               }}
             >
-              {isActive && (
-                <div className="pointer-events-auto">
-                  <EdicionPanel edition={edition} speakers={speakers} viewMoreText={viewMoreText} modalSettings={modalSettings} />
-                </div>
-              )}
-              {!isActive && (
+              <div className={isActive ? "pointer-events-auto" : "pointer-events-none"}>
                 <EdicionPanel edition={edition} speakers={speakers} viewMoreText={viewMoreText} modalSettings={modalSettings} />
-              )}
+              </div>
             </div>
           );
         })}

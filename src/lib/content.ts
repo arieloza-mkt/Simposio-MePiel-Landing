@@ -79,6 +79,7 @@ export interface QueEsSettings {
   experienceItems: string[];
   imageUrl: string;
   imageAlt: string;
+  images?: string[];
 }
 
 export interface MepielAlianzaSettings {
@@ -88,6 +89,7 @@ export interface MepielAlianzaSettings {
   paragraphs: string[];
   imageUrl: string;
   imageAlt: string;
+  images?: string[];
 }
 
 export interface CtaCierreSettings {
@@ -144,6 +146,7 @@ export interface FooterSettings {
 }
 
 export interface LandingContent {
+  QueEsPreview: QueEsSettings;
   site: SiteInfo;
   seo: SeoSettings;
   hero: HeroSettings;
@@ -215,6 +218,7 @@ export async function getLandingContent(): Promise<LandingContent> {
       tracks: SETTINGS_SEED.tracks as Track[],
       labFeatures: SETTINGS_SEED.labFeatures as Benefit[],
       queEs: SETTINGS_SEED.queEs as QueEsSettings,
+      QueEsPreview: SETTINGS_SEED.QueEsPreview as QueEsSettings,
       mepielAlianza: SETTINGS_SEED.mepielAlianza as MepielAlianzaSettings,
       ctaCierre: SETTINGS_SEED.ctaCierre as CtaCierreSettings,
       eventConfig: SETTINGS_SEED.eventConfig as EventConfig,
@@ -247,6 +251,7 @@ export async function getLandingContent(): Promise<LandingContent> {
     tracks: s<Track[]>("tracks"),
     labFeatures: s<Benefit[]>("labFeatures"),
     queEs: s<QueEsSettings>("queEs"),
+    QueEsPreview: s<QueEsSettings>("QueEsPreview"),
     mepielAlianza: s<MepielAlianzaSettings>("mepielAlianza"),
     ctaCierre: s<CtaCierreSettings>("ctaCierre"),
     eventConfig: s<EventConfig>("eventConfig"),

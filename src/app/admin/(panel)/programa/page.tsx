@@ -33,6 +33,7 @@ export default async function AdminProgramaPage() {
         nota: i.nota,
         kind: i.kind as ProgramaItemKind,
         modo: i.modo,
+        icon: i.icon ?? "",
       })),
   }));
 
@@ -44,9 +45,10 @@ export default async function AdminProgramaPage() {
             Programa
           </h1>
           <p className="mt-1 text-sm text-muted">
-            Agenda por día (Lunes 12 llegada, Martes 13 y Miércoles 14). El
-            Lunes solo se muestra en la pestaña Foráneos; las actividades
-            marcadas &quot;solo Foráneos&quot; se ocultan en la pestaña Locales.
+            Agenda por día (Lunes 12 llegada, Martes 13 y Miércoles 14). El día
+            Lunes siempre está visible; las actividades marcadas &quot;solo
+            Foráneos&quot; solo aparecen en la pestaña Foráneos y las
+            &quot;solo Locales&quot; solo en la pestaña Locales.
           </p>
         </div>
         <NewProgramaItemForm />
