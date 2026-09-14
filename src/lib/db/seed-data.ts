@@ -454,6 +454,38 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     imageUrl:
       "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1112&auto=format&fit=crop",
     imageAlt: "Edición anterior del Simposio Dermocosmético",
+    images: [
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1112&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop",
+    ],
+  },
+  QueEsPreview: {
+    eyebrow: "Qué es el Simposio",
+    title: "Más que un evento, una experiencia para conectar y crecer",
+    highlight: "conectar y crecer",
+    intro:
+      "El Simposio Dermocosmético reúne a especialistas, líderes de opinión y profesionales de la industria en un espacio diseñado para compartir conocimiento, descubrir nuevas tendencias y generar conexiones de valor.",
+    experienceIntro: "Durante esta experiencia podrás disfrutar de:",
+    experienceItems: [
+      "Conferencias magistrales con líderes de la industria",
+      "Sesiones de networking one-a-one",
+      "Stands de exhibición de laboratorios",
+      "Demos de punto de venta",
+      "Una experiencia exclusiva diseñada para reconocer y fortalecer la relación con nuestros mejores aliados.",
+    ],
+    imageUrl:
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1112&auto=format&fit=crop",
+    imageAlt: "Edición anterior del Simposio Dermocosmético",
+    images: [
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1112&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop",
+    ],
   },
   mepielAlianza: {
     eyebrow: "Mepiel · Distribuidores Especializados",
@@ -466,6 +498,13 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     ],
     imageUrl: "",
     imageAlt: "Mepiel distribuidores especializados",
+    images: [
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1112&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop",
+    ],
   },
   ctaCierre: {
     description:

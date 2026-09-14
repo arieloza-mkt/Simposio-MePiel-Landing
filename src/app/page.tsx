@@ -1,8 +1,9 @@
 import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { QueEs } from "@/components/sections/QueEs";
-import { MepielAlianza } from "@/components/sections/MepielAlianza";
+import { LogoSpin } from "@/components/features/LogoSpin";
+import { QueEsPreview } from "@/components/sections/QueEsPreview";
+import { SimposioDermocosmetico } from "@/components/sections/SimposioDermocosmetico";
 import { Laboratorios } from "@/components/sections/Laboratorios";
 import { Expositores } from "@/components/sections/Expositores";
 import { Programa } from "@/components/sections/Programa";
@@ -21,8 +22,11 @@ export default async function Home() {
       <TopNav editions={content.editions} />
       <main id="content">
         <Hero site={content.site} hero={content.hero} />
-        <QueEs queEs={content.queEs} />
-        <MepielAlianza alianza={content.mepielAlianza} />
+        <SimposioDermocosmetico alianza={content.mepielAlianza} />
+        <LogoSpin
+          logoUrl={content.logoSpin.logoUrl}
+          nextPreview={<QueEsPreview queEs={content.queEs} />}
+        />
         <ScrollPinnedEditions
           editions={content.editions}
           speakers={content.speakers}

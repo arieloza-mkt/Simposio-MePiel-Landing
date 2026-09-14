@@ -42,7 +42,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-svh flex-col overflow-hidden bg-dark pt-[clamp(96px,14vw,140px)] pb-[clamp(40px,8vw,88px)] text-white"
+      className="relative flex min-h-screen items-center overflow-hidden bg-dark pt-[clamp(100px,16vw,160px)] pb-[clamp(48px,7vw,80px)] text-white"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <motion.div
@@ -56,7 +56,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
                 loop
                 muted
                 playsInline
-                className="absolute top-1/2 left-1/2 h-full min-h-full w-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover brightness-[0.55]"
+                className="absolute top-1/2 left-1/2 h-full min-h-full w-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover brightness-[0.6]"
               >
                 <source src={heroVideoId} type="video/mp4" />
               </video>
@@ -66,7 +66,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
                 title="Video de fondo del Simposio Dermocosmético"
                 allow="autoplay; encrypted-media"
                 referrerPolicy="strict-origin-when-cross-origin"
-                className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.55]"
+                className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.6]"
               />
 ) : null}
           </div>
@@ -81,7 +81,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
               className="animate-aurora absolute -bottom-[30%] left-[22%] h-[60vmax] w-[60vmax] rounded-full bg-[radial-gradient(circle,rgba(123,63,228,0.18),transparent_62%)] blur-3xl mix-blend-screen"
             />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/45 to-dark" />
+          <div className="absolute inset-0 bg-gradient-to-b from-dark/50 via-dark/30 to-dark/80" />
         </motion.div>
         <div
           className="pointer-events-none absolute inset-0"
@@ -106,7 +106,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
         className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-[0.05]"
       />
 
-      <Container className="relative flex flex-1 flex-col justify-center">
+      <Container className="relative">
         <motion.div
           initial="hidden"
           animate="visible"
@@ -130,32 +130,14 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="relative mt-12 flex flex-wrap justify-start gap-4"
+          transition={{ delay: 0.6, duration: 0.4 }}
+          className="relative mt-12 flex justify-start"
         >
           <button
-            onClick={() => scrollTo("#programa")}
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3 text-sm font-semibold tracking-wide text-white transition hover:brightness-110 active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
-          >
-            Ver programa
-            <svg
-              aria-hidden
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4"
-            >
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </button>
-          <button
             onClick={() => scrollTo("#ediciones")}
-            className="inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
+            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
           >
-            Ver ediciones
+            Ver más
             <svg
               aria-hidden
               viewBox="0 0 24 24"
@@ -164,9 +146,9 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
               strokeWidth={2}
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="h-4 w-4"
+              className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5"
             >
-              <path d="M5 12h14M13 6l6 6-6 6" />
+              <path d="M12 5v14M5 12l7 7 7-7" />
             </svg>
           </button>
         </motion.div>

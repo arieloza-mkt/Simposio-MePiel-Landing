@@ -55,16 +55,24 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <Container>
-<div
-  className={`flex items-center justify-between transition-all duration-500 ease-[var(--ease-out-expo)] ${
-    scrolled
-      ? "mx-auto mt-2 w-[80%] rounded-2xl border border-border bg-surface/60 px-8 py-3 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-2xl backdrop-saturate-150 animate-[nav-island_0.5s_var(--ease-out-expo)]"
-      : overDarkHero
-        ? "w-full bg-transparent px-6 py-4 sm:px-8"
-        : "w-full bg-surface px-6 py-4 sm:px-8"
-  }`}
->
+      <div
+        className={`transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
+          scrolled ? "px-[6%] pt-2 lg:px-[10%]" : "px-0 pt-0"
+        }`}
+      >
+        <div
+          className={`w-full transition-[border-radius,border-color,background-color,box-shadow] duration-500 ease-[var(--ease-out-expo)] ${
+            scrolled
+              ? "rounded-2xl border border-border bg-surface/60 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-xl backdrop-saturate-150"
+              : overDarkHero
+                ? "rounded-none border-0 bg-transparent shadow-none"
+                : "rounded-none border-0 bg-surface shadow-none"
+          }`}
+        >
+          <Container>
+            <div className={`flex items-center justify-between transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
+              scrolled ? "px-8 py-3" : "px-6 py-4 sm:px-8"
+            }`}>
           <a href="#" className="flex items-center gap-2.5">
             <img
               src={isDark
@@ -203,8 +211,10 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
               </svg>
             </button>
           </div>
+            </div>
+          </Container>
         </div>
-      </Container>
+      </div>
 
       {mobileOpen && (
         <nav className="border-b border-border bg-surface px-8 py-4 md:hidden">

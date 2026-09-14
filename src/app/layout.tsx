@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import localFont from "next/font/local";
 import { MotionConfig } from "framer-motion";
 import "./globals.css";
@@ -53,9 +52,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <Script
-          id="theme-init"
-          strategy="beforeInteractive"
+        <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var h=document.documentElement;var s=localStorage.getItem("admin-theme");if(s==="light"||s==="dark"){h.setAttribute("data-theme",s);return}var p=new Intl.DateTimeFormat("en-GB",{timeZone:"America/Mexico_City",hour:"2-digit",hourCycle:"h23"}).format(new Date());var hour=parseInt(p,10);var dark=hour>=19||hour<7;h.setAttribute("data-theme",dark?"dark":"light")}catch(e){}})();`,
           }}
