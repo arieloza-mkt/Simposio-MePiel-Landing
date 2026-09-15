@@ -104,24 +104,48 @@ export function EdicionPanel({
                 </div>
               ))}
             </div>
-            <button
-              onClick={() => setDetailOpen(true)}
-              className="group mt-[clamp(24px,3vw,40px)] inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
-            >
-              {viewMoreText}
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={1.8}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-4 w-4 transition-transform duration-150 ease-[var(--ease-out-expo)] group-hover:translate-x-0.5"
-                aria-hidden
-              >
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </button>
+            <div className="mt-[clamp(24px,3vw,40px)] flex flex-wrap items-center gap-4">
+              {!edition.ordinal.startsWith("3") && (
+                <button
+                  onClick={() => setDetailOpen(true)}
+                  className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
+                >
+                  {viewMoreText}
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4 transition-transform duration-150 ease-[var(--ease-out-expo)] group-hover:translate-x-0.5"
+                    aria-hidden
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+              )}
+              {edition.ordinal.startsWith("3") && (
+                <a
+                  href="#programa"
+                  className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-dark transition-all hover:opacity-90 active:translate-y-px"
+                >
+                  Ver programa
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4"
+                    aria-hidden
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </a>
+              )}
+            </div>
           </div>
 
           <div className="min-w-0 flex flex-col gap-[clamp(20px,3vw,32px)]">

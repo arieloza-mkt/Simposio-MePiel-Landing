@@ -8,11 +8,9 @@ import { LogoCarousel } from "@/components/features/LogoCarousel";
 
 export function Laboratorios({
   labsList,
-  eyebrow,
   title,
 }: {
   labsList: Lab[];
-  eyebrow: string;
   title: string;
 }) {
   return (
@@ -26,24 +24,21 @@ export function Laboratorios({
         className="pointer-events-none absolute inset-y-0 right-0 h-full w-auto max-w-full object-contain opacity-[0.12]"
       />
       <Container className="relative z-10">
-        <div className="mb-[56px] mx-auto text-center">
-          <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
-            {eyebrow}
-          </p>
-          <h2 className="font-display text-[clamp(30px,4vw,48px)] font-bold leading-[1.1] tracking-tight">
-            {title}
-          </h2>
-        </div>
-
         <AnimatedSection animation="fade-up">
           <LogoCarousel
             items={labsList.map((lab) => ({
               name: lab.name,
               image: lab.imageUrl,
             }))}
-            label={eyebrow}
+            label={title}
           />
         </AnimatedSection>
+
+        <div className="mt-[56px] mx-auto text-center">
+          <h2 className="font-display text-[clamp(30px,4vw,48px)] font-bold leading-[1.1] tracking-tight">
+            {title}
+          </h2>
+        </div>
       </Container>
     </Section>
   );

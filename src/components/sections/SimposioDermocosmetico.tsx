@@ -15,6 +15,10 @@ export function SimposioDermocosmetico({
     ? alianza.title.split(alianza.highlight)
     : [alianza.title];
 
+  const titleLines = alianza.titleLines?.length
+    ? alianza.titleLines
+    : null;
+
   const slides =
     alianza.images && alianza.images.length > 0
       ? alianza.images
@@ -57,26 +61,20 @@ export function SimposioDermocosmetico({
         {/* Título principal centrado */}
         <AnimatedSection animation="fade-up">
           <div className="mb-[clamp(48px,6vw,88px)] flex flex-col items-center text-center">
-            <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-              {alianza.eyebrow}
-            </p>
-            <h2 className="m-0 max-w-[22ch] font-display text-[clamp(36px,5.5vw,72px)] font-bold leading-[1.02] tracking-tight">
-              {alianza.highlight && title.length > 1 ? (
-                <>
-                  {title[0]}
-                  <span className="text-accent">{alianza.highlight}</span>
-                  {title[1]}
-                </>
-              ) : (
-                alianza.title
-              )}
-            </h2>
+             <h2 className="m-0 max-w-[24ch]  text-[clamp(32px,5vw,64px)] font-bold leading-[1.04] tracking-tight">
+              Crecemos juntos <br />
+para llevar la <span className="text-gm font-display font-3xl">Dermocosmética</span>   <br />
+a otro nivel
+             </h2>
+            
+           
+
           </div>
         </AnimatedSection>
 
         {/* Texto a la izquierda + galería a la derecha */}
         <div className="grid grid-cols-12 items-center gap-x-[clamp(40px,5vw,80px)] gap-y-10">
-          <div className="col-span-12 lg:col-span-5">
+          <div className="col-span-12 lg:col-span-4">
             <AnimatedSection animation="fade-right">
               <div className="flex flex-col gap-6">
                 {alianza.paragraphs.map((text, i) => (
@@ -95,14 +93,19 @@ export function SimposioDermocosmetico({
             </AnimatedSection>
           </div>
 
-          <div className="col-span-12 lg:col-span-7">
+          <div className="col-span-12 lg:col-span-8">
             <AnimatedSection animation="fade-left">
               <div className="relative">
                 {slides.length > 0 ? (
                   <ImageCarousel
                     slides={slides}
                     alt={alianza.imageAlt}
-                    aspectClassName="aspect-[3/4] md:aspect-[4/3] lg:aspect-[4/3]"
+                    aspectClassName="aspect-[3/4] sm:aspect-[4/3] lg:aspect-[380/450]"
+                    slidesPerView={1}
+                    slidesPerViewSm={2}
+                    slidesPerViewLg={3}
+                    slidesPerGroup={1}
+                    spaceBetween={20}
                   />
                 ) : (
                   <div
@@ -115,27 +118,6 @@ export function SimposioDermocosmetico({
                     </p>
                   </div>
                 )}
-
-                {/* Botón de navegación sobre la galería */}
-                <button
-                  type="button"
-                  onClick={scrollToNext}
-                  aria-label="Ir a la siguiente sección"
-                  className="absolute -right-3 -top-5 z-3 grid h-14 w-14 place-items-center rounded-full border-none bg-accent text-white shadow-xl shadow-accent/30 transition-transform duration-300 hover:scale-105 hover:shadow-accent/50 active:translate-y-px max-md:h-12 max-md:w-12"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-6 w-6"
-                    aria-hidden
-                  >
-                    <path d="M12 4v16M5 13l7 7 7-7" />
-                  </svg>
-                </button>
               </div>
             </AnimatedSection>
           </div>

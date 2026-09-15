@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
@@ -129,6 +130,8 @@ export async function saveEdition(
     return { ok: false, error: "No se pudo guardar. ¿El año ya existe?" };
   }
 
+  revalidatePath("/admin/ediciones");
+  revalidatePath("/");
   return { ok: true };
 }
 
@@ -143,5 +146,7 @@ export async function deleteEdition(
   const db = await getDbReady();
   await db.delete(editions).where(eq(editions.id, id));
 
+  revalidatePath("/admin/ediciones");
+  revalidatePath("/");
   return { ok: true };
 }

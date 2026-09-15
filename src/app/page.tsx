@@ -2,11 +2,11 @@ import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LogoSpin } from "@/components/features/LogoSpin";
-import { QueEsPreview } from "@/components/sections/QueEsPreview";
+import { CifrasPreview } from "@/components/sections/CifrasPreview";
 import { SimposioDermocosmetico } from "@/components/sections/SimposioDermocosmetico";
 import { Laboratorios } from "@/components/sections/Laboratorios";
 import { Expositores } from "@/components/sections/Expositores";
-import { Programa } from "@/components/sections/Programa";
+import { ProgramaLauncher } from "@/components/programa/ProgramaLauncher";
 import { ScrollPinnedEditions } from "@/components/features/ScrollPinnedEditions";
 import { getLandingContent } from "@/lib/content";
 import { getProgramaData } from "@/lib/programa-store";
@@ -25,7 +25,16 @@ export default async function Home() {
         <SimposioDermocosmetico alianza={content.mepielAlianza} />
         <LogoSpin
           logoUrl={content.logoSpin.logoUrl}
-          nextPreview={<QueEsPreview queEs={content.queEs} />}
+          nextPreview={<CifrasPreview queEs={content.queEs} />}
+        />
+        <Expositores
+          speakers={content.speakers}
+          eyebrow={content.expositoresSection.eyebrow}
+          title={content.expositoresSection.title}
+        />
+        <Laboratorios
+          labsList={content.labsList}
+          title={content.labsSection.title}
         />
         <ScrollPinnedEditions
           editions={content.editions}
@@ -33,18 +42,8 @@ export default async function Home() {
           viewMoreText={content.editionsPanel.viewMoreText}
           modalSettings={content.editionsModal}
         />
-        <Programa items={programa.items} />
-        <Laboratorios
-          labsList={content.labsList}
-          eyebrow={content.labsSection.eyebrow}
-          title={content.labsSection.title}
-        />
-        <Expositores
-          speakers={content.speakers}
-          eyebrow={content.expositoresSection.eyebrow}
-          title={content.expositoresSection.title}
-        />
       </main>
+      <ProgramaLauncher items={programa.items} />
       <Footer settings={content.footer} />
     </>
   );

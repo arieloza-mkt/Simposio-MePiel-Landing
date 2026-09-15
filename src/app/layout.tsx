@@ -13,6 +13,7 @@ const bebas = localFont({
 
 const montserrat = localFont({
   src: [
+    { path: "./fonts/montserrat-300.woff2", weight: "300" },
     { path: "./fonts/montserrat-400.woff2", weight: "400" },
     { path: "./fonts/montserrat-500.woff2", weight: "500" },
     { path: "./fonts/montserrat-600.woff2", weight: "600" },

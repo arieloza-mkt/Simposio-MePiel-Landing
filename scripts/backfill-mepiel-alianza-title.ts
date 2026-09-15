@@ -8,7 +8,7 @@ import type { MepielAlianzaSettings } from "../src/lib/content";
 async function main(): Promise<void> {
   if (!process.env.DATABASE_URL?.includes("neon.tech")) {
     console.error(
-      "DATABASE_URL no apunta a Neon. Corre con: node --env-file=.env.local --import tsx scripts/backfill-mepiel-alianza-images.ts",
+      "DATABASE_URL no apunta a Neon. Corre con: node --env-file=.env.local --import tsx scripts/backfill-mepiel-alianza-title.ts",
     );
     process.exit(1);
   }
@@ -27,15 +27,15 @@ async function main(): Promise<void> {
   }
 
   const seed = SETTINGS_SEED.mepielAlianza as MepielAlianzaSettings;
-  if (!Array.isArray(seed.images) || seed.images.length !== 6) {
-    console.error("El seed 'mepielAlianza' no trae las 6 imágenes.");
+  if (!Array.isArray(seed.titleLines) || seed.titleLines.length === 0) {
+    console.error("El seed 'mepielAlianza' no trae titleLines válidas.");
     process.exit(1);
   }
 
   const current = rows[0].value as Partial<MepielAlianzaSettings>;
   const next = {
     ...current,
-    images: seed.images,
+    titleLines: seed.titleLines,
   } as MepielAlianzaSettings;
 
   await db
@@ -50,7 +50,7 @@ async function main(): Promise<void> {
 
   const saved = after[0].value as MepielAlianzaSettings;
   console.log(
-    `OK: fila 'mepielAlianza' actualizada con ${saved.images?.length ?? 0} imágenes de slider.`,
+    `OK: fila 'mepielAlianza' actualizada con ${saved.titleLines?.length ?? 0} líneas de título.`,
   );
 }
 

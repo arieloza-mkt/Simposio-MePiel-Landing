@@ -491,6 +491,12 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     eyebrow: "Mepiel · Distribuidores Especializados",
     title: "Crecemos juntos para llevar la dermocosmética a otro nivel",
     highlight: "juntos",
+    titleLines: [
+      "Crecemos juntos",
+      "para llevar la",
+      "Dermocosmética",
+      "a otro nivel",
+    ],
     paragraphs: [
       "En mepiel distribuidores especializados creemos que una gran relación con nuestros médicos va más allá de ofrecer productos. Buscamos construir alianzas duraderas que generen valor para tu práctica, tus pacientes y tu crecimiento profesional.",
       "Por eso, nuestros clientes y aliados estratégicos tienen la oportunidad de acceder a experiencias exclusivas de capacitación, actualización y conexión profesional.",
@@ -504,6 +510,7 @@ export const SETTINGS_SEED: Record<string, unknown> = {
       "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1170&auto=format&fit=crop",
     ],
   },
   ctaCierre: {
@@ -534,7 +541,7 @@ export const SETTINGS_SEED: Record<string, unknown> = {
   },
   labsSection: {
     eyebrow: "Laboratorios participantes",
-    title: "Las marcas que lideran la categoría",
+    title: "Laboratorios Participantes",
   },
   expositoresSection: {
     eyebrow: "Expositores y speakers",

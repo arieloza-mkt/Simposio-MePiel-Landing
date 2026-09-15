@@ -86,6 +86,7 @@ export interface MepielAlianzaSettings {
   eyebrow: string;
   title: string;
   highlight: string;
+  titleLines?: string[];
   paragraphs: string[];
   imageUrl: string;
   imageAlt: string;

@@ -22,15 +22,12 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
     >
       {/* Encabezado de sección */}
       <div className="mb-8 flex flex-col items-start lg:items-center lg:text-center">
-        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.12em] text-accent">
-          {queEs.eyebrow}
-        </p>
         <h2 className="m-0 max-w-[26ch] font-display text-[clamp(34px,4.8vw,62px)] font-bold leading-[1.04] tracking-tight">
           {queEs.highlight ? (
             <>
               {queEs.title.split(queEs.highlight)[0]}
-              <span className="text-accent">{queEs.highlight}</span>
-              {queEs.title.split(queEs.highlight)[1]}
+              <span className="text-accent">{queEs.highlight} {queEs.title.split(queEs.highlight)[1]}</span>
+              
             </>
           ) : (
             queEs.title
