@@ -11,7 +11,7 @@ const SLIDE_END = 0.9;
 // Suavizado del borde del hueco (px)
 const HOLE_FEATHER = 10;
 // Cuánto sobresale el hueco del disco en reposo (px)
-const HOLE_RING = 70;
+const HOLE_RING = 0;
 
 export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPreview?: ReactNode }) {
   const wrapperRef = useRef<HTMLDivElement>(null);

@@ -115,7 +115,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
         >
           <motion.h1
             variants={heroChild}
-            className="mb-5 font-display text-[clamp(38px,6vw,76px)] font-bold leading-[1.04] tracking-tight text-white"
+            className="mb-5 font-display text-[clamp(48px,7vw,88px)] font-bold leading-[1.04] tracking-tight text-white"
           >
             {hero.headline}
           </motion.h1>

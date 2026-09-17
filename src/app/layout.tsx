@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Montserrat } from "next/font/google";
 import { MotionConfig } from "framer-motion";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme-provider";
@@ -11,14 +12,9 @@ const bebas = localFont({
   display: "swap",
 });
 
-const montserrat = localFont({
-  src: [
-    { path: "./fonts/montserrat-300.woff2", weight: "300" },
-    { path: "./fonts/montserrat-400.woff2", weight: "400" },
-    { path: "./fonts/montserrat-500.woff2", weight: "500" },
-    { path: "./fonts/montserrat-600.woff2", weight: "600" },
-    { path: "./fonts/montserrat-700.woff2", weight: "700" },
-  ],
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "900"],
   variable: "--font-montserrat",
   display: "swap",
 });
@@ -48,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${bebas.variable} ${montserrat.variable}`}
+      className={`${bebas.variable} ${montserrat.className}`}
       data-theme="dark"
       suppressHydrationWarning
     >

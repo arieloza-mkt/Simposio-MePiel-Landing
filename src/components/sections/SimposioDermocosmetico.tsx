@@ -68,7 +68,7 @@ export function SimposioDermocosmetico({
         {/* Título principal centrado */}
         <AnimatedSection animation="fade-up">
           <div className="mb-[clamp(48px,6vw,88px)] flex flex-col items-center text-center">
-             <h2 className="m-0 max-w-[24ch]  text-[clamp(32px,5vw,64px)] font-black leading-[1.04] tracking-tight uppercase text-[#004496] dark:text-white">
+             <h2 className="m-0 max-w-[24ch]  text-[clamp(42px,6vw,78px)] font-black leading-[1.04] tracking-tight uppercase text-[#004496] dark:text-white">
               Crecemos juntos <br />
 <span className="font-bold lowercase text-6xl">para llevar la</span> <span className="text-gm font-display text-8xl">Dermocosmética</span>   <br />
 <span className="font-light lowercase text-6xl">a otro nivel</span>
@@ -87,11 +87,7 @@ export function SimposioDermocosmetico({
                 {alianza.paragraphs.map((text, i) => (
                   <p
                     key={i}
-                    className={`m-0 leading-relaxed ${
-                      i === 0
-                        ? "text-[clamp(17px,2vw,20px)] text-[#004496] dark:text-white"
-                        : "text-muted"
-                    }`}
+                    className="m-0 leading-relaxed text-[17px] text-black/70"
                   >
                     {text}
                   </p>

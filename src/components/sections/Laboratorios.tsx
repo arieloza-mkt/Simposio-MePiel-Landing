@@ -31,6 +31,7 @@ export function Laboratorios({
               image: lab.imageUrl,
             }))}
             label={title}
+            showNames
           />
         </AnimatedSection>
 

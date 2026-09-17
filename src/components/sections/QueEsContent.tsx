@@ -32,7 +32,7 @@ export function QueEsContent({ queEs }: { queEs: QueEsSettings }) {
       <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
         Qué es el Simposio
       </p>
-      <h2 className="m-0 max-w-[24ch] font-display text-[clamp(34px,4.8vw,62px)] font-bold leading-[1.04] tracking-tight">
+      <h2 className="m-0 max-w-[24ch] font-display text-[clamp(42px,5.8vw,72px)] font-bold leading-[1.04] tracking-tight">
         {queEs.highlight ? (
           <>
             {queEs.title.split(queEs.highlight)[0]}

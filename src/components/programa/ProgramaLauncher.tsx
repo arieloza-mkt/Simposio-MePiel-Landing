@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { ProgramaModal } from "./ProgramaModal";
-import { PROGRAMA_MODO_FORANEOS, type ProgramaItem, type ProgramaModo } from "@/lib/programa";
+import { PROGRAMA_MODO_FORANEOS, type ProgramaModo } from "@/lib/programa";
 
-export function ProgramaLauncher({ items }: { items: ProgramaItem[] }) {
+export function ProgramaLauncher() {
   const [open, setOpen] = useState(false);
   const [modo, setModo] = useState<ProgramaModo>(PROGRAMA_MODO_FORANEOS);
 
@@ -25,7 +25,6 @@ export function ProgramaLauncher({ items }: { items: ProgramaItem[] }) {
     <ProgramaModal
       open={open}
       onClose={() => setOpen(false)}
-      items={items}
       modo={modo}
       onModoChange={setModo}
     />

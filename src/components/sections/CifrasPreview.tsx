@@ -37,7 +37,7 @@ export function CifrasPreview({
     >
       <div className="grid grid-cols-12 items-center gap-[clamp(32px,5vw,72px)]">
         <div className="col-span-12 lg:col-span-7">
-          <h2 className="m-0 max-w-[24ch] font-display text-[clamp(34px,4.8vw,62px)] leading-[1.04] tracking-tight">
+          <h2 className="m-0 max-w-[24ch] font-display text-[clamp(42px,5.8vw,72px)] leading-[1.04] tracking-tight">
             {queEs.highlight ? (
               <>
                 {queEs.title.split(queEs.highlight)[0]}
@@ -66,9 +66,9 @@ export function CifrasPreview({
                 className="aspect-[16/11] w-full rounded-[10px] object-cover"
               />
             )}
-            <h3 className="m-0 mt-2 font-display text-[clamp(20px,2.4vw,28px)] tracking-tight">
+            {/* <h3 className="m-0 mt-2 font-display text-[clamp(20px,2.4vw,28px)] tracking-tight">
               Expositores
-            </h3>
+            </h3> */}
             <SpeakerCarousel speakers={speakers} perView={2} />
           </div>
         </div>

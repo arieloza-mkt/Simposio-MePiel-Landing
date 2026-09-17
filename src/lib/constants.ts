@@ -1,7 +1,7 @@
 export const NAV_LINKS = [
   { label: "Inicio", href: "#inicio" },
   { label: "Acerca de", href: "#acerca" },
-  { label: "Expositores", href: "#ponentes" },
+  // { label: "Expositores", href: "#ponentes" },
   { label: "Laboratorios", href: "#laboratorios" },
   { label: "Ediciones", href: "#ediciones" },
 ] as const;

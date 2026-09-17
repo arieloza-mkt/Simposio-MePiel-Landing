@@ -10,13 +10,11 @@ import { ProgramaLauncher } from "@/components/programa/ProgramaLauncher";
 import { ScrollPinnedEditions } from "@/components/features/ScrollPinnedEditions";
 import { CategoriaHero } from "@/components/sections/CategoriaHero";
 import { getLandingContent } from "@/lib/content";
-import { getProgramaData } from "@/lib/programa-store";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const content = await getLandingContent();
-  const programa = await getProgramaData();
 
   return (
     <>
@@ -41,7 +39,7 @@ export default async function Home() {
         />
         <CategoriaHero />
       </main>
-      <ProgramaLauncher items={programa.items} />
+      <ProgramaLauncher />
       <Footer settings={content.footer} />
     </>
   );
