@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useId, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { getYoutubeId } from "@/lib/video";
+import { useFancybox } from "@/components/ui/Fancybox";
 
 interface PhotoSlide {
   src: string;
@@ -12,11 +13,20 @@ interface PhotoSlide {
 interface PhotoCarouselProps {
   images: readonly PhotoSlide[];
   className?: string;
+  fill?: boolean;
+  autoplayMs?: number;
 }
 
-export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
+export function PhotoCarousel({
+  images,
+  className,
+  fill,
+  autoplayMs = 5000,
+}: PhotoCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const fancyboxRef = useFancybox<HTMLDivElement>();
+  const group = useId();
   const youtubeIds = images.map((slide) => getYoutubeId(slide.src));
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
@@ -52,18 +62,18 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
       // Pausa el autoplay mientras se muestra un video para poder verlo.
       if (current < youtubeIds.length && youtubeIds[current]) return;
       emblaApi.scrollNext();
-    }, 5000);
+    }, autoplayMs);
     return () => clearInterval(interval);
-  }, [emblaApi, images, youtubeIds]);
+  }, [emblaApi, images, youtubeIds, autoplayMs]);
 
   return (
-    <div className={`relative overflow-hidden rounded-[var(--radius-lg)] bg-dark-s ${className ?? ""}`}>
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
+    <div ref={fancyboxRef} className={`relative overflow-hidden bg-dark-s ${fill ? "h-full" : "rounded-[var(--radius-lg)]"} ${className ?? ""}`}>
+      <div className={`overflow-hidden ${fill ? "h-full" : ""}`} ref={emblaRef}>
+        <div className="flex h-full">
           {images.map((slide, i) => (
             <div
               key={i}
-              className="min-w-full shrink-0 aspect-[16/10] relative"
+              className={`min-w-full shrink-0 relative ${fill ? "h-full" : "aspect-[16/10]"}`}
             >
               {youtubeIds[i] ? (
                 <>
@@ -93,11 +103,18 @@ export function PhotoCarousel({ images, className }: PhotoCarouselProps) {
                   </span>
                 </>
               ) : (
-                <img
-                  src={slide.src}
-                  alt={slide.alt}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
+                <a
+                  href={slide.src}
+                  data-fancybox={group}
+                  data-caption={slide.alt}
+                  className="absolute inset-0 block cursor-zoom-in"
+                >
+                  <img
+                    src={slide.src}
+                    alt={slide.alt}
+                    className="h-full w-full object-cover"
+                  />
+                </a>
               )}
             </div>
           ))}

@@ -86,6 +86,43 @@ const editionSchema = z.object({
       return v;
     }),
   speakerIds: z.array(z.string().uuid()).default([]),
+  temario: z
+    .union([
+      z.string(),
+      z.array(
+        z.object({
+          time: z.string().optional(),
+          title: z.string(),
+          description: z.string().optional(),
+        }),
+      ),
+    ])
+    .transform((v) => {
+      if (typeof v === "string") {
+        try {
+          const parsed = JSON.parse(v);
+          if (Array.isArray(parsed)) return parsed;
+        } catch {}
+        return v
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .map((l) => {
+            const parts = l.split("|").map((p) => p.trim());
+            return parts[0]
+              ? { time: parts[0], title: parts[1] ?? "", description: parts[2] }
+              : null;
+          })
+          .filter(
+            (
+              x,
+            ): x is { time: string; title: string; description: string } =>
+              x !== null,
+          );
+      }
+      return v;
+    })
+    .default([]),
 });
 
 export type EditionInput = z.infer<typeof editionSchema>;
@@ -118,6 +155,7 @@ export async function saveEdition(
     images: data.images,
     labs: data.labs,
     speakerIds: data.speakerIds,
+    temario: data.temario,
   };
 
   try {

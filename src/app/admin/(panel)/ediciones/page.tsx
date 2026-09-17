@@ -57,6 +57,7 @@ export default async function AdminEdicionesPage() {
                 images: edition.images,
                 labs: edition.labs,
                 speakerIds: edition.speakerIds,
+                temario: edition.temario,
               }}
               allSpeakers={allSpeakers}
             />

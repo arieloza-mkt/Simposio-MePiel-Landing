@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { cn } from "@/lib/cn";
+import { useFancybox } from "@/components/ui/Fancybox";
 
 const AUTOPLAY_DELAY = 4500;
 
@@ -124,6 +125,9 @@ export function ImageCarousel({
   spaceBetween = 20,
   showDots = true,
 }: ImageCarouselProps) {
+  const fancyboxRef = useFancybox<HTMLDivElement>();
+  const group = useId();
+
   if (slides.length === 0) return null;
 
   const breakpoints: Record<number, { slidesPerView: number }> = {};
@@ -139,6 +143,7 @@ export function ImageCarousel({
 
   return (
     <div
+      ref={fancyboxRef}
       className={cn(
         "relative overflow-hidden rounded-[var(--radius-lg)]",
         className,
@@ -161,13 +166,20 @@ export function ImageCarousel({
       >
         {slides.map((src, i) => (
           <SwiperSlide key={i} className={cn("h-auto", aspectClassName)}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={src}
-              alt={i === 0 ? alt : `${alt} ${i + 1}`}
-              loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            <a
+              href={src}
+              data-fancybox={group}
+              data-caption={i === 0 ? alt : `${alt} ${i + 1}`}
+              className="absolute inset-0 block cursor-zoom-in"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={src}
+                alt={i === 0 ? alt : `${alt} ${i + 1}`}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </a>
           </SwiperSlide>
         ))}
         <AutoplayGuard />

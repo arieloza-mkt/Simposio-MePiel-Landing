@@ -11,6 +11,7 @@ interface ModalProps {
   onClose: () => void;
   label: string;
   className?: string;
+  bodyClassName?: string;
   children: React.ReactNode;
 }
 
@@ -19,6 +20,7 @@ export function Modal({
   onClose,
   label,
   className,
+  bodyClassName,
   children,
 }: ModalProps) {
   const mounted = useSyncExternalStore(
@@ -82,7 +84,12 @@ export function Modal({
               <line x1="6" y1="18" x2="18" y2="6" />
             </svg>
           </button>
-          <div className="min-h-0 overflow-y-auto overscroll-contain p-6 sm:p-8">
+          <div
+            className={
+              bodyClassName ??
+              "min-h-0 overflow-y-auto overscroll-contain p-6 sm:p-8"
+            }
+          >
             {children}
           </div>
         </div>

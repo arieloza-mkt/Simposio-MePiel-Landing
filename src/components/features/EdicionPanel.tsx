@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { PhotoCarousel } from "./PhotoCarousel";
 import { EditionDetailModal } from "./EditionDetailModal";
+import { TemarioModal } from "./TemarioModal";
+import { EditionLightbox } from "./EditionLightbox";
 import { getYoutubeId } from "@/lib/video";
 
 interface EdicionPanelProps {
@@ -21,6 +23,24 @@ export function EdicionPanel({
   modalSettings,
 }: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);
+  const [temarioOpen, setTemarioOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = descriptionRef.current;
+    if (!el) return;
+
+    const measure = () => {
+      setOverflows(el.scrollHeight > el.clientHeight + 1);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const slides = edition.images;
   const videoYoutubeId = edition.videoId ? getYoutubeId(edition.videoId) : null;
@@ -89,9 +109,34 @@ export function EdicionPanel({
                 </div>
               </>
             )}
-            <p className="mt-6 mb-0 text-[17px] leading-relaxed text-white/55">
+            <p
+              ref={descriptionRef}
+              className="mt-6 mb-0 line-clamp-4 whitespace-pre-line text-[17px] leading-relaxed text-white/55"
+            >
               {edition.description}
             </p>
+            {overflows ? (
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                aria-haspopup="dialog"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-colors hover:text-white"
+              >
+                Leer más
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-4 w-4"
+                  aria-hidden
+                >
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </button>
+            ) : null}
             <div className="mt-[clamp(32px,4vw,56px)] grid grid-cols-3 gap-4 sm:gap-5">
               {edition.stats.map((s) => (
                 <div key={s.label} className="min-w-0">
@@ -105,6 +150,26 @@ export function EdicionPanel({
               ))}
             </div>
             <div className="mt-[clamp(24px,3vw,40px)] flex flex-wrap items-center gap-4">
+              {edition.temario.length > 0 && (
+                <button
+                  onClick={() => setTemarioOpen(true)}
+                  className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-dark transition-all hover:opacity-90 active:translate-y-px"
+                >
+                  Ver temario
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.8}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="h-4 w-4"
+                    aria-hidden
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+              )}
               {!edition.ordinal.startsWith("3") && (
                 <button
                   onClick={() => setDetailOpen(true)}
@@ -162,6 +227,16 @@ export function EdicionPanel({
         edition={edition}
         speakers={speakers}
         modalSettings={modalSettings}
+      />
+      <EditionLightbox
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        edition={edition}
+      />
+      <TemarioModal
+        open={temarioOpen}
+        onClose={() => setTemarioOpen(false)}
+        edition={edition}
       />
     </div>
   );

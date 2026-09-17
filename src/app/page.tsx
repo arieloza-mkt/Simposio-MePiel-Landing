@@ -8,6 +8,7 @@ import { Laboratorios } from "@/components/sections/Laboratorios";
 import { Expositores } from "@/components/sections/Expositores";
 import { ProgramaLauncher } from "@/components/programa/ProgramaLauncher";
 import { ScrollPinnedEditions } from "@/components/features/ScrollPinnedEditions";
+import { CategoriaHero } from "@/components/sections/CategoriaHero";
 import { getLandingContent } from "@/lib/content";
 import { getProgramaData } from "@/lib/programa-store";
 
@@ -27,11 +28,7 @@ export default async function Home() {
           logoUrl={content.logoSpin.logoUrl}
           nextPreview={<CifrasPreview queEs={content.queEs} />}
         />
-        <Expositores
-          speakers={content.speakers}
-          eyebrow={content.expositoresSection.eyebrow}
-          title={content.expositoresSection.title}
-        />
+        <Expositores speakers={content.speakers} />
         <Laboratorios
           labsList={content.labsList}
           title={content.labsSection.title}
@@ -42,6 +39,7 @@ export default async function Home() {
           viewMoreText={content.editionsPanel.viewMoreText}
           modalSettings={content.editionsModal}
         />
+        <CategoriaHero />
       </main>
       <ProgramaLauncher items={programa.items} />
       <Footer settings={content.footer} />

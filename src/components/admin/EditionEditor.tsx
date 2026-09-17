@@ -25,6 +25,7 @@ export interface EditionRowData {
   images: { src: string; alt: string }[];
   labs: { name: string; image: string }[];
   speakerIds: string[];
+  temario: { title: string; description?: string; speaker?: string }[];
 }
 
 let _id = 0;
@@ -235,6 +236,9 @@ function EditionForm({
   const [labs, setLabs] = useState(() =>
     edition.labs.map((l) => ({ ...l, id: uid() }))
   );
+  const [temario, setTemario] = useState(() =>
+    edition.temario.map((t) => ({ ...t, id: uid() }))
+  );
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -259,6 +263,7 @@ function EditionForm({
         stats: JSON.stringify(stats.map(({ id, ...s }) => s)),
         images: JSON.stringify(images.map(({ id, ...i }) => i)),
         labs: JSON.stringify(labs.map(({ id, ...l }) => l)),
+        temario: JSON.stringify(temario.map(({ id, ...t }) => t)),
         speakerIds,
       } as unknown as EditionInput;
       await onSave(input);
@@ -363,6 +368,40 @@ function EditionForm({
                 placeholder="Etiqueta (ej. Asistentes)"
                 value={item.label}
                 onChange={(e) => onChange({ ...item, label: e.target.value })}
+              />
+            </div>
+          )}
+        />
+      </div>
+
+      <div className="mt-4">
+        <p className="mb-2 text-sm font-medium text-fg">Temario (agenda de la edición)</p>
+        <p className="mb-2 text-xs text-muted">
+          Si está vacío no se muestra el botón «Ver temario» en el landing.
+        </p>
+        <FieldArray
+          items={temario}
+          onChange={setTemario}
+          addLabel="Agregar actividad"
+          emptyLabel="Sin temario"
+          renderItem={(item, _, onChange) => (
+            <div className="grid gap-3">
+              <TextInput
+                placeholder="Título"
+                value={item.title}
+                onChange={(e) => onChange({ ...item, title: e.target.value })}
+              />
+              <TextInput
+                placeholder="Descripción (opcional)"
+                value={item.description ?? ""}
+                onChange={(e) =>
+                  onChange({ ...item, description: e.target.value })
+                }
+              />
+              <TextInput
+                placeholder="Expositor (opcional)"
+                value={item.speaker ?? ""}
+                onChange={(e) => onChange({ ...item, speaker: e.target.value })}
               />
             </div>
           )}

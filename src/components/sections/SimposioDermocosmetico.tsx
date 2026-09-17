@@ -61,9 +61,9 @@ export function SimposioDermocosmetico({
         {/* Título principal centrado */}
         <AnimatedSection animation="fade-up">
           <div className="mb-[clamp(48px,6vw,88px)] flex flex-col items-center text-center">
-             <h2 className="m-0 max-w-[24ch]  text-[clamp(32px,5vw,64px)] font-bold leading-[1.04] tracking-tight">
+             <h2 className="m-0 max-w-[24ch]  text-[clamp(32px,5vw,64px)] font-bold leading-[1.04] tracking-tight text-[#004496]">
               Crecemos juntos <br />
-para llevar la <span className="text-gm font-display font-3xl">Dermocosmética</span>   <br />
+<span className="font-light text-6xl">para llevar la</span> <span className="text-gm font-display text-8xl">Dermocosmética</span>   <br />
 a otro nivel
              </h2>
             
@@ -82,7 +82,7 @@ a otro nivel
                     key={i}
                     className={`m-0 leading-relaxed ${
                       i === 0
-                        ? "text-[clamp(17px,2vw,20px)]"
+                        ? "text-[clamp(17px,2vw,20px)] text-[#004496]"
                         : "text-muted"
                     }`}
                   >

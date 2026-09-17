@@ -207,8 +207,10 @@ export async function getLandingContent(): Promise<LandingContent> {
   } catch (error) {
     // Ante un fallo transitorio de la base de datos servimos el contenido
     // semilla en lugar de tumbar la landing.
-    console.error("[content] DB no disponible, sirviendo contenido de reserva");
-    void error;
+    console.error(
+      "[content] DB no disponible, sirviendo contenido de reserva:",
+      error instanceof Error ? error.message : String(error),
+    );
     return {
       site: SETTINGS_SEED.site as SiteInfo,
       seo: SETTINGS_SEED.seo as SeoSettings,
