@@ -62,7 +62,7 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
 
           <div className="col-span-12 lg:col-span-7">
             <AnimatedSection animation="fade-up">
-              <h2 className="m-0 sm:max-w-lg max-w-xl font-display text-[clamp(32px,4.4vw,56px)] font-bold leading-[1.06] tracking-tight">
+              <h2 className="m-0 sm:max-w-lg max-w-xl font-display text-[clamp(32px,4.4vw,56px)] font-black uppercase leading-[1.06] tracking-tight">
                 {alianza.highlight && title.length > 1 ? (
                   <>
                     {title[0]}

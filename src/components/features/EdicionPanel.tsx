@@ -137,13 +137,13 @@ export function EdicionPanel({
                 </svg>
               </button>
             ) : null}
-            <div className="mt-[clamp(32px,4vw,56px)] grid grid-cols-3 gap-4 sm:gap-5">
+            <div className="mt-[clamp(32px,4vw,56px)] flex flex-wrap items-baseline justify-center gap-[clamp(24px,4vw,48px)]">
               {edition.stats.map((s) => (
-                <div key={s.label} className="min-w-0">
-                  <div className="font-display text-[clamp(24px,3vw,32px)] font-bold leading-none text-accent">
+                <div key={s.label} className="flex flex-col items-center text-center">
+                  <div className="font-display text-[clamp(64px,8vw,96px)] font-bold leading-none text-accent">
                     {s.value}
                   </div>
-                  <div className="mt-1 font-mono text-[11px] uppercase tracking-widest text-white/55 leading-tight">
+                  <div className="mt-1.5 text-[clamp(10px,1.2vw,12px)] uppercase tracking-wide text-white/70 leading-tight">
                     {s.label}
                   </div>
                 </div>

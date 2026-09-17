@@ -139,7 +139,7 @@ export function ImageCarousel({
     slidesPerViewSm ?? 0,
     slidesPerViewLg ?? 0,
   );
-  const loopEnabled = slides.length > maxSlidesPerView;
+  const loopEnabled = slides.length > 1;
 
   return (
     <div
@@ -170,7 +170,7 @@ export function ImageCarousel({
               href={src}
               data-fancybox={group}
               data-caption={i === 0 ? alt : `${alt} ${i + 1}`}
-              className="absolute inset-0 block cursor-zoom-in"
+              className="absolute inset-0 block cursor-zoom-in overflow-hidden rounded-[var(--radius-lg)]"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
