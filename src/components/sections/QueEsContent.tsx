@@ -46,9 +46,7 @@ export function QueEsContent({ queEs }: { queEs: QueEsSettings }) {
 
       <div className="mt-[clamp(44px,6vw,80px)] grid grid-cols-12 gap-x-[clamp(40px,5vw,80px)] gap-y-[clamp(36px,5vw,56px)]">
         <div className="col-span-12 flex flex-col lg:col-span-7">
-          <p className="m-0 max-w-[58ch] text-[19px] leading-relaxed text-muted">
-            {queEs.intro}
-          </p>
+          <div className="m-0 max-w-[58ch] text-[19px] leading-relaxed text-muted" dangerouslySetInnerHTML={{ __html: queEs.intro }} />
           <p className="mb-0 mt-8 font-display text-lg font-semibold">
             {queEs.experienceIntro}
           </p>
@@ -73,7 +71,7 @@ export function QueEsContent({ queEs }: { queEs: QueEsSettings }) {
                     {EXPERIENCE_ICONS[i % EXPERIENCE_ICONS.length]}
                   </svg>
                 </span>
-                <span className="pt-1 text-[15px] leading-relaxed">{text}</span>
+                <span className="pt-1 text-[15px] leading-relaxed" dangerouslySetInnerHTML={{ __html: text }} />
               </li>
             ))}
           </ul>

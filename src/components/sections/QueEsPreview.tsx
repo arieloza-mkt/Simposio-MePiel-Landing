@@ -38,9 +38,7 @@ export function QueEsPreview({ queEs }: { queEs: QueEsSettings }) {
       <div className="grid grid-cols-12 items-center gap-x-[clamp(32px,5vw,72px)] gap-y-8 rounded-3xl border border-white/15 bg-white/[0.06] p-[clamp(24px,4vw,56px)] backdrop-blur-sm dark:border-0 dark:bg-dark/90">
         {/* Columna izquierda: texto */}
         <div className="col-span-12 flex flex-col lg:col-span-7">
-          <p className="m-0 max-w-[52ch] text-[clamp(14px,1.8vw,18px)] leading-relaxed">
-            {queEs.intro}
-          </p>
+          <p className="m-0 max-w-[52ch] text-[clamp(14px,1.8vw,18px)] leading-relaxed" dangerouslySetInnerHTML={{ __html: queEs.intro }} />
         </div>
 
         {/* Columna derecha: carousel de imágenes */}

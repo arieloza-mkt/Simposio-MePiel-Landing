@@ -78,9 +78,11 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
             <AnimatedSection animation="fade-up" className="mt-[clamp(28px,3vw,44px)]">
               <div className="flex sm:max-w-lg max-w-lg flex-col gap-5">
                 {alianza.paragraphs.map((text, i) => (
-                  <p key={i} className="m-0 leading-relaxed text-black/70 text-[17px]">
-                    {text}
-                  </p>
+                  <div
+                    key={i}
+                    className="m-0 leading-relaxed text-black/70 text-[17px]"
+                    dangerouslySetInnerHTML={{ __html: text }}
+                  />
                 ))}
               </div>
             </AnimatedSection>

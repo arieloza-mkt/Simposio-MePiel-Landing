@@ -152,8 +152,9 @@ export function EditionDetailModal({
   speakers,
   modalSettings,
 }: EditionDetailModalProps) {
-  const editionSpeakers = edition.speakerIds
-    .map((id) => speakers.find((speaker) => speaker.id === id))
+  const safeSpeakers = speakers ?? [];
+  const editionSpeakers = (edition.speakerIds ?? [])
+    .map((id) => safeSpeakers.find((speaker) => speaker.id === id))
     .filter((speaker): speaker is Speaker => Boolean(speaker));
 
   return (
@@ -166,9 +167,7 @@ export function EditionDetailModal({
       <h3 className="m-0 font-display text-xl font-bold tracking-tight text-fg">
         {modalSettings?.speakersTitle ?? "Ponentes de la edición"}
       </h3>
-      <p className="mb-5 mt-1 text-sm text-muted">
-        {modalSettings?.speakersDescription ?? "Especialistas y líderes que compartieron su experiencia en escenario."}
-      </p>
+      <div className="mb-5 mt-1 text-sm text-muted" dangerouslySetInnerHTML={{ __html: modalSettings?.speakersDescription ?? "Especialistas y líderes que compartieron su experiencia en escenario." }} />
       {editionSpeakers.length > 0 ? (
         <SpeakersCarousel speakers={editionSpeakers} />
       ) : (
@@ -182,9 +181,7 @@ export function EditionDetailModal({
       <h3 className="m-0 font-display text-xl font-bold tracking-tight text-fg">
         {modalSettings?.labsTitle ?? "Laboratorios participantes"}
       </h3>
-      <p className="mb-4 mt-1 text-sm text-muted">
-        {modalSettings?.labsDescription ?? "Las marcas que exhibieron su portafolio en el recinto."}
-      </p>
+      <div className="mb-4 mt-1 text-sm text-muted" dangerouslySetInnerHTML={{ __html: modalSettings?.labsDescription ?? "Las marcas que exhibieron su portafolio en el recinto." }} />
       {edition.labs.length > 0 ? (
         <LogoCarousel items={edition.labs} label={modalSettings?.labsTitle ?? "Laboratorios participantes"} />
       ) : (
@@ -192,6 +189,7 @@ export function EditionDetailModal({
           [PENDIENTE: logos de laboratorios de esta edición]
         </div>
       )}
+
     </Modal>
   );
 }

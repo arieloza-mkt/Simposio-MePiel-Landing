@@ -586,19 +586,23 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     privacyLinkUrl: "#",
     eventLinks: [
       { label: "Acerca del Simposio", href: "#acerca" },
-      { label: "Ediciones anteriores", href: "#ediciones" },
-      { label: "Ejes temáticos", href: "#ejes-tematicos" },
-      { label: "Preguntas frecuentes", href: "#faq" },
+      { label: "Laboratorios participantes", href: "#acerca" },
+      { label: "Ediciones", href: "#ediciones" },
+      { label: "Programa", href: "#programa" },
     ],
     participateLinks: [
-      { label: "Registro de asistentes", href: "#registro" },
-      { label: "Ser expositor", href: "#para-labs" },
-      { label: "Patrocinadores", href: "#para-labs" },
+      { label: "Ver ediciones anteriores", href: "#ediciones" },
     ],
     contactLinks: [
-      { label: "contacto@simposiodermocosmetico.com", href: "mailto:contacto@simposiodermocosmetico.com" },
-      { label: "LinkedIn", href: "#" },
-      { label: "Instagram", href: "#" },
+      { label: "simposio@mepiel.com.mx", href: "mailto:simposio@mepiel.com.mx" },
+      {
+        label: "LinkedIn · Mepiel Distribuidores",
+        href: "https://linkedin.com/company/mepieldistribuidoresespecializados",
+      },
+      {
+        label: "Instagram · @mepieldistribuidores",
+        href: "https://www.instagram.com/mepieldistribuidores",
+      },
     ],
   },
 };

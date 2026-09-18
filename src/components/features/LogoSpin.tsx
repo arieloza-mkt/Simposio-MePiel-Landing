@@ -113,7 +113,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
             ref={previewRef}
             className="pointer-events-none absolute inset-0 z-0 overflow-y-auto bg-bg text-center dark:bg-[#0a1330]"
           >
-            <div className="flex min-h-full items-center justify-center px-5 py-10 pb-16 sm:px-8">
+            <div className="flex min-h-full items-center justify-center px-5 py-10 pb-16 sm:px-8 max-sm:py-4 max-sm:pb-10">
               <div className="w-full max-w-[1440px]">{nextPreview}</div>
             </div>
           </div>

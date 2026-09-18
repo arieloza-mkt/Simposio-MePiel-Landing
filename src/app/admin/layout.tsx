@@ -10,5 +10,5 @@ export default function AdminRootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return <div className="admin">{children}</div>;
 }

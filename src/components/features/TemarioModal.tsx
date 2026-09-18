@@ -23,8 +23,7 @@ export function TemarioModal({
         Temario de la {edition.ordinal} edición
       </h3>
       <p className="m-0 mb-6 border-b border-border pb-4 text-[13px] leading-relaxed text-muted">
-        Actividades de la {edition.eyebrow} ({edition.year}). Horarios sujetos a
-        cambios por cada recinto.
+        Actividades de la {edition.eyebrow} ({edition.year}).
       </p>
 
       <ol className="m-0 list-none p-0">

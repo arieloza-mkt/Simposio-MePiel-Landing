@@ -44,6 +44,7 @@ export function EdicionPanel({
 
   const slides = edition.images;
   const videoYoutubeId = edition.videoId ? getYoutubeId(edition.videoId) : null;
+  const isThirdEdition = edition.ordinal.startsWith("3");
 
   return (
     <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-center py-[clamp(48px,8vw,96px)]">
@@ -90,8 +91,8 @@ export function EdicionPanel({
         </>
       ) : null}
       <Container className="relative w-full">
-        <div className="items-center gap-[clamp(32px,5vw,72px)] grid grid-cols-2 max-md:grid-cols-1 max-md:gap-[40px]">
-          <div>
+        <div className="flex h-full flex-col items-center gap-[40px] lg:flex-row lg:items-stretch lg:gap-[clamp(32px,5vw,72px)]">
+          <div className="flex w-full flex-col lg:h-full lg:flex-1 lg:justify-center">
             {edition.logoUrl ? (
               <img
                 src={edition.logoUrl}
@@ -111,11 +112,13 @@ export function EdicionPanel({
             )}
             <p
               ref={descriptionRef}
-              className="mt-6 mb-0 line-clamp-4 whitespace-pre-line text-[17px] leading-relaxed text-white/55"
+              className={`mt-6 mb-0 whitespace-pre-line text-[17px] leading-relaxed text-white/55 ${
+                isThirdEdition ? "" : "line-clamp-4"
+              }`}
             >
               {edition.description}
             </p>
-            {overflows ? (
+            {overflows && !isThirdEdition ? (
               <button
                 type="button"
                 onClick={() => setLightboxOpen(true)}
@@ -170,7 +173,7 @@ export function EdicionPanel({
                   </svg>
                 </button>
               )}
-              {!edition.ordinal.startsWith("3") && (
+              {!isThirdEdition && (
                 <button
                   onClick={() => setDetailOpen(true)}
                   className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
@@ -190,7 +193,7 @@ export function EdicionPanel({
                   </svg>
                 </button>
               )}
-              {edition.ordinal.startsWith("3") && (
+              {isThirdEdition && (
                 <a
                   href="#programa"
                   className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-dark transition-all hover:opacity-90 active:translate-y-px"
@@ -213,7 +216,7 @@ export function EdicionPanel({
             </div>
           </div>
 
-          <div className="min-w-0 flex flex-col gap-[clamp(20px,3vw,32px)]">
+          <div className="min-w-0 flex w-full flex-col gap-[clamp(20px,3vw,32px)] lg:h-full lg:flex-1 lg:justify-center">
             {slides.length > 0 ? (
               <PhotoCarousel images={slides} className="max-md:aspect-[16/10]" />
             ) : null}

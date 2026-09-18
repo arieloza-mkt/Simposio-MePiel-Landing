@@ -11,6 +11,8 @@ interface LogoCarouselProps {
   items: { name: string; image: string }[];
   label: string;
   showNames?: boolean;
+  /** Logos visibles simultáneamente (default 4). */
+  perView?: number;
 }
 
 function AutoplayGuard() {
@@ -36,13 +38,19 @@ function AutoplayGuard() {
   return null;
 }
 
-export function LogoCarousel({ items, label, showNames = false }: LogoCarouselProps) {
+export function LogoCarousel({
+  items,
+  label,
+  showNames = false,
+  perView = 4,
+}: LogoCarouselProps) {
   if (items.length === 0) return null;
 
   const breakpoints: Record<number, { slidesPerView: number }> = {
-    640: { slidesPerView: 4 },
-    768: { slidesPerView: 5 },
-    1024: { slidesPerView: 6 },
+    480: { slidesPerView: Math.min(2, perView) },
+    640: { slidesPerView: Math.min(3, perView) },
+    768: { slidesPerView: Math.min(4, perView) },
+    1024: { slidesPerView: Math.min(5, perView) },
   };
 
   return (
@@ -54,9 +62,9 @@ export function LogoCarousel({ items, label, showNames = false }: LogoCarouselPr
       <div className="min-w-0 overflow-hidden" style={{ width: "100%" }}>
         <Swiper
           modules={[Autoplay]}
-          loop={true}
+          loop={items.length > perView}
           freeMode={true}
-          slidesPerView={3}
+          slidesPerView={Math.min(2, perView)}
           slidesPerGroup={1}
           spaceBetween={24}
           breakpoints={breakpoints}

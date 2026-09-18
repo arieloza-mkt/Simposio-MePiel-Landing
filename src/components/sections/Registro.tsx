@@ -18,12 +18,11 @@ export function Registro({ settings }: { settings: RegistroSettings }) {
             <h2 className="font-display text-[clamp(30px,4vw,48px)] font-bold leading-[1.1] tracking-tight">
               {settings.title}
             </h2>
-            <p className="mt-5 max-w-[60ch] text-[19px] leading-relaxed text-muted">
-              {settings.description}
-            </p>
+            <p className="mt-5 max-w-[60ch] text-[19px] leading-relaxed text-muted" dangerouslySetInnerHTML={{ __html: settings.description }} />
             <div className="mt-8 rounded-[var(--radius-lg)] border border-accent bg-accent/12 p-5">
               <p className="m-0 text-[14px]">
-                <strong>Proceso de validación:</strong> {settings.validationText}
+                <strong>Proceso de validación:</strong>
+                <span dangerouslySetInnerHTML={{ __html: settings.validationText }} />
               </p>
             </div>
             <div className="mt-8">

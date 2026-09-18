@@ -11,30 +11,12 @@ export function SimposioDermocosmetico({
 }: {
   alianza: MepielAlianzaSettings;
 }) {
-  const title = alianza.highlight
-    ? alianza.title.split(alianza.highlight)
-    : [alianza.title];
-
-  const titleLines = alianza.titleLines?.length
-    ? alianza.titleLines
-    : null;
-
   const slides =
     alianza.images && alianza.images.length > 0
       ? alianza.images
       : alianza.imageUrl
         ? [alianza.imageUrl]
         : [];
-
-  const scrollToNext = () => {
-    const el = document.querySelector("#acerca");
-    if (el) {
-      window.scrollTo({
-        top: (el as HTMLElement).offsetTop - 60,
-        behavior: "smooth",
-      });
-    }
-  };
 
   return (
     <Section
@@ -68,10 +50,10 @@ export function SimposioDermocosmetico({
         {/* Título principal centrado */}
         <AnimatedSection animation="fade-up">
           <div className="mb-[clamp(48px,6vw,88px)] flex flex-col items-center text-center">
-             <h2 className="m-0 max-w-[24ch]  text-[clamp(42px,6vw,78px)] font-black leading-[1.04] tracking-tight uppercase text-[#004496] dark:text-white">
+             <h2 className="m-0 max-w-[24ch]  text-[clamp(42px,6vw,78px)] font-black leading-[1.04] tracking-tight uppercase text-[#004496] dark:text-white max-sm:text-[clamp(34px,9vw,44px)]">
               Crecemos juntos <br />
-<span className="font-bold lowercase text-6xl">para llevar la</span> <span className="text-gm font-display text-8xl">Dermocosmética</span>   <br />
-<span className="font-light lowercase text-6xl">a otro nivel</span>
+<span className="font-bold lowercase text-6xl max-md:text-5xl max-sm:text-3xl">para llevar la</span> <span className="text-gm font-display text-8xl max-md:text-6xl max-sm:text-5xl">Dermocosmética</span>   <br />
+<span className="font-light lowercase text-6xl max-md:text-5xl max-sm:text-3xl">a otro nivel</span>
              </h2>
             
            
@@ -80,30 +62,29 @@ export function SimposioDermocosmetico({
         </AnimatedSection>
 
         {/* Texto a la izquierda + galería a la derecha */}
-        <div className="grid grid-cols-12 items-center gap-x-[clamp(40px,5vw,80px)] gap-y-10">
-          <div className="col-span-12 lg:col-span-4">
+        <div className="flex flex-col items-center gap-y-10 lg:flex-row lg:items-center lg:gap-x-[clamp(40px,5vw,80px)]">
+          <div className="w-full lg:flex-[5] max-sm:text-center">
             <AnimatedSection animation="fade-right">
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6 max-sm:items-center">
                 {alianza.paragraphs.map((text, i) => (
-                  <p
+                  <div
                     key={i}
-                    className="m-0 leading-relaxed text-[17px] text-black/70"
-                  >
-                    {text}
-                  </p>
+                    className="m-0 leading-relaxed text-[17px] text-black/70 max-sm:text-[15px]"
+                    dangerouslySetInnerHTML={{ __html: text }}
+                  />
                 ))}
               </div>
             </AnimatedSection>
           </div>
 
-          <div className="col-span-12 lg:col-span-8">
+          <div className="w-full lg:flex-[9] lg:min-w-0">
             <AnimatedSection animation="fade-left">
               <div className="relative">
                 {slides.length > 0 ? (
                   <ImageCarousel
                     slides={slides}
                     alt={alianza.imageAlt}
-                    aspectClassName="aspect-[3/4] sm:aspect-[4/3] lg:aspect-[380/450]"
+                    aspectClassName="max-sm:aspect-[4/5] aspect-[3/4] sm:aspect-[4/3] lg:aspect-[380/450]"
                     slidesPerView={1}
                     slidesPerViewSm={2}
                     slidesPerViewLg={3}

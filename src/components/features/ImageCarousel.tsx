@@ -94,7 +94,7 @@ function Dots({ slides }: { slides: string[] }) {
         <button
           key={i}
           type="button"
-          onClick={() => swiper.slideTo(i)}
+          onClick={() => swiper.slideToLoop(i)}
           className="grid h-6 w-6 place-items-center rounded-full border-none p-0 transition-colors"
           aria-label={`Foto ${i + 1}`}
           aria-current={i === active}

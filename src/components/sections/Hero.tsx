@@ -111,17 +111,17 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           initial="hidden"
           animate="visible"
           variants={heroChildren}
-          className="max-w-[720px] text-left"
+          className="max-w-[720px] text-left max-sm:mx-auto max-sm:text-center"
         >
           <motion.h1
             variants={heroChild}
-            className="mb-5 font-display text-[clamp(48px,7vw,88px)] font-bold leading-[1.04] tracking-tight text-white"
+            className="mb-5 font-display text-[clamp(48px,7vw,88px)] font-bold leading-[1.04] tracking-tight text-white max-sm:text-[clamp(32px,9vw,42px)]"
           >
             {hero.headline}
           </motion.h1>
           <motion.p
             variants={heroChild}
-            className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55"
+            className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55 max-sm:text-[16px]!"
           >
             {site.description}
           </motion.p>
@@ -131,7 +131,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.4 }}
-          className="relative mt-12 flex justify-start"
+          className="relative mt-12 flex justify-start max-sm:justify-center"
         >
           <button
             onClick={() => scrollTo("#ediciones")}

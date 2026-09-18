@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
 import { siteSettings } from "@/lib/db/schema";
+import { sanitizeHtmlSimple } from "@/lib/sanitize";
 
 const benefit = z.object({
   icon: z.string().min(1),
@@ -226,7 +227,30 @@ export async function saveContentSetting(
     return { ok: false, error: "Sección desconocida." };
   }
 
-  const parsed = CONTENT_SCHEMAS[key].safeParse(rawValues);
+  // Sanitize HTML fields before validation
+  const sanitizedValues = { ...rawValues };
+  const htmlFields: Record<string, string[]> = {
+    queEs: ["intro", "experienceIntro"],
+    mepielAlianza: ["paragraphs"],
+    registroSection: ["description", "validationText"],
+    footer: ["description"],
+    editionsModal: ["speakersDescription", "labsDescription"],
+  };
+
+  const fieldsToSanitize = htmlFields[key as keyof typeof htmlFields];
+  if (fieldsToSanitize) {
+    for (const field of fieldsToSanitize) {
+      if (typeof sanitizedValues[field] === "string") {
+        sanitizedValues[field] = sanitizeHtmlSimple(sanitizedValues[field] as string);
+      } else if (Array.isArray(sanitizedValues[field])) {
+        sanitizedValues[field] = (sanitizedValues[field] as string[]).map((item) =>
+          sanitizeHtmlSimple(item),
+        );
+      }
+    }
+  }
+
+  const parsed = CONTENT_SCHEMAS[key].safeParse(sanitizedValues);
   if (!parsed.success) {
     return {
       ok: false,
