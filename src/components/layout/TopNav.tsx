@@ -264,11 +264,14 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
             if (link.href === "#ediciones") {
               return (
                 <div key={link.href} className="w-full max-w-[340px]">
-                  <button
-                    type="button"
-                    onClick={() => setEdicionesOpen((v) => !v)}
+                  <a
+                    href="#ediciones"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEdicionesOpen((v) => !v);
+                    }}
                     aria-expanded={edicionesOpen}
-                    className="flex w-full items-center justify-center gap-3 py-3 font-display text-[clamp(34px,9.5vw,54px)] uppercase text-white transition-colors hover:text-accent"
+                    className="flex w-full cursor-pointer items-center justify-center gap-3 py-3 font-display text-[clamp(42px,9.5vw,54px)] uppercase text-white transition-colors hover:text-accent"
                   >
                     {link.label}
                     <svg
@@ -285,7 +288,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                     >
                       <path d="M6 9l6 6 6-6" />
                     </svg>
-                  </button>
+                  </a>
                   <div
                     className={cn(
                       "grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-[var(--ease-out-expo)]",
@@ -297,17 +300,20 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                         {editions && editions.length > 0 ? (
                           editions.map((edition, index) => (
                             <li key={index}>
-                              <button
-                                type="button"
-                                onClick={() => goToEdition(index)}
-                                className="px-4 py-2 font-display text-[clamp(30px,8.5vw,48px)] uppercase text-white/70 transition-colors hover:text-accent"
+                              <a
+                                href="#ediciones"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  goToEdition(index);
+                                }}
+                                className="cursor-pointer px-4 py-2 font-display text-[clamp(24px,6vw,48px)] uppercase text-white/70 transition-colors hover:text-accent"
                               >
                                 {edition.ordinal} edición
-                              </button>
+                              </a>
                             </li>
                           ))
                         ) : (
-                          <li className="px-4 py-2 font-display text-[clamp(30px,8.5vw,48px)] uppercase text-white/40">Sin ediciones</li>
+                          <li className="px-4 py-2 font-display text-[clamp(24px,6vw,48px)] uppercase text-white/40">Sin ediciones</li>
                         )}
                       </ul>
                     </div>
