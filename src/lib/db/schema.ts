@@ -28,6 +28,12 @@ export const siteSettings = pgTable("site_settings", {
     .defaultNow(),
 });
 
+export type EditionTemarioItem = {
+  title: string;
+  description?: string;
+  speaker?: string;
+};
+
 export const editions = pgTable("editions", {
   id: uuid("id").primaryKey().defaultRandom(),
   ordinal: text("ordinal").notNull(),
@@ -35,6 +41,10 @@ export const editions = pgTable("editions", {
   eyebrow: text("eyebrow").notNull(),
   title: text("title").notNull(),
   description: text("description").notNull(),
+  temario: jsonb("temario")
+    .$type<EditionTemarioItem[]>()
+    .notNull()
+    .default([]),
   stats: jsonb("stats")
     .$type<{ value: string; label: string }[]>()
     .notNull()

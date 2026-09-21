@@ -1,10 +1,9 @@
 export const NAV_LINKS = [
   { label: "Inicio", href: "#inicio" },
-  { label: "Acerca de", href: "#acerca" },
+  { label: "Acerca de", href: "#alianza" },
+  { label: "Expertos y Aliados", href: "#acerca" },
+  // { label: "Expositores", href: "#ponentes" },
   { label: "Ediciones", href: "#ediciones" },
-  { label: "Programa", href: "#programa" },
-  { label: "Laboratorios", href: "#laboratorios" },
-  { label: "Ponentes", href: "#ponentes" },
 ] as const;
 
 export const PROFILE_OPTIONS = [

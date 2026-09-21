@@ -54,6 +54,23 @@ export const PROGRAMA_MODOS: { value: ProgramaModo; label: string }[] = [
   { value: PROGRAMA_MODO_LOCALES, label: "Locales" },
 ];
 
+// PDFs oficiales del programa, uno por modalidad.
+export const PROGRAMA_PDF_URLS: Record<ProgramaModo, string> = {
+  [PROGRAMA_MODO_FORANEOS]:
+    "https://res.cloudinary.com/cc4tium7/image/upload/v1789687953/Foraneos.pdf",
+  [PROGRAMA_MODO_LOCALES]:
+    "https://res.cloudinary.com/cc4tium7/image/upload/v1789688009/Locales.pdf",
+};
+
+export function getProgramaPdfUrl(modo: ProgramaModo): string {
+  return PROGRAMA_PDF_URLS[modo];
+}
+
+// Fuerza la descarga vía Cloudinary (Content-Disposition: attachment).
+export function getProgramaPdfDownloadUrl(modo: ProgramaModo): string {
+  return PROGRAMA_PDF_URLS[modo].replace("/upload/", "/upload/fl_attachment/");
+}
+
 // 1 = Lunes 12 (llegada) · 2 = Martes 13 · 3 = Miércoles 14
 export const PROGRAMA_DIA_LABEL: Record<1 | 2 | 3, string> = {
   1: "LUNES 12",

@@ -11,10 +11,6 @@ export function SimposioDermocosmetico({
 }: {
   alianza: MepielAlianzaSettings;
 }) {
-  const title = alianza.highlight
-    ? alianza.title.split(alianza.highlight)
-    : [alianza.title];
-
   const slides =
     alianza.images && alianza.images.length > 0
       ? alianza.images
@@ -22,21 +18,18 @@ export function SimposioDermocosmetico({
         ? [alianza.imageUrl]
         : [];
 
-  const scrollToNext = () => {
-    const el = document.querySelector("#acerca");
-    if (el) {
-      window.scrollTo({
-        top: (el as HTMLElement).offsetTop - 60,
-        behavior: "smooth",
-      });
-    }
-  };
-
   return (
     <Section
       id="alianza"
       className="relative overflow-hidden"
     >
+      <img
+        src="https://res.cloudinary.com/cc4tium7/image/upload/v1789679969/alianza_back.png"
+        alt=""
+        aria-hidden
+        loading="lazy"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+      />
       {/* Formas orgánicas decorativas */}
       <div
         aria-hidden
@@ -57,52 +50,46 @@ export function SimposioDermocosmetico({
         {/* Título principal centrado */}
         <AnimatedSection animation="fade-up">
           <div className="mb-[clamp(48px,6vw,88px)] flex flex-col items-center text-center">
-            <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.22em] text-accent">
-              {alianza.eyebrow}
-            </p>
-            <h2 className="m-0 max-w-[22ch] font-display text-[clamp(36px,5.5vw,72px)] font-bold leading-[1.02] tracking-tight">
-              {alianza.highlight && title.length > 1 ? (
-                <>
-                  {title[0]}
-                  <span className="text-accent">{alianza.highlight}</span>
-                  {title[1]}
-                </>
-              ) : (
-                alianza.title
-              )}
-            </h2>
+             <h2 className="m-0 max-w-[24ch]  text-[clamp(42px,6vw,78px)] font-black leading-[1.04] tracking-tight uppercase text-[#004496] dark:text-white max-sm:text-[clamp(34px,9vw,44px)]">
+              Crecemos juntos <br />
+<span className="font-bold lowercase text-6xl max-md:text-5xl max-sm:text-3xl">para llevar la</span> <span className="text-gm font-display text-8xl max-md:text-6xl max-sm:text-5xl">Dermocosmética</span>   <br />
+<span className="font-light lowercase text-6xl max-md:text-5xl max-sm:text-3xl">a otro nivel</span>
+             </h2>
+            
+           
+
           </div>
         </AnimatedSection>
 
         {/* Texto a la izquierda + galería a la derecha */}
-        <div className="grid grid-cols-12 items-center gap-x-[clamp(40px,5vw,80px)] gap-y-10">
-          <div className="col-span-12 lg:col-span-5">
+        <div className="flex flex-col items-center gap-y-10 lg:flex-row lg:items-center lg:gap-x-[clamp(40px,5vw,80px)]">
+          <div className="w-full lg:flex-[5] max-sm:text-center">
             <AnimatedSection animation="fade-right">
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-6 max-sm:items-center">
                 {alianza.paragraphs.map((text, i) => (
-                  <p
+                  <div
                     key={i}
-                    className={`m-0 leading-relaxed ${
-                      i === 0
-                        ? "text-[clamp(17px,2vw,20px)]"
-                        : "text-muted"
-                    }`}
-                  >
-                    {text}
-                  </p>
+                    className="m-0 leading-relaxed text-[17px] text-black/70 max-sm:text-[15px]"
+                    dangerouslySetInnerHTML={{ __html: text }}
+                  />
                 ))}
               </div>
             </AnimatedSection>
           </div>
 
-          <div className="col-span-12 lg:col-span-7">
+          <div className="w-full lg:flex-[9] lg:min-w-0">
             <AnimatedSection animation="fade-left">
               <div className="relative">
                 {slides.length > 0 ? (
                   <ImageCarousel
                     slides={slides}
                     alt={alianza.imageAlt}
-                    aspectClassName="aspect-[3/4] md:aspect-[4/3] lg:aspect-[4/3]"
+                    aspectClassName="max-sm:aspect-[4/5] aspect-[3/4] sm:aspect-[4/3] lg:aspect-[380/450]"
+                    slidesPerView={1}
+                    slidesPerViewSm={2}
+                    slidesPerViewLg={3}
+                    slidesPerGroup={1}
+                    spaceBetween={20}
                   />
                 ) : (
                   <div
@@ -115,27 +102,6 @@ export function SimposioDermocosmetico({
                     </p>
                   </div>
                 )}
-
-                {/* Botón de navegación sobre la galería */}
-                <button
-                  type="button"
-                  onClick={scrollToNext}
-                  aria-label="Ir a la siguiente sección"
-                  className="absolute -right-3 -top-5 z-3 grid h-14 w-14 place-items-center rounded-full border-none bg-accent text-white shadow-xl shadow-accent/30 transition-transform duration-300 hover:scale-105 hover:shadow-accent/50 active:translate-y-px max-md:h-12 max-md:w-12"
-                >
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-6 w-6"
-                    aria-hidden
-                  >
-                    <path d="M12 4v16M5 13l7 7 7-7" />
-                  </svg>
-                </button>
               </div>
             </AnimatedSection>
           </div>

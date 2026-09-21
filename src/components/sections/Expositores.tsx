@@ -6,15 +6,7 @@ import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { SpeakerCarousel } from "@/components/features/SpeakerCarousel";
 
-export function Expositores({
-  speakers,
-  eyebrow,
-  title,
-}: {
-  speakers: Speaker[];
-  eyebrow: string;
-  title: string;
-}) {
+export function Expositores({ speakers }: { speakers: Speaker[] }) {
   return (
     <Section id="ponentes" fullHeight dark className="relative overflow-hidden justify-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -27,11 +19,8 @@ export function Expositores({
       />
       <Container className="relative z-10 min-w-0">
         <div className="mb-[56px] mx-auto text-center">
-          <p className="mb-5 font-mono text-xs uppercase tracking-[0.08em] text-accent">
-            {eyebrow}
-          </p>
           <h2 className="max-w-full font-display text-[clamp(26px,4vw,48px)] font-bold leading-[1.25] tracking-tight break-words">
-            {title}
+            Expositores
           </h2>
         </div>
 

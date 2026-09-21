@@ -77,6 +77,7 @@ export const DDL_STATEMENTS: string[] = [
   )`,
   `ALTER TABLE registrations ADD COLUMN IF NOT EXISTS access_code TEXT`,
   `ALTER TABLE editions ADD COLUMN IF NOT EXISTS logo_url TEXT`,
+  `ALTER TABLE editions ADD COLUMN IF NOT EXISTS temario JSONB NOT NULL DEFAULT '[]'::jsonb`,
   `ALTER TABLE schedule_items ADD COLUMN IF NOT EXISTS day INTEGER NOT NULL DEFAULT 1`,
   `CREATE UNIQUE INDEX IF NOT EXISTS registrations_access_code_unique ON registrations (access_code)`,
   `ALTER TABLE speakers ADD COLUMN IF NOT EXISTS bio TEXT`,

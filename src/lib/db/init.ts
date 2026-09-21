@@ -91,6 +91,23 @@ async function init(): Promise<void> {
     }
 
     // Backfill: código de acceso para registros creados antes de la migración.
+    // Temario de ediciones: se rellena solo si la edición ya existe y su temario
+    // está vacío, para no pisar contenido editado desde /admin/ediciones.
+    for (const seed of EDITION_SEED) {
+      if (!seed.temario || seed.temario.length === 0) continue;
+      const rows = await db
+        .select({ id: schema.editions.id, temario: schema.editions.temario })
+        .from(schema.editions)
+        .where(sql`${schema.editions.year} = ${seed.year}`);
+      for (const row of rows) {
+        if (row.temario.length === 0) {
+          await db
+            .update(schema.editions)
+            .set({ temario: seed.temario })
+            .where(eq(schema.editions.id, row.id));
+        }
+      }
+    }
     // Programa (3 días): se siembra solo si la tabla está vacía,
     // para no pisar las ediciones hechas desde /admin/programa.
     const programCount = await db

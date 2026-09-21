@@ -6,6 +6,7 @@ import { saveLabsList } from "@/app/actions/admin/labs";
 import { FieldArray } from "@/components/admin/FieldArray";
 import { ImageField } from "@/components/admin/ImageField";
 import { Button, Field, TextInput, TextArea } from "@/components/admin/ui";
+import { TipTapEditor } from "./TipTapEditor";
 import type {
   SiteInfo,
   SeoSettings,
@@ -173,25 +174,59 @@ export function AlianzaEditor({ data }: { data: MepielAlianzaSettings }) {
     imageUrl: data.imageUrl ?? "",
     imageAlt: data.imageAlt ?? "",
   });
+  const [titleLines, setTitleLines] = useState(() =>
+    [0, 1, 2, 3].map(
+      (i) =>
+        (Array.isArray(data.titleLines)
+          ? data.titleLines
+          : [data.title])[i] ?? "",
+    ),
+  );
   const [paragraphs, setParagraphs] = useState(() =>
     (data.paragraphs ?? []).map((text) => ({ id: uid(), text }))
   );
+  const [images, setImages] = useState(() =>
+    (data.images?.length ? data.images : data.imageUrl ? [data.imageUrl] : []).map(
+      (url) => ({ id: uid(), url }),
+    )
+  );
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); save({ ...form, paragraphs: JSON.stringify(paragraphs.map(({ id, ...p }) => p.text)) }); }} className="grid gap-4">
+    <form onSubmit={(e) => { e.preventDefault(); save({ ...form, titleLines: JSON.stringify(titleLines), paragraphs: JSON.stringify(paragraphs.map(({ id, ...p }) => p.text)), images: JSON.stringify(images.map(({ id, ...i }) => i.url)) }); }} className="grid gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Antetítulo" htmlFor="alianza-eyebrow">
           <TextInput id="alianza-eyebrow" value={form.eyebrow} onChange={(e) => setForm({ ...form, eyebrow: e.target.value })} />
         </Field>
-        <Field label="Título" htmlFor="alianza-title">
-          <TextInput id="alianza-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-        </Field>
-        <Field label="Palabra resaltada" htmlFor="alianza-highlight" hint="Debe estar en el título">
-          <TextInput id="alianza-highlight" value={form.highlight} onChange={(e) => setForm({ ...form, highlight: e.target.value })} />
-        </Field>
         <Field label="Alt de imagen" htmlFor="alianza-imageAlt">
           <TextInput id="alianza-imageAlt" value={form.imageAlt} onChange={(e) => setForm({ ...form, imageAlt: e.target.value })} />
         </Field>
+      </div>
+
+      <div className="rounded-xl border border-border bg-surface/20 p-4">
+        <p className="mb-3 text-sm font-semibold text-fg">Título por líneas (estilo de sección)</p>
+        <div className="grid gap-3">
+          <Field label="Línea 1 · Montserrat Bold" htmlFor="alianza-line-0">
+            <TextInput id="alianza-line-0" value={titleLines[0]} onChange={(e) => setTitleLines([e.target.value, titleLines[1], titleLines[2], titleLines[3]])} />
+          </Field>
+          <Field label="Línea 2 · Montserrat Bold" htmlFor="alianza-line-1" hint="Va junto a la línea 3">
+            <TextInput id="alianza-line-1" value={titleLines[1]} onChange={(e) => setTitleLines([titleLines[0], e.target.value, titleLines[2], titleLines[3]])} />
+          </Field>
+          <Field label="Línea 3 · Bebas rosa, más grande" htmlFor="alianza-line-2" hint="Va junto a la línea 2">
+            <TextInput id="alianza-line-2" value={titleLines[2]} onChange={(e) => setTitleLines([titleLines[0], titleLines[1], e.target.value, titleLines[3]])} />
+          </Field>
+          <Field label="Línea 4 · Montserrat Light" htmlFor="alianza-line-3">
+            <TextInput id="alianza-line-3" value={titleLines[3]} onChange={(e) => setTitleLines([titleLines[0], titleLines[1], titleLines[2], e.target.value])} />
+          </Field>
+        </div>
+        <p className="mt-3 text-xs text-muted">Campos de fallback (se usan si no hay líneas):</p>
+        <div className="mt-2 grid gap-3 sm:grid-cols-2">
+          <Field label="Título completo" htmlFor="alianza-title">
+            <TextInput id="alianza-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          </Field>
+          <Field label="Palabra resaltada" htmlFor="alianza-highlight" hint="Debe estar en el título">
+            <TextInput id="alianza-highlight" value={form.highlight} onChange={(e) => setForm({ ...form, highlight: e.target.value })} />
+          </Field>
+        </div>
       </div>
 
       <div>
@@ -201,11 +236,27 @@ export function AlianzaEditor({ data }: { data: MepielAlianzaSettings }) {
           onChange={setParagraphs}
           addLabel="Agregar párrafo"
           renderItem={(item, _, onChange) => (
-            <TextArea
-              rows={2}
-              placeholder="Texto del párrafo"
+            <TipTapEditor
               value={item.text}
-              onChange={(e) => onChange({ ...item, text: e.target.value })}
+              onChange={(html) => onChange({ ...item, text: html })}
+              placeholder="Texto del párrafo"
+            />
+          )}
+        />
+      </div>
+
+      <div>
+        <p className="mb-2 text-sm font-medium text-fg">Imágenes del slider (6 slides, se muestran 3 por vista y avanza de uno en uno)</p>
+        <FieldArray
+          items={images}
+          onChange={setImages}
+          addLabel="Agregar imagen"
+          renderItem={(item, _, onChange) => (
+            <ImageField
+              name={`alianza-slide-${item.id}`}
+              label="Slide"
+              defaultValue={item.url}
+              onChange={(url) => onChange({ ...item, url })}
             />
           )}
         />
@@ -213,7 +264,7 @@ export function AlianzaEditor({ data }: { data: MepielAlianzaSettings }) {
 
       <ImageField
         name="imageUrl"
-        label="Imagen (URL Cloudinary)"
+        label="Imagen principal (URL Cloudinary, fallback)"
         defaultValue={form.imageUrl}
         onChange={(url) => setForm({ ...form, imageUrl: url })}
       />
@@ -272,7 +323,11 @@ export function QueEsEditor({ data }: { data: QueEsSettings }) {
         </Field>
       </div>
       <Field label="Introducción" htmlFor="queEs-intro">
-        <TextArea id="queEs-intro" rows={3} value={form.intro} onChange={(e) => setForm({ ...form, intro: e.target.value })} />
+        <TipTapEditor
+          value={form.intro}
+          onChange={(html) => setForm({ ...form, intro: html })}
+          placeholder="Texto de introducción"
+        />
       </Field>
       <Field label="Intro de experiencia" htmlFor="queEs-expIntro">
         <TextInput id="queEs-expIntro" value={form.experienceIntro} onChange={(e) => setForm({ ...form, experienceIntro: e.target.value })} />
@@ -285,10 +340,10 @@ export function QueEsEditor({ data }: { data: QueEsSettings }) {
           onChange={setExperienceItems}
           addLabel="Agregar elemento"
           renderItem={(item, _, onChange) => (
-            <TextInput
-              placeholder="Texto del elemento"
+            <TipTapEditor
               value={item.text}
-              onChange={(e) => onChange({ ...item, text: e.target.value })}
+              onChange={(html) => onChange({ ...item, text: html })}
+              placeholder="Texto del elemento"
             />
           )}
         />
@@ -332,13 +387,21 @@ export function EditionsEditor({
             <TextInput id="modal-speakersTitle" value={modal.speakersTitle} onChange={(e) => setModal({ ...modal, speakersTitle: e.target.value })} />
           </Field>
           <Field label="Descripción ponentes" htmlFor="modal-speakersDesc">
-            <TextInput id="modal-speakersDesc" value={modal.speakersDescription} onChange={(e) => setModal({ ...modal, speakersDescription: e.target.value })} />
+            <TipTapEditor
+              value={modal.speakersDescription}
+              onChange={(html) => setModal({ ...modal, speakersDescription: html })}
+              placeholder="Descripción de ponentes"
+            />
           </Field>
           <Field label="Título laboratorios" htmlFor="modal-labsTitle">
             <TextInput id="modal-labsTitle" value={modal.labsTitle} onChange={(e) => setModal({ ...modal, labsTitle: e.target.value })} />
           </Field>
           <Field label="Descripción laboratorios" htmlFor="modal-labsDesc">
-            <TextInput id="modal-labsDesc" value={modal.labsDescription} onChange={(e) => setModal({ ...modal, labsDescription: e.target.value })} />
+            <TipTapEditor
+              value={modal.labsDescription}
+              onChange={(html) => setModal({ ...modal, labsDescription: html })}
+              placeholder="Descripción de laboratorios"
+            />
           </Field>
         </div>
         <SaveButton pending={modalSave.pending} message={modalSave.message} />
@@ -398,10 +461,18 @@ export function RegistroEditor({ data }: { data: RegistroSettings }) {
         </Field>
       </div>
       <Field label="Descripción" htmlFor="reg-desc">
-        <TextArea id="reg-desc" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+        <TipTapEditor
+          value={form.description}
+          onChange={(html) => setForm({ ...form, description: html })}
+          placeholder="Descripción del registro"
+        />
       </Field>
       <Field label="Texto de validación" htmlFor="reg-validation">
-        <TextArea id="reg-validation" rows={3} value={form.validationText} onChange={(e) => setForm({ ...form, validationText: e.target.value })} />
+        <TipTapEditor
+          value={form.validationText}
+          onChange={(html) => setForm({ ...form, validationText: html })}
+          placeholder="Texto de validación"
+        />
       </Field>
       <div className="grid gap-4 sm:grid-cols-3">
         <Field label="Label '¿Tienes dudas?'" htmlFor="reg-dudasLabel">
@@ -452,7 +523,11 @@ export function FooterEditor({ data }: { data: FooterSettings }) {
     <form onSubmit={handleSubmit} className="grid gap-4">
       <ImageField name="logoUrl" label="Logo del footer" defaultValue={form.logoUrl} onChange={(url) => setForm({ ...form, logoUrl: url })} />
       <Field label="Descripción" htmlFor="footer-desc">
-        <TextArea id="footer-desc" rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+        <TipTapEditor
+          value={form.description}
+          onChange={(html) => setForm({ ...form, description: html })}
+          placeholder="Descripción del footer"
+        />
       </Field>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Copyright" htmlFor="footer-copyright">

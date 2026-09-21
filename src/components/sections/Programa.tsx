@@ -195,8 +195,6 @@ export function Programa({ items }: { items: ProgramaItem[] }) {
       <ProgramaModal
         open={openDay !== null}
         onClose={() => setOpenDay(null)}
-        items={items}
-        initialDay={openDay ?? undefined}
         modo={modo}
         onModoChange={setModo}
       />

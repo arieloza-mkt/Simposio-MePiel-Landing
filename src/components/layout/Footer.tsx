@@ -5,12 +5,14 @@ import { AnimatedSection } from "@/components/ui/AnimatedSection";
 function FooterColumn({
   title,
   links,
+  className,
 }: {
   title: string;
   links: { label: string; href: string }[];
+  className?: string;
 }) {
   return (
-    <div>
+    <div className={className}>
       <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-widest text-white">
         {title}
       </p>
@@ -47,8 +49,8 @@ export function Footer({ settings }: { settings: FooterSettings }) {
       />
 <Container className="relative z-10">
         <AnimatedSection animation="fade-up">
-          <div className="mb-[40px] grid gap-[40px] text-[14px] sm:grid-cols-2 md:grid-cols-4 md:gap-[56px]">
-        <div className="sm:col-span-2 md:col-span-1">
+          <div className="mb-[40px] flex flex-col gap-[40px] text-[14px] md:gap-[56px]">
+        <div className="w-full">
           <div className="mb-5 flex items-center gap-2.5">
             {settings.logoUrl && (
               <img
@@ -60,14 +62,14 @@ export function Footer({ settings }: { settings: FooterSettings }) {
               />
             )}
           </div>
-          <p className="max-w-[32ch] text-[14px] leading-relaxed text-white/55">
-            {settings.description}
-          </p>
+          <p className="max-w-[32ch] text-[14px] leading-relaxed text-white/55" dangerouslySetInnerHTML={{ __html: settings.description }} />
         </div>
 
-        <FooterColumn title="Evento" links={settings.eventLinks} />
-        <FooterColumn title="Participa" links={settings.participateLinks} />
-        <FooterColumn title="Contacto" links={settings.contactLinks} />
+        <div className="flex flex-col gap-[40px] sm:flex-row sm:flex-wrap md:gap-[56px]">
+          <FooterColumn title="Evento" links={settings.eventLinks} className="w-full sm:flex-1" />
+          <FooterColumn title="Ediciones Anteriores" links={settings.participateLinks} className="w-full sm:flex-1" />
+          <FooterColumn title="Contacto" links={settings.contactLinks} className="w-full sm:flex-1" />
+        </div>
       </div>
         </AnimatedSection>
 

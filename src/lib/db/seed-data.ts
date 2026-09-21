@@ -58,6 +58,15 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
     title: "El inicio de una conversación que transforma",
     description:
       "Una primera edición que reunió a expertos, líderes de la industria y profesionales de la salud para analizar el presente y futuro de la dermocosmética en México. Un espacio de intercambio y conocimiento que puso sobre la mesa las tendencias, retos y oportunidades de una categoría en constante evolución.",
+    temario: [
+      { title: "Mercado mexicano del dermocosmético", description: "Conferencia sobre el panorama actual del mercado dermocosmético en México", speaker: "MARIO MUÑIZ · SR. GENERAL MANAGER NOLA IQVIA" },
+      { title: "Categoría dermocosmética", description: "Análisis de la categoría y sus principales drivers", speaker: "MARGARITA TRUJILLO · DIRECTORA DE UNIDADES ESTRATÉGICAS GRUPO MEPIEL" },
+      { title: "Tipos de generadores de demanda", description: "Estrategias para generar demanda en dermocosmética", speaker: "PHILIPPE DE CARVALHO · DIRECTOR PIERRE FABRE" },
+      { title: "Hábitos del consumidor mexicano", description: "Comportamiento y preferencias del shopper dermocosmético", speaker: "ANDREA FIGUEROA · BRAND GENERAL MANAGER EN SKINCEUTICALS MÉXICO" },
+      { title: "Comunicación de la categoría", description: "Claves para comunicar eficazmente la dermocosmética", speaker: "ELIANA CARDOZO · TD&DS BU'S AND COMMERCIAL DIRECTOR GALDERMA MÉXICO" },
+      { title: "Estrategia Digital", description: "Transformación digital en el canal dermocosmético", speaker: "MARIE DI CESARE · MANAGER GENERAL DE LOREAL MEXICO" },
+      { title: "Tendencias del mercado dermocosmético", description: "Principales tendencias que definirán el futuro de la categoría", speaker: "SALATHIEL ROSAS · SENIOR DIGITAL AND COMMUNITY MANAGER ISDIN MÉXICO" },
+    ],
     stats: [
       { value: "+1000", label: "Asistentes" },
       { value: "+15", label: "Laboratorios" },
@@ -102,6 +111,15 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
     title: "Consolidando una comunidad que impulsa la categoría",
     description:
       "Una segunda edición que llevó la conversación más allá, conectando a expertos y profesionales para compartir nuevas perspectivas, estrategias y oportunidades de crecimiento. Un encuentro que fortaleció la colaboración entre la industria y el punto de venta, consolidando al Simposio como un espacio clave para impulsar la dermocosmética en México.",
+    temario: [
+      { title: "¿Es el mercado Dermocosmético mexicano una oportunidad de negocio?", description: "Análisis de oportunidad de negocio en el mercado dermocosmético mexicano", speaker: "MARIO MUÑIZ · SR. GENERAL MANAGER NOLA IQVIA" },
+      { title: "Drivers de la categoría dermocosmética", description: "Principales impulsores de crecimiento en la categoría", speaker: "LAURENCIA MUSSOL · CEO ADJUNTA ISISPHARMA" },
+      { title: "Marketing de la categoría", description: "Estrategias de marketing para marcas dermocosméticas", speaker: "ELIANA CARDOZO · TD&DS BU'S AND COMMERCIAL DIRECTOR GALDERMA MÉXICO" },
+      { title: "Estrategia Digital", description: "Digitalización y estrategia omnicanal", speaker: "MARIAGNA ORTIZ · DIRECTOR COMERCIAL PIERRE FABRE MÉXICO" },
+      { title: "Herramientas tecnológicas para tu negocio IA", description: "Aplicaciones de inteligencia artificial en dermocosmética", speaker: "SALATHIEL ROSAS · SENIOR DIGITAL AND COMMUNITY MANAGER ISDIN MÉXICO" },
+      { title: "Tendencias", description: "Tendencias emergentes en dermocosmética y retail", speaker: "SUSANA ALFARO · BUSINESS UNIT HEAD EUCERIN MÉXICO Y CENTRO AMÉRICA" },
+      { title: "Estrategia comercial", description: "Estrategias comerciales para el canal farmacéutico", speaker: "MARGARITA TRUJILLO · DIRECTOR UNIDADES DE NEGOCIO GRUPO MEPIEL" },
+    ],
     stats: [
       { value: "+3500", label: "Asistentes" },
       { value: "+40", label: "Laboratorios" },
@@ -150,6 +168,7 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
     title: "En octubre, nos volvemos a encontrar",
     description:
       "La tercera edición del Simposio Dermocosmético llegará con la esencia que ya nos caracteriza, pero con nuevas experiencias para conectar, aprender y vivir la categoría de una forma diferente.\nHabrá más ponencias, espacios de convivencia y encuentros con los laboratorios participantes… y tenemos algo más preparado para esta edición que todavía no podemos revelar.\nNuevas experiencias. La misma misión: seguir impulsando juntos la dermocosmética en México.",
+    temario: [],
     stats: [
       { value: "+5000", label: "Asistentes" },
       { value: "+60", label: "Laboratorios" },
@@ -298,7 +317,7 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     tagline:
       "El encuentro comercial más relevante de la industria dermocosmética en México",
     description:
-      "En mepiel distribuidores especializados creemos que una gran relación con nuestros médicos va más allá de ofrecer productos. Buscamos construir alianzas duraderas que generen valor para tu práctica, tus pacientes y tu crecimiento profesional.",
+      "Nuestros clientes y aliados estratégicos tienen la oportunidad de acceder a experiencias exclusivas de capacitación, actualización y conexión profesional dermocosmética. Entre estas oportunidades se encuentra la invitación al Simposio Dermocosmético, un encuentro creado para profesionales que buscan mantenerse a la vanguardia de la industria.",
   },
   seo: {
     title: "Simposio Dermocosmético - 3a Edición - Registro Abierto",
@@ -491,10 +510,15 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     eyebrow: "Mepiel · Distribuidores Especializados",
     title: "Crecemos juntos para llevar la dermocosmética a otro nivel",
     highlight: "juntos",
+    titleLines: [
+      "Crecemos juntos",
+      "para llevar la",
+      "Dermocosmética",
+      "a otro nivel",
+    ],
     paragraphs: [
-      "En mepiel distribuidores especializados creemos que una gran relación con nuestros médicos va más allá de ofrecer productos. Buscamos construir alianzas duraderas que generen valor para tu práctica, tus pacientes y tu crecimiento profesional.",
-      "Por eso, nuestros clientes y aliados estratégicos tienen la oportunidad de acceder a experiencias exclusivas de capacitación, actualización y conexión profesional.",
-      "Entre estas oportunidades se encuentra una invitación al Simposio Dermocosmético 2025, un encuentro creado para profesionales que buscan mantenerse a la vanguardia de la industria.",
+      "Nuestros clientes y aliados estratégicos tienen la oportunidad de acceder a experiencias exclusivas de capacitación, actualización y conexión profesional dermocosmética.",
+      "Entre estas oportunidades se encuentra la invitación al Simposio Dermocosmético, un encuentro creado para profesionales que buscan mantenerse a la vanguardia de la industria.",
     ],
     imageUrl: "",
     imageAlt: "Mepiel distribuidores especializados",
@@ -504,6 +528,7 @@ export const SETTINGS_SEED: Record<string, unknown> = {
       "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1529070538774-1843cb3265df?q=80&w=1170&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1594122230689-45899d9e6f69?q=80&w=1170&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=1170&auto=format&fit=crop",
     ],
   },
   ctaCierre: {
@@ -534,7 +559,7 @@ export const SETTINGS_SEED: Record<string, unknown> = {
   },
   labsSection: {
     eyebrow: "Laboratorios participantes",
-    title: "Las marcas que lideran la categoría",
+    title: "Laboratorios Participantes",
   },
   expositoresSection: {
     eyebrow: "Expositores y speakers",
@@ -561,19 +586,23 @@ export const SETTINGS_SEED: Record<string, unknown> = {
     privacyLinkUrl: "#",
     eventLinks: [
       { label: "Acerca del Simposio", href: "#acerca" },
-      { label: "Ediciones anteriores", href: "#ediciones" },
-      { label: "Ejes temáticos", href: "#ejes-tematicos" },
-      { label: "Preguntas frecuentes", href: "#faq" },
+      { label: "Laboratorios participantes", href: "#acerca" },
+      { label: "Ediciones", href: "#ediciones" },
+      { label: "Programa", href: "#programa" },
     ],
     participateLinks: [
-      { label: "Registro de asistentes", href: "#registro" },
-      { label: "Ser expositor", href: "#para-labs" },
-      { label: "Patrocinadores", href: "#para-labs" },
+      { label: "Ver ediciones anteriores", href: "#ediciones" },
     ],
     contactLinks: [
-      { label: "contacto@simposiodermocosmetico.com", href: "mailto:contacto@simposiodermocosmetico.com" },
-      { label: "LinkedIn", href: "#" },
-      { label: "Instagram", href: "#" },
+      { label: "simposio@mepiel.com.mx", href: "mailto:simposio@mepiel.com.mx" },
+      {
+        label: "LinkedIn · Mepiel Distribuidores",
+        href: "https://linkedin.com/company/mepieldistribuidoresespecializados",
+      },
+      {
+        label: "Instagram · @mepieldistribuidores",
+        href: "https://www.instagram.com/mepieldistribuidores",
+      },
     ],
   },
 };

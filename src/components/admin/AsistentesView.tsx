@@ -177,7 +177,7 @@ function RegistrosTab({
       {data.length === 0 ? (
         <EmptyState message="No hay registros que coincidan con la búsqueda." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border">
+        <div className="overflow-x-auto rounded-xl border border-border">
           <Table className="min-w-[860px]">
             <TableHeader>
               <TableRow className="hover:bg-transparent">

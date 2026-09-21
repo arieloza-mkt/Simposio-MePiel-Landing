@@ -70,7 +70,13 @@ function AutoplayGuard() {
   return null;
 }
 
-export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
+export function SpeakerCarousel({
+  speakers,
+  perView,
+}: {
+  speakers: Speaker[];
+  perView?: number;
+}) {
 
   if (speakers.length === 0) {
     return (
@@ -87,7 +93,7 @@ export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
       <div className="relative">
         <Swiper
           modules={[Autoplay]}
-          slidesPerView={1}
+          slidesPerView={perView ?? 1}
           spaceBetween={16}
           loop={true}
           autoplay={{
@@ -95,11 +101,15 @@ export function SpeakerCarousel({ speakers }: { speakers: Speaker[] }) {
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
           }}
-          breakpoints={{
-            640: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-            1280: { slidesPerView: 4 },
-          }}
+          breakpoints={
+            perView
+              ? undefined
+              : {
+                  640: { slidesPerView: 2 },
+                  1024: { slidesPerView: 3 },
+                  1280: { slidesPerView: 4 },
+                }
+          }
           className="w-full"
         >
           {speakers.map((speaker) => (

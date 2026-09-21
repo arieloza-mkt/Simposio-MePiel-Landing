@@ -36,8 +36,8 @@ export function AccordionItem({
         </svg>
       </button>
       <div
-        className={`overflow-hidden transition-[max-height] duration-300 ease-[var(--ease-out-expo)] ${
-          isOpen ? "max-h-[400px]" : "max-h-0"
+        className={`overflow-y-auto overscroll-contain transition-[max-height] duration-300 ease-[var(--ease-out-expo)] ${
+          isOpen ? "max-h-[min(60dvh,400px)]" : "max-h-0"
         }`}
       >
         <div className="max-w-[60ch] pb-5 text-[15px] leading-relaxed text-muted">
