@@ -147,7 +147,7 @@ export function PhotoCarousel({
             key={i}
             type="button"
             onClick={() => scrollTo(i)}
-            className="grid h-6 w-6 place-items-center rounded-full border-none p-0 transition-colors"
+            className="grid h-8 w-8 place-items-center rounded-full border-none p-0 transition-colors"
             aria-label={`Foto ${i + 1}`}
             aria-current={i === selectedIndex}
           >

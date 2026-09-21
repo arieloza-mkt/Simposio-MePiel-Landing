@@ -57,7 +57,7 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
         <button
           onClick={() => emblaApi?.scrollPrev()}
           disabled={selectedIndex === 0}
-          className="absolute left-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-8 max-md:w-8"
+          className="absolute left-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-11 max-md:w-11"
           aria-label="Ponente anterior"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
@@ -67,7 +67,7 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
         <button
           onClick={() => emblaApi?.scrollNext()}
           disabled={selectedIndex === scrollSnaps.length - 1}
-          className="absolute right-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-8 max-md:w-8"
+          className="absolute right-3 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/25 bg-dark/55 text-white backdrop-blur-sm transition-colors hover:border-accent hover:text-accent disabled:pointer-events-none disabled:opacity-0 max-md:h-11 max-md:w-11"
           aria-label="Ponente siguiente"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden>
@@ -121,15 +121,20 @@ function SpeakersCarousel({ speakers }: { speakers: Speaker[] }) {
 
       <div className="mt-5 flex items-center justify-center">
         <div className="flex gap-1.5">
-          {scrollSnaps.map((_, i) => (
+{scrollSnaps.map((_, i) => (
             <button
               key={i}
               onClick={() => emblaApi?.scrollTo(i)}
-              className={`h-2 w-2 rounded-full border-none p-0 transition-colors ${
-                i === selectedIndex ? "bg-accent" : "bg-border"
-              }`}
-              aria-label={`Página ${i + 1}`}
-            />
+              aria-label={`Ponente ${i + 1}`}
+              className="grid h-6 w-6 place-items-center rounded-full border-none p-0 transition-colors"
+            >
+              <span
+                aria-hidden
+                className={`h-2 w-2 rounded-full transition-colors ${
+                  i === selectedIndex ? "bg-accent" : "bg-border"
+                }`}
+              />
+            </button>
           ))}
         </div>
       </div>

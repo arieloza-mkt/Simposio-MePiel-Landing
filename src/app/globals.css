@@ -141,13 +141,14 @@
   .font-mono {
     font-weight: 300;
   }
-}
 
-/* Tamaño uniforme (no pequeño) para todos los párrafos del sitio,
-   excepto el admin (contenido dentro de .admin mantiene sus tamaños).
-   Sin capa → gana a las utilities de tamaño (text-xs/text-sm/text-[..]). */
-p:not(.admin p) {
-  font-size: 20px;
+  /* Tamaño uniforme (no pequeño) para todos los párrafos del sitio,
+     excepto el admin (contenido dentro de .admin mantiene sus tamaños).
+     Dentro de @layer components para que las utilities de tamaño
+     (text-xs/text-sm/text-[..]) sobre <p> vuelvan a ganar. */
+  p:not(.admin p) {
+    font-size: 20px;
+  }
 }
 
 /* En móvil, los párrafos de la sección Alianza (HTML con <p> anidados)

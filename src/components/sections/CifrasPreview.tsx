@@ -41,7 +41,7 @@ export function CifrasPreview({
       className="text-left"
     >
       <div className="flex flex-col items-center gap-[clamp(32px,5vw,72px)] lg:flex-row lg:items-center">
-        <div className="w-full lg:w-[58.333%] lg:flex-none">
+        <div className="w-full lg:w-[58.333%] lg:flex-none mt-[8rem]">
           <h2 className="m-0 max-w-[24ch] font-display text-[clamp(42px,5.8vw,72px)] leading-[1.04] tracking-tight max-sm:text-[clamp(32px,9vw,42px)]">
             {queEs.highlight ? (
               <>
@@ -55,7 +55,7 @@ export function CifrasPreview({
               queEs.title
             )}
           </h2>
-          <p className="m-0 mt-5 max-w-[58ch] text-[clamp(17px,2vw,21px)] leading-relaxed text-fg/80 max-sm:text-[15px]!">
+          <p className="m-0 mt-5 max-w-[58ch] text-[clamp(17px,2vw,21px)] leading-relaxed text-fg/80 max-sm:text-[15px]">
             {queEs.intro}
           </p>
           {labsList.length > 0 && (

@@ -121,7 +121,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           </motion.h1>
           <motion.p
             variants={heroChild}
-            className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55 max-sm:text-[16px]!"
+            className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55 max-sm:text-[16px]"
           >
             {site.description}
           </motion.p>

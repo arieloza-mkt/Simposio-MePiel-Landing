@@ -13,7 +13,7 @@ function FooterColumn({
 }) {
   return (
     <div className={className}>
-      <p className="mb-3 font-mono text-[13px]! font-semibold uppercase tracking-widest text-white">
+      <p className="mb-3 font-mono text-[13px] font-semibold uppercase tracking-widest text-white">
         {title}
       </p>
       <nav className="flex flex-col gap-2">
@@ -62,7 +62,7 @@ export function Footer({ settings }: { settings: FooterSettings }) {
               />
             )}
           </div>
-          <p className="max-w-[32ch] text-[14px]! leading-relaxed text-white/55" dangerouslySetInnerHTML={{ __html: settings.description }} />
+          <p className="max-w-[32ch] text-[14px] leading-relaxed text-white/55" dangerouslySetInnerHTML={{ __html: settings.description }} />
         </div>
 
         <div className="flex flex-col gap-[40px] sm:flex-row sm:flex-wrap md:gap-[56px]">

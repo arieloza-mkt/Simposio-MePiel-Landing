@@ -6,7 +6,7 @@ export function CategoriaHero() {
       <Container className="relative z-10">
         <div className="flex flex-col-reverse items-center justify-between gap-[clamp(32px,5vw,72px)] md:flex-row">
           <div className="max-w-[720px] text-center md:text-left">
-            <p className="mb-[18px] font-mono text-xs! font-bold uppercase tracking-[0.35em] text-white/80">
+            <p className="mb-[18px] font-mono text-xs font-bold uppercase tracking-[0.35em] text-white/80">
               Impulsando
             </p>
             <h2 className="m-0 font-display text-[clamp(38px,6.2vw,72px)] font-bold uppercase leading-[1.02] tracking-tight">
@@ -17,7 +17,7 @@ export function CategoriaHero() {
                 Dermocosmética
               </span>
             </h2>
-            <p className="mt-[6px] font-mono text-[clamp(16px,1.8vw,26px)]! font-bold uppercase tracking-[0.25em] text-[#cfd6ff]">
+            <p className="mt-[6px] font-mono text-[clamp(16px,1.8vw,26px)] font-bold uppercase tracking-[0.25em] text-[#cfd6ff]">
               En México
             </p>
           </div>

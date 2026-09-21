@@ -70,7 +70,7 @@ export function Modal({
             ref={closeButtonRef}
             onClick={onClose}
             aria-label="Cerrar"
-            className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full border-none bg-surface text-muted transition-colors hover:bg-border/50 hover:text-fg"
+            className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full border-none bg-surface text-muted transition-colors hover:bg-border/50 hover:text-fg"
           >
             <svg
               viewBox="0 0 24 24"

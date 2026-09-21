@@ -1,17 +1,24 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { NAV_LINKS } from "@/lib/constants";
 import { useTheme } from "@/lib/theme-provider";
 import { scrollToEdition } from "@/lib/editions-nav";
 import { Container } from "./Container";
+import { X } from "lucide-react";
 
 export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [fullMenuOpen, setFullMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("");
   const { mode, setMode, resolve } = useTheme();
   const resolved = resolve();
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+
+  const closeMenu = useCallback(() => {
+    setFullMenuOpen(false);
+    hamburgerRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -29,8 +36,24 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && fullMenuOpen) {
+        closeMenu();
+      }
+    };
+    if (fullMenuOpen) {
+      window.addEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [fullMenuOpen, closeMenu]);
+
   const scrollTo = (href: string) => {
-    setMobileOpen(false);
+    closeMenu();
     const el = document.querySelector(href);
     if (el) {
       window.scrollTo({
@@ -41,7 +64,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
   };
 
   const goToEdition = (index: number) => {
-    setMobileOpen(false);
+    closeMenu();
     scrollToEdition(index);
   };
 
@@ -55,8 +78,16 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
+      {fullMenuOpen && (
+        <button
+          type="button"
+          aria-label="Cerrar menú"
+          onClick={closeMenu}
+          className="fixed inset-0 -z-10 h-full w-full cursor-default bg-dark/50 backdrop-blur-sm md:hidden"
+        />
+      )}
       <div
-        className={`transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
+        className={`relative z-10 transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
           scrolled ? "px-[6%] pt-1 lg:px-[10%]" : "px-0 pt-0"
         }`}
       >
@@ -188,15 +219,16 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
             </button>
 
             <button
+              ref={hamburgerRef}
               className={`grid h-10 w-10 place-items-center rounded-full border-none bg-transparent md:hidden transition-colors ${
                 overDarkHero ? "text-white" : "text-fg"
               }`}
-              onClick={() => setMobileOpen(!mobileOpen)}
+              onClick={() => setFullMenuOpen(!fullMenuOpen)}
               aria-label="Menú"
-              aria-expanded={mobileOpen}
+              aria-expanded={fullMenuOpen}
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="h-6 w-6">
-                {mobileOpen ? (
+                {fullMenuOpen ? (
                   <>
                     <line x1="6" y1="6" x2="18" y2="18" />
                     <line x1="6" y1="18" x2="18" y2="6" />
@@ -216,8 +248,8 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
         </div>
       </div>
 
-      {mobileOpen && (
-        <nav className="border-b border-border bg-surface px-6 py-3 md:hidden">
+      {fullMenuOpen && (
+        <nav className="relative z-10 border-b border-border bg-surface px-6 py-3 md:hidden">
           {NAV_LINKS.map((link) => {
             const isActive = activeHref === link.href;
             return (
@@ -229,7 +261,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                   scrollTo(link.href);
                 }}
                 aria-current={isActive ? "true" : undefined}
-                className={`block border-b border-border py-2.5 text-sm last:border-b-0 transition-colors hover:text-accent ${
+                className={`block border-b border-border py-3 text-sm last:border-b-0 transition-colors hover:text-accent ${
                   isActive ? "font-semibold text-accent" : "text-fg"
                 }`}
               >
@@ -247,7 +279,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                   key={index}
                   type="button"
                   onClick={() => goToEdition(index)}
-                  className="block w-full border-b border-border py-2.5 text-left text-sm transition-colors last:border-b-0 hover:text-accent"
+                  className="block w-full border-b border-border py-3 text-left text-sm transition-colors last:border-b-0 hover:text-accent"
                 >
                   {edition.ordinal} edición
                 </button>

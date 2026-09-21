@@ -98,7 +98,7 @@ export function EdicionPanel({
                 src={edition.logoUrl}
                 alt={`${edition.eyebrow} — ${edition.title}`}
                 loading="lazy"
-                className="max-h-[clamp(72px,10vw,120px)] w-auto max-w-full object-contain object-left"
+                className="max-h-[clamp(56px,9vw,120px)] w-auto max-w-full object-contain object-left md:max-h-[clamp(72px,10vw,120px)]"
               />
             ) : (
               <>
@@ -140,23 +140,23 @@ export function EdicionPanel({
                 </svg>
               </button>
             ) : null}
-            <div className="mt-[clamp(32px,4vw,56px)] flex flex-wrap items-baseline justify-center gap-[clamp(24px,4vw,48px)]">
+            <div className="mt-[clamp(24px,4vw,56px)] flex items-center justify-center gap-2 sm:gap-6 md:flex-wrap md:gap-[clamp(24px,4vw,48px)]">
               {edition.stats.map((s) => (
-                <div key={s.label} className="flex flex-col items-center text-center">
-                  <div className="font-display text-[clamp(64px,8vw,96px)] font-bold leading-none text-accent">
+                <div key={s.label} className="min-w-0 flex flex-1 flex-col items-center text-center md:flex-none">
+                  <div className="font-display text-[clamp(22px,6.5vw,34px)] font-bold leading-none text-accent md:text-[clamp(64px,8vw,96px)]">
                     {s.value}
                   </div>
-                  <div className="mt-1.5 text-[clamp(10px,1.2vw,12px)] uppercase tracking-wide text-white/70 leading-tight">
+                  <div className="mt-1 text-[10px] uppercase tracking-wide text-white/70 leading-tight sm:text-[11px] md:mt-1.5 md:text-[clamp(10px,1.2vw,12px)]">
                     {s.label}
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-[clamp(24px,3vw,40px)] flex flex-wrap items-center gap-4">
+            <div className="mt-[clamp(24px,3vw,40px)] flex flex-wrap items-center gap-3">
               {edition.temario.length > 0 && (
                 <button
                   onClick={() => setTemarioOpen(true)}
-                  className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-dark transition-all hover:opacity-90 active:translate-y-px"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold whitespace-nowrap text-dark transition-all hover:opacity-90 active:translate-y-px max-md:flex-1"
                 >
                   Ver temario
                   <svg
@@ -176,7 +176,7 @@ export function EdicionPanel({
               {!isThirdEdition && (
                 <button
                   onClick={() => setDetailOpen(true)}
-                  className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-medium text-white transition-all hover:border-accent hover:text-accent active:translate-y-px"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-4 py-3 text-sm font-medium whitespace-nowrap text-white transition-all hover:border-accent hover:text-accent active:translate-y-px max-md:flex-1"
                 >
                   {viewMoreText}
                   <svg
@@ -196,7 +196,7 @@ export function EdicionPanel({
               {isThirdEdition && (
                 <a
                   href="#programa"
-                  className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-dark transition-all hover:opacity-90 active:translate-y-px"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold whitespace-nowrap text-dark transition-all hover:opacity-90 active:translate-y-px max-md:flex-1"
                 >
                   Ver programa
                   <svg

@@ -31,7 +31,7 @@ export function Registro({ settings }: { settings: RegistroSettings }) {
               </p>
               <a
                 href="#faq"
-                className="inline-flex items-center gap-2 border-none bg-transparent px-2 py-0 text-fg transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+                className="inline-flex items-center gap-2 rounded-full border-none bg-transparent px-3 py-2 text-fg transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
               >
                 {settings.dudasLinkText}
                 <span className="transition-transform duration-150 hover:translate-x-0.5" aria-hidden>
