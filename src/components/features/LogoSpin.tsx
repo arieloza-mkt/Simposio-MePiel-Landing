@@ -104,7 +104,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       id="acerca"
       ref={wrapperRef}
       aria-hidden
-      className="relative h-[200vh] select-none"
+      className="relative h-[200vh] select-none overflow-clip"
     >
       <div
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden"

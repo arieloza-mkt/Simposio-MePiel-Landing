@@ -66,6 +66,14 @@ export function getProgramaPdfUrl(modo: ProgramaModo): string {
   return PROGRAMA_PDF_URLS[modo];
 }
 
+// Vista previa del PDF como imagen (Cloudinary renderiza la página del póster).
+export function getProgramaPdfPreviewUrl(modo: ProgramaModo): string {
+  return PROGRAMA_PDF_URLS[modo].replace(
+    "/upload/",
+    "/upload/f_jpg,q_auto,c_limit,w_1400,pg_1/",
+  );
+}
+
 // Fuerza la descarga vía Cloudinary (Content-Disposition: attachment).
 export function getProgramaPdfDownloadUrl(modo: ProgramaModo): string {
   return PROGRAMA_PDF_URLS[modo].replace("/upload/", "/upload/fl_attachment/");

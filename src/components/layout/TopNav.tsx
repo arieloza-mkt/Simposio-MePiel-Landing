@@ -72,8 +72,8 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
   };
 
   const isDark = resolved === "dark";
-  const overDarkHero = !scrolled;
-  const overDark = overDarkHero || isDark || fullMenuOpen;
+  const overDarkHero = !scrolled && resolved === "dark";
+  const overDark = overDarkHero || fullMenuOpen;
 
   const toggleTheme = () => {
     setMode(resolved === "dark" ? "light" : "dark");
@@ -83,7 +83,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
     <header className="fixed top-0 left-0 right-0 z-50">
       <div
         className={`relative z-50 transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
-          scrolled ? "px-[6%] lg:px-[10%]" : "px-0 pt-0"
+          scrolled ? "px-[6%] lg:px-[10%] md:mt-4 md:pt-1" : "px-0 pt-0"
         }`}
       >
 <div
@@ -91,7 +91,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
             fullMenuOpen
               ? "rounded-none border-0 bg-transparent shadow-none"
               : scrolled
-                ? "rounded-b-xl md:rounded-xl border border-border bg-surface/90 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-md backdrop-saturate-150 dark:border-white/10 dark:bg-dark/90 dark:shadow-none"
+                ? "rounded-b-xl border border-border bg-surface/90 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-md backdrop-saturate-150 max-md:dark:border-white/10 max-md:dark:bg-dark/90 max-md:dark:shadow-none md:rounded-xl md:bg-surface/60 md:backdrop-blur-xl"
                 : overDarkHero
                   ? "rounded-none border-0 bg-transparent shadow-none"
                   : "rounded-none border-0 bg-surface shadow-none"
@@ -99,11 +99,11 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
         >
           <Container>
             <div className={`flex items-center justify-between transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
-              scrolled ? "px-6 py-1.5" : "px-4 py-2 sm:px-6"
+              scrolled ? "px-6 md:py-2 py-1.5" : "px-4 py-2 sm:px-6"
             }`}>
           <a href="#" className="flex items-center gap-2.5">
             <img
-              src={overDark
+              src={isDark || fullMenuOpen
                 ? "https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg"
                 : "https://res.cloudinary.com/cc4tium7/image/upload/v1787681794/logo-color.svg"}
               alt="Simposio Dermocosmético"
@@ -129,7 +129,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                       className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-sm transition-all duration-300 ${
                         isActive
                           ? "bg-accent/15 font-medium text-accent"
-                          : overDark
+                          : overDarkHero
                             ? "text-white/70 hover:bg-white/10 hover:text-white"
                             : "text-fg hover:bg-accent/10 hover:text-accent"
                       }`}
@@ -175,7 +175,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                     isActive
                       ? "bg-accent/15 font-medium text-accent"
                       : `${
-                          overDark
+                          overDarkHero
                             ? "text-white/70 hover:bg-white/10 hover:text-white"
                             : "text-fg hover:bg-accent/10 hover:text-accent"
                         }`
@@ -268,7 +268,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                     type="button"
                     onClick={() => setEdicionesOpen((v) => !v)}
                     aria-expanded={edicionesOpen}
-                    className="flex w-full items-center justify-center gap-3 py-3 font-display text-[clamp(30px,8.5vw,48px)] uppercase text-white transition-colors hover:text-accent"
+                    className="flex w-full items-center justify-center gap-3 py-3 font-display text-[clamp(34px,9.5vw,54px)] uppercase text-white transition-colors hover:text-accent"
                   >
                     {link.label}
                     <svg
@@ -278,7 +278,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                       strokeWidth={2}
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className={`h-5 w-5 transition-transform duration-300 ${
+                      className={`h-6 w-6 transition-transform duration-300 ${
                         edicionesOpen ? "rotate-180" : ""
                       }`}
                       aria-hidden
