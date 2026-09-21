@@ -76,7 +76,9 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       applyHole(radius);
 
       if (preview) {
-        preview.style.pointerEvents = progress > SPIN_END ? "auto" : "none";
+        const revealed = progress >= 1;
+        preview.style.pointerEvents = revealed ? "auto" : "none";
+        preview.style.overflowY = revealed ? "auto" : "hidden";
       }
     };
 

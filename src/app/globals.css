@@ -199,6 +199,13 @@ button {
   cursor: pointer;
 }
 
+/* `button { font: inherit }` (sin capa) prevalece sobre las utilities de
+   Tailwind, así que un <button> con font-display no recibía Bebas.
+   Esta regla, más específica, lo restaura. */
+button.font-display {
+  font-family: var(--font-display);
+}
+
 p {
   text-wrap: pretty;
 }

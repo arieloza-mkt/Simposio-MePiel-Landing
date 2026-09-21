@@ -5,18 +5,21 @@ import { NAV_LINKS } from "@/lib/constants";
 import { useTheme } from "@/lib/theme-provider";
 import { scrollToEdition } from "@/lib/editions-nav";
 import { Container } from "./Container";
+import { cn } from "@/lib/cn";
 import { X } from "lucide-react";
 
 export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
   const [fullMenuOpen, setFullMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState("");
+  const [edicionesOpen, setEdicionesOpen] = useState(false);
   const { mode, setMode, resolve } = useTheme();
   const resolved = resolve();
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   const closeMenu = useCallback(() => {
     setFullMenuOpen(false);
+    setEdicionesOpen(false);
     hamburgerRef.current?.focus();
   }, []);
 
@@ -68,50 +71,44 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
     scrollToEdition(index);
   };
 
-  const overDarkHero = !scrolled && resolved === "dark";
+  const isDark = resolved === "dark";
+  const overDarkHero = !scrolled;
+  const overDark = overDarkHero || isDark || fullMenuOpen;
 
   const toggleTheme = () => {
     setMode(resolved === "dark" ? "light" : "dark");
   };
 
-  const isDark = resolved === "dark";
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      {fullMenuOpen && (
-        <button
-          type="button"
-          aria-label="Cerrar menú"
-          onClick={closeMenu}
-          className="fixed inset-0 -z-10 h-full w-full cursor-default bg-dark/50 backdrop-blur-sm md:hidden"
-        />
-      )}
       <div
-        className={`relative z-10 transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
-          scrolled ? "px-[6%] pt-1 lg:px-[10%]" : "px-0 pt-0"
+        className={`relative z-50 transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
+          scrolled ? "px-[6%] lg:px-[10%]" : "px-0 pt-0"
         }`}
       >
-        <div
+<div
           className={`w-full transition-[border-radius,border-color,background-color,box-shadow] duration-500 ease-[var(--ease-out-expo)] ${
-            scrolled
-              ? "rounded-xl border border-border bg-surface/60 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-xl backdrop-saturate-150"
-              : overDarkHero
-                ? "rounded-none border-0 bg-transparent shadow-none"
-                : "rounded-none border-0 bg-surface shadow-none"
+            fullMenuOpen
+              ? "rounded-none border-0 bg-transparent shadow-none"
+              : scrolled
+                ? "rounded-b-xl md:rounded-xl border border-border bg-surface/90 shadow-[0_10px_30px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.35)] backdrop-blur-md backdrop-saturate-150 dark:border-white/10 dark:bg-dark/90 dark:shadow-none"
+                : overDarkHero
+                  ? "rounded-none border-0 bg-transparent shadow-none"
+                  : "rounded-none border-0 bg-surface shadow-none"
           }`}
         >
           <Container>
             <div className={`flex items-center justify-between transition-[padding] duration-500 ease-[var(--ease-out-expo)] ${
-              scrolled ? "px-6 py-2" : "px-4 py-2.5 sm:px-6"
+              scrolled ? "px-6 py-1.5" : "px-4 py-2 sm:px-6"
             }`}>
           <a href="#" className="flex items-center gap-2.5">
             <img
-              src={isDark
+              src={overDark
                 ? "https://res.cloudinary.com/cc4tium7/image/upload/v1787612015/logo-white.svg"
                 : "https://res.cloudinary.com/cc4tium7/image/upload/v1787681794/logo-color.svg"}
               alt="Simposio Dermocosmético"
               height={72}
-              className="h-16 w-auto transition-all duration-300 md:h-20"
+              className="h-12 w-auto transition-all duration-300 md:h-14"
             />
           </a>
 
@@ -132,7 +129,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                       className={`flex items-center gap-1 rounded-full px-3 py-1.5 text-sm transition-all duration-300 ${
                         isActive
                           ? "bg-accent/15 font-medium text-accent"
-                          : overDarkHero
+                          : overDark
                             ? "text-white/70 hover:bg-white/10 hover:text-white"
                             : "text-fg hover:bg-accent/10 hover:text-accent"
                       }`}
@@ -178,7 +175,7 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                     isActive
                       ? "bg-accent/15 font-medium text-accent"
                       : `${
-                          overDarkHero
+                          overDark
                             ? "text-white/70 hover:bg-white/10 hover:text-white"
                             : "text-fg hover:bg-accent/10 hover:text-accent"
                         }`
@@ -192,8 +189,8 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
 
             <button
               onClick={toggleTheme}
-              className={`grid h-8 w-8 place-items-center rounded-full border transition-colors max-md:h-10 max-md:w-10 ${
-                overDarkHero
+              className={`grid h-7 w-7 place-items-center rounded-full border transition-colors max-md:h-9 max-md:w-9 ${
+                overDark
                   ? "border-white/15 text-white/70 hover:border-accent hover:text-accent"
                   : "border-border text-muted hover:border-accent hover:text-accent"
               }`}
@@ -221,9 +218,12 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
             <button
               ref={hamburgerRef}
               className={`grid h-10 w-10 place-items-center rounded-full border-none bg-transparent md:hidden transition-colors ${
-                overDarkHero ? "text-white" : "text-fg"
+                overDark ? "text-white" : "text-fg"
               }`}
-              onClick={() => setFullMenuOpen(!fullMenuOpen)}
+              onClick={() => {
+                setEdicionesOpen(false);
+                setFullMenuOpen(!fullMenuOpen);
+              }}
               aria-label="Menú"
               aria-expanded={fullMenuOpen}
             >
@@ -248,10 +248,73 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
         </div>
       </div>
 
-      {fullMenuOpen && (
-        <nav className="relative z-10 border-b border-border bg-surface px-6 py-3 md:hidden">
+      <div
+        className={cn(
+          "fixed inset-0 z-40 flex flex-col overflow-y-auto bg-dark text-white transition-[transform,visibility] duration-[400ms] ease-[var(--ease-out-expo)] md:hidden",
+          fullMenuOpen ? "visible translate-y-0" : "invisible -translate-y-full",
+        )}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menú de navegación"
+        aria-hidden={!fullMenuOpen}
+      >
+        <div className="flex min-h-full flex-col items-center justify-center gap-3 px-8 py-24">
           {NAV_LINKS.map((link) => {
             const isActive = activeHref === link.href;
+            if (link.href === "#ediciones") {
+              return (
+                <div key={link.href} className="w-full max-w-[340px]">
+                  <button
+                    type="button"
+                    onClick={() => setEdicionesOpen((v) => !v)}
+                    aria-expanded={edicionesOpen}
+                    className="flex w-full items-center justify-center gap-3 py-3 font-display text-[clamp(30px,8.5vw,48px)] uppercase text-white transition-colors hover:text-accent"
+                  >
+                    {link.label}
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={`h-5 w-5 transition-transform duration-300 ${
+                        edicionesOpen ? "rotate-180" : ""
+                      }`}
+                      aria-hidden
+                    >
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </button>
+                  <div
+                    className={cn(
+                      "grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-[var(--ease-out-expo)]",
+                      edicionesOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                    )}
+                  >
+                    <div className="overflow-hidden">
+                      <ul className="flex flex-col items-center gap-1 border-t border-white/10 pt-4">
+                        {editions && editions.length > 0 ? (
+                          editions.map((edition, index) => (
+                            <li key={index}>
+                              <button
+                                type="button"
+                                onClick={() => goToEdition(index)}
+                                className="px-4 py-2 font-display text-[clamp(30px,8.5vw,48px)] uppercase text-white/70 transition-colors hover:text-accent"
+                              >
+                                {edition.ordinal} edición
+                              </button>
+                            </li>
+                          ))
+                        ) : (
+                          <li className="px-4 py-2 font-display text-[clamp(30px,8.5vw,48px)] uppercase text-white/40">Sin ediciones</li>
+                        )}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
             return (
               <a
                 key={link.href}
@@ -261,32 +324,14 @@ export function TopNav({ editions }: { editions?: { ordinal: string }[] }) {
                   scrollTo(link.href);
                 }}
                 aria-current={isActive ? "true" : undefined}
-                className={`block border-b border-border py-3 text-sm last:border-b-0 transition-colors hover:text-accent ${
-                  isActive ? "font-semibold text-accent" : "text-fg"
-                }`}
+                className="py-3 font-display text-[clamp(30px,8.5vw,48px)] uppercase text-white transition-colors hover:text-accent"
               >
                 {link.label}
               </a>
             );
           })}
-          {editions && editions.length > 0 && (
-            <div>
-              <p className="mb-1 mt-2 block border-t border-border px-0 pt-2 font-mono text-xs uppercase tracking-widest text-muted">
-                Ediciones
-              </p>
-              {editions.map((edition, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  onClick={() => goToEdition(index)}
-                  className="block w-full border-b border-border py-3 text-left text-sm transition-colors last:border-b-0 hover:text-accent"
-                >
-                  {edition.ordinal} edición
-                </button>
-              ))}
-            </div>
-          )}        </nav>
-      )}
+        </div>
+      </div>
     </header>
   );
 }
