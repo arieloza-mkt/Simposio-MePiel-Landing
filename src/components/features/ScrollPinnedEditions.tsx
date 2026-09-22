@@ -1,27 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { Edition, Speaker, EditionsModalSettings } from "@/lib/content";
+import type { Edition, Speaker, EditionsModalSettings, EventConfig } from "@/lib/content";
 import { EdicionPanel } from "./EdicionPanel";
 import {
   registerScrollToEdition,
   unregisterScrollToEdition,
 } from "@/lib/editions-nav";
 
+const SNAP_LOCK_MS = 650;
+
 export function ScrollPinnedEditions({
   editions,
   speakers,
+  eventConfig,
   viewMoreText,
   modalSettings,
 }: {
   editions: Edition[];
   speakers: Speaker[];
+  eventConfig?: EventConfig;
   viewMoreText?: string;
   modalSettings?: EditionsModalSettings;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
+  const lockUntilRef = useRef(0);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -39,7 +43,6 @@ export function ScrollPinnedEditions({
         Math.round(progress * (editions.length - 1)),
       );
       if (idx !== prevIndex) {
-        setDirection(idx > prevIndex ? 1 : -1);
         prevIndex = idx;
       }
       setActiveIndex(idx);
@@ -64,8 +67,60 @@ export function ScrollPinnedEditions({
     return () => unregisterScrollToEdition();
   });
 
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper || editions.length < 2) return;
+
+    const onWheel = (e: WheelEvent) => {
+      const dy = e.deltaY;
+      if (dy === 0) return;
+
+      const rect = wrapper.getBoundingClientRect();
+      const top = wrapper.offsetTop;
+      const scrollY = window.scrollY;
+      const innerHeight = window.innerHeight;
+
+      const currentlyCaptured =
+        scrollY >= top - innerHeight * 0.5 && scrollY <= top + innerHeight * 0.5;
+
+      const now = performance.now();
+      if (now < lockUntilRef.current) {
+        if (currentlyCaptured) e.preventDefault();
+        return;
+      }
+
+      const clipTop = Math.round(rect.top + scrollY);
+      const scrollable = wrapper.offsetHeight - innerHeight;
+      if (scrollable <= 0) return;
+
+      const progress = Math.max(0, Math.min(1, (scrollY - clipTop) / scrollable));
+      const idx = Math.min(
+        editions.length - 1,
+        Math.round(progress * (editions.length - 1)),
+      );
+      const goingDown = dy > 0;
+      const next = goingDown ? idx + 1 : idx - 1;
+      if (next < 0 || next > editions.length - 1) return;
+
+      e.preventDefault();
+      lockUntilRef.current = now + SNAP_LOCK_MS;
+      window.scrollTo({
+        top: clipTop + (next / (editions.length - 1)) * scrollable,
+        behavior: "smooth",
+      });
+    };
+
+    wrapper.addEventListener("wheel", onWheel, { passive: false });
+    return () => wrapper.removeEventListener("wheel", onWheel);
+  }, [editions.length]);
+
   return (
-    <div ref={wrapperRef} id="ediciones" className="relative" style={{ height: "300vh" }}>
+    <div
+      ref={wrapperRef}
+      id="ediciones"
+      className="relative"
+      style={{ height: `${Math.max(editions.length, 1) * 100}vh` }}
+    >
       <section className="sticky top-0 h-screen overflow-hidden bg-dark">
         {editions.map((edition, i) => {
           const isActive = i === activeIndex;
@@ -83,7 +138,7 @@ export function ScrollPinnedEditions({
               }}
             >
               <div className={isActive ? "pointer-events-auto" : "pointer-events-none"}>
-                <EdicionPanel edition={edition} speakers={speakers} viewMoreText={viewMoreText} modalSettings={modalSettings} />
+                <EdicionPanel edition={edition} speakers={speakers} eventConfig={eventConfig} viewMoreText={viewMoreText} modalSettings={modalSettings} />
               </div>
             </div>
           );

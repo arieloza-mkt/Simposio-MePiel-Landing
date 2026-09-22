@@ -2,6 +2,7 @@ import type { MepielAlianzaSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
+import { withCloudinaryTransform } from "@/lib/image";
 
 export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
   const title = alianza.highlight
@@ -12,7 +13,7 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
     <Section id="alianza" fullHeight className="relative overflow-hidden">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="https://res.cloudinary.com/cc4tium7/image/upload/v1787608569/bg-elemnts-01.png"
+        src={withCloudinaryTransform("https://res.cloudinary.com/cc4tium7/image/upload/v1787608569/bg-elemnts-01.png")}
         alt=""
         aria-hidden
         loading="lazy"

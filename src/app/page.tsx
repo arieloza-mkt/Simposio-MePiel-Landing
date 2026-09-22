@@ -34,6 +34,7 @@ export default async function Home() {
        <ScrollPinnedEditions
           editions={content.editions}
           speakers={content.speakers}
+          eventConfig={content.eventConfig}
           viewMoreText={content.editionsPanel.viewMoreText}
           modalSettings={content.editionsModal}
         />

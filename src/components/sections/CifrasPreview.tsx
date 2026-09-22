@@ -82,11 +82,10 @@ export function CifrasPreview({
                 alt={big.alt}
                 loading="lazy"
                 className="aspect-[16/11] w-full rounded-[10px] object-cover"
+                id="cifras-preview-big-image"
               />
             )}
-            {/* <h3 className="m-0 mt-2 font-display text-[clamp(20px,2.4vw,28px)] tracking-tight">
-              Expositores
-            </h3> */}
+
             <div className="mt-4 flex items-center gap-3">
               <h3 className="m-0 font-display text-[clamp(26px,3vw,38px)] font-bold leading-tight tracking-tight text-fg">
                 Ponentes

@@ -51,7 +51,7 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
   {
     id: ed(1),
     logoUrl:
-      "https://res.cloudinary.com/cc4tium7/image/upload/v1787610069/logo-primera-edicion.png",
+      "https://res.cloudinary.com/cc4tium7/image/upload/c_fit,w_1920,q_auto,f_auto/v1787610069/logo-primera-edicion.png",
     ordinal: "1ra.",
     year: 2024,
     eyebrow: "Primera edición",
@@ -104,7 +104,7 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
   {
     id: ed(2),
     logoUrl:
-      "https://res.cloudinary.com/cc4tium7/image/upload/v1787610069/logo-segunda-edicion.png",
+      "https://res.cloudinary.com/cc4tium7/image/upload/c_fit,w_1920,q_auto,f_auto/v1787610069/logo-segunda-edicion.png",
     ordinal: "2da.",
     year: 2025,
     eyebrow: "Segunda edición",
@@ -161,7 +161,7 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
   {
     id: ed(3),
     logoUrl:
-      "https://res.cloudinary.com/cc4tium7/image/upload/v1787610069/logo-segunda-edicion.png",
+      "https://res.cloudinary.com/cc4tium7/image/upload/c_fit,w_1920,q_auto,f_auto/v1787610069/logo-segunda-edicion.png",
     ordinal: "3ra.",
     year: 2026,
     eyebrow: "Tercera edición",

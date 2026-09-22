@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
+import { withCloudinaryTransform } from "@/lib/image";
 
 const NAVY = "#0a1330";
 const CYAN = "#2EC5E8";
@@ -133,7 +134,10 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={logoUrl || "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png"}
+              src={withCloudinaryTransform(
+                logoUrl || "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png",
+                "fit",
+              )}
               alt=""
               draggable={false}
               loading="eager"
