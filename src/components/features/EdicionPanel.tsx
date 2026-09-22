@@ -35,7 +35,7 @@ export function EdicionPanel({
   edition,
   speakers,
   eventConfig,
-  viewMoreText = "Ver más",
+  viewMoreText = "Ver detalles",
   modalSettings,
 }: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);

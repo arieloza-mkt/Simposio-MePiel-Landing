@@ -26,10 +26,13 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
     if (el) {
-      window.scrollTo({
-        top: (el as HTMLElement).offsetTop - 60,
-        behavior: "smooth",
-      });
+      const elTop = (el as HTMLElement).offsetTop;
+      // #acerca es el wrapper h-[200vh] del LogoSpin: hay que recorrer
+      // la sección completa hasta el fin de la revelación (progreso 1),
+      // donde el hueco ya cubre la pantalla y CifrasPreview queda visible.
+      const top =
+        href === "#acerca" ? elTop + window.innerHeight : elTop - 60;
+      window.scrollTo({ top, behavior: "smooth" });
     }
   };
 
@@ -134,7 +137,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           className="relative mt-12 flex justify-start max-sm:justify-center"
         >
           <button
-            onClick={() => scrollTo("#ediciones")}
+            onClick={() => scrollTo("#acerca")}
             className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
           >
             Ver más

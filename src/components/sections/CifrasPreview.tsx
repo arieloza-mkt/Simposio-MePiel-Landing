@@ -86,7 +86,7 @@ export function CifrasPreview({
               />
             )}
 
-            <div className="mt-4 flex items-center gap-3">
+            <div id="ponentes" className="mt-4 flex items-center gap-3">
               <h3 className="m-0 font-display text-[clamp(26px,3vw,38px)] font-bold leading-tight tracking-tight text-fg">
                 Ponentes
               </h3>

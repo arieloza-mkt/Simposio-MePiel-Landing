@@ -38,13 +38,13 @@ export function Footer({ settings }: { settings: FooterSettings }) {
         aria-hidden
         className="animate-gradient-flow pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-[linear-gradient(90deg,transparent,var(--color-gc),var(--color-gm),var(--color-gp),transparent)]"
       />
-       <Container className="relative z-10" id="footer-top">
-        <div className="flex flex-col-reverse items-center justify-between gap-[clamp(32px,5vw,72px)] md:flex-row">
+       <Container className="relative z-10">
+        <div className="flex flex-row items-center justify-between gap-[clamp(16px,3vw,56px)]" id="footer-top">
           <div className="max-w-[720px] text-center md:text-left">
             <p className="mb-[18px] font-mono text-xs font-bold uppercase tracking-[0.35em] text-white/80">
               Impulsando
             </p>
-            <h2 className="m-0 font-display text-[clamp(38px,6.2vw,72px)] font-bold uppercase leading-[1.02] tracking-tight">
+            <h2 className="m-0 font-display text-[clamp(28px,4.5vw,72px)] font-bold uppercase leading-[1.02] tracking-tight">
               <span className="block bg-[linear-gradient(90deg,#3ee9e6,#6fb8ff)] bg-clip-text text-transparent">
                 La categoría
               </span>
@@ -52,7 +52,7 @@ export function Footer({ settings }: { settings: FooterSettings }) {
                 Dermocosmética
               </span>
             </h2>
-            <p className="mt-[6px] font-mono text-[clamp(16px,1.8vw,26px)] font-bold uppercase tracking-[0.25em] text-[#cfd6ff]">
+            <p className="mt-[6px] font-mono text-[clamp(13px,1.4vw,26px)] font-bold uppercase tracking-[0.25em] text-[#cfd6ff]">
               En México
             </p>
           </div>
@@ -64,12 +64,13 @@ export function Footer({ settings }: { settings: FooterSettings }) {
               alt="Simposio Dermocosmético"
               loading="lazy"
               decoding="async"
-              className="h-auto w-[clamp(220px,32vw,420px)]"
+              className="h-auto w-[clamp(140px,26vw,420px)]"
             />
           </div>
         </div>
       </Container>
-      <br></br>
+      <br />
+      <hr />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.1]"
