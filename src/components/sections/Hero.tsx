@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   motion,
   useReducedMotion,
@@ -9,6 +10,7 @@ import {
 import type { HeroSettings, SiteInfo } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { getYoutubeId } from "@/lib/video";
+import { useInView } from "@/lib/use-in-view";
 
 const heroChildren = {
   hidden: {},
@@ -39,11 +41,23 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
   const backdropY = useTransform(scrollY, [0, 900], [0, 240]);
+  const [heroSectionRef, heroInView] = useInView<HTMLElement>({ threshold: 0.2 });
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+
   const heroVideoId = hero.videoId;
   const heroYoutubeId = heroVideoId ? getYoutubeId(heroVideoId) : null;
 
+  useEffect(() => {
+    if (heroYoutubeId) return;
+    const v = heroVideoRef.current;
+    if (!v) return;
+    if (heroInView) v.play().catch(() => {});
+    else v.pause();
+  }, [heroInView, heroYoutubeId]);
+
   return (
     <section
+      ref={heroSectionRef}
       id="inicio"
       className="relative flex min-h-screen items-center overflow-hidden bg-dark pt-[clamp(100px,16vw,160px)] pb-[clamp(48px,7vw,80px)] text-white max-sm:min-h-[70svh]"
     >
@@ -55,6 +69,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           <div className="absolute inset-0 overflow-hidden">
             {heroVideoId && !heroYoutubeId ? (
               <video
+                ref={heroVideoRef}
                 autoPlay
                 loop
                 muted
@@ -64,13 +79,24 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
                 <source src={heroVideoId} type="video/mp4" />
               </video>
             ) : heroYoutubeId ? (
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${heroYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
-                title="Video de fondo del Simposio Dermocosmético"
-                allow="autoplay; encrypted-media"
-                referrerPolicy="strict-origin-when-cross-origin"
-                className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.6]"
-              />
+              heroInView ? (
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${heroYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+                  title="Video de fondo del Simposio Dermocosmético"
+                  allow="autoplay; encrypted-media"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.6]"
+                />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={`https://i.ytimg.com/vi/${heroYoutubeId}/maxresdefault.jpg`}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  className="absolute top-1/2 left-1/2 h-full min-h-full w-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover brightness-[0.6]"
+                />
+              )
 ) : null}
           </div>
           <div className="absolute inset-0" aria-hidden>

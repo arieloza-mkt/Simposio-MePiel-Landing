@@ -16,6 +16,7 @@ interface EdicionPanelProps {
   eventConfig?: EventConfig;
   viewMoreText?: string;
   modalSettings?: EditionsModalSettings;
+  playing?: boolean;
 }
 
 const TERCERA_EDICION_STATS = [
@@ -37,12 +38,14 @@ export function EdicionPanel({
   eventConfig,
   viewMoreText = "Ver detalles",
   modalSettings,
+  playing = false,
 }: EdicionPanelProps) {
   const [detailOpen, setDetailOpen] = useState(false);
   const [temarioOpen, setTemarioOpen] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [overflows, setOverflows] = useState(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const paneVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const el = descriptionRef.current;
@@ -60,6 +63,15 @@ export function EdicionPanel({
 
   const slides = edition.images;
   const videoYoutubeId = edition.videoId ? getYoutubeId(edition.videoId) : null;
+
+  useEffect(() => {
+    if (videoYoutubeId) return;
+    const v = paneVideoRef.current;
+    if (!v) return;
+    if (playing) v.play().catch(() => {});
+    else v.pause();
+  }, [playing, videoYoutubeId]);
+
   const isThirdEdition = edition.ordinal.startsWith("3");
 
   const [countdown, setCountdown] = useState<{
@@ -102,15 +114,27 @@ export function EdicionPanel({
             className="pointer-events-none absolute inset-0 overflow-hidden"
           >
             {videoYoutubeId ? (
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${videoYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
-                title={`Video de fondo — ${edition.eyebrow} ${edition.ordinal}`}
-                allow="autoplay; encrypted-media"
-                referrerPolicy="strict-origin-when-cross-origin"
-                className="pointer-events-none absolute left-1/2 top-1/2 h-[max(56.25vw,100%)] w-[max(100%,177.78vh)] -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.42]"
-              />
+              playing ? (
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${videoYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+                  title={`Video de fondo — ${edition.eyebrow} ${edition.ordinal}`}
+                  allow="autoplay; encrypted-media"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="pointer-events-none absolute left-1/2 top-1/2 h-[max(56.25vw,100%)] w-[max(100%,177.78vh)] -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.42]"
+                />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={`https://i.ytimg.com/vi/${videoYoutubeId}/maxresdefault.jpg`}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover brightness-[0.42]"
+                />
+              )
             ) : (
               <video
+                ref={paneVideoRef}
                 autoPlay
                 loop
                 muted
@@ -323,7 +347,7 @@ export function EdicionPanel({
                 </div>
               </>
             ) : slides.length > 0 ? (
-              <PhotoCarousel images={slides} className="max-md:aspect-[16/10]" />
+              <PhotoCarousel images={slides} paused={!playing} className="max-md:aspect-[16/10]" />
             ) : null}
           </div>
         </div>

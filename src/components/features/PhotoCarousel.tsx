@@ -15,6 +15,7 @@ interface PhotoCarouselProps {
   className?: string;
   fill?: boolean;
   autoplayMs?: number;
+  paused?: boolean;
 }
 
 export function PhotoCarousel({
@@ -22,6 +23,7 @@ export function PhotoCarousel({
   className,
   fill,
   autoplayMs = 5000,
+  paused = false,
 }: PhotoCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -57,6 +59,7 @@ export function PhotoCarousel({
     if (mq.matches) return;
     const interval = setInterval(() => {
       if (document.hidden) return;
+      if (paused) return;
       const current = emblaApi.selectedScrollSnap();
       if (images.length <= 1) return;
       // Pausa el autoplay mientras se muestra un video para poder verlo.
@@ -64,7 +67,7 @@ export function PhotoCarousel({
       emblaApi.scrollNext();
     }, autoplayMs);
     return () => clearInterval(interval);
-  }, [emblaApi, images, youtubeIds, autoplayMs]);
+  }, [emblaApi, images, youtubeIds, autoplayMs, paused]);
 
   return (
     <div ref={fancyboxRef} className={`relative overflow-hidden bg-dark-s max-md:mx-auto max-md:w-[80%] ${fill ? "h-full" : "rounded-[var(--radius-lg)]"} ${className ?? ""}`}>
@@ -77,7 +80,7 @@ export function PhotoCarousel({
             >
               {youtubeIds[i] ? (
                 <>
-                  {i === selectedIndex ? (
+                  {i === selectedIndex && !paused ? (
                     <iframe
                       src={`https://www.youtube-nocookie.com/embed/${youtubeIds[i]}?autoplay=1&mute=1&rel=0&playsinline=1&loop=1&playlist=${youtubeIds[i]}`}
                       title={slide.alt || `Video ${i + 1}`}

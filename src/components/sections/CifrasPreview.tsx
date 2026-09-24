@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import type { Lab, QueEsSettings, Speaker } from "@/lib/content";
 import { SpeakerCarousel } from "@/components/features/SpeakerCarousel";
 import { LogoCarousel } from "@/components/features/LogoCarousel";
+import { withCloudinaryTransform } from "@/lib/image";
 
 export interface CifraFoto {
   src: string;
@@ -12,7 +13,7 @@ export interface CifraFoto {
 
 export const FOTOS_DEFAULT: CifraFoto[] = [
   {
-    src: "https://res.cloudinary.com/cc4tium7/image/upload/v1789682779/principal.jpg",
+    src: withCloudinaryTransform("https://res.cloudinary.com/cc4tium7/image/upload/v1789682779/principal.jpg", "fill", "rect"),
     alt: "Panorama del recinto en una edición anterior del Simposio",
   },
 ];

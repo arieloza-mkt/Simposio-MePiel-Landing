@@ -30,6 +30,7 @@
   --radius-lg: 16px;
 
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
   /* Paleta del programa (referencias póster Foráneos / Local) */
   --color-program-navy: #00104F;
@@ -321,6 +322,13 @@ h4 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Ocultar la imagen principal del preview de Acerca en tablets y menores */
+@media (max-width: 980px) {
+  #cifras-preview-big-image {
+    display: none !important;
   }
 }
 

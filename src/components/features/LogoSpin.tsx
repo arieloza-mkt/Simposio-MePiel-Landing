@@ -64,7 +64,19 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       // Sigue rodando un poco mientras se aleja, para apreciar la trayectoria
       const rotation = spin * 360 + slide * 140;
 
+      // En mobile/tablet el logo no vuela a la derecha: desaparece
+      // suavemente durante la fase de salida y se cierra en progreso 1.
+      const isMobile = window.innerWidth <= 980;
+
       disc.style.transform = `translateX(${slideX.toFixed(1)}px) rotate(${rotation.toFixed(2)}deg)`;
+
+      if (isMobile) {
+        const fade =
+          progress <= SPIN_END ? 0 : (progress - SPIN_END) / (1 - SPIN_END);
+        disc.style.opacity = String(Math.max(0, 1 - fade).toFixed(3));
+      } else {
+        disc.style.opacity = "1";
+      }
 
       // Hueco: tapado por el disco durante el giro; crece después hasta llenar la pantalla
       const grow = progress <= SPIN_END ? 0 : (progress - SPIN_END) / (1 - SPIN_END);
@@ -135,7 +147,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
             ref={previewRef}
             className="pointer-events-none relative z-0 w-full bg-bg text-center dark:bg-[#0a1330]"
           >
-            <div className="flex min-h-screen items-center justify-center px-5 py-10 pb-16 sm:px-8 max-sm:py-4 max-sm:pb-10">
+            <div className="flex min-h-screen items-center justify-center px-5 py-10 pb-16 sm:px-8 max-sm:py-4 max-sm:pb-10 md:pl-12 md:pr-[clamp(48px,9vw,144px)] lg:pl-[clamp(48px,6vw,96px)]">
               <div className="w-full max-w-[1440px]">{nextPreview}</div>
             </div>
           </div>
@@ -156,6 +168,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
               src={withCloudinaryTransform(
                 logoUrl || "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png",
                 "fit",
+                "square",
               )}
               alt=""
               draggable={false}
