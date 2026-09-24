@@ -45,7 +45,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-[82svh] items-center overflow-hidden bg-dark pt-[clamp(88px,12vw,140px)] pb-[clamp(32px,5vw,56px)] text-white"
+      className="relative flex min-h-screen items-center overflow-hidden bg-dark pt-[clamp(100px,16vw,160px)] pb-[clamp(48px,7vw,80px)] text-white max-sm:min-h-[70svh]"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <motion.div
@@ -114,7 +114,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           initial="hidden"
           animate="visible"
           variants={heroChildren}
-          className="ml-auto w-full max-w-[720px] text-left max-sm:mx-auto max-sm:text-center"
+          className="max-w-[720px] text-left"
         >
           <motion.h1
             variants={heroChild}
