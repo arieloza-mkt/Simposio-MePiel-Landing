@@ -8,7 +8,7 @@ import {
   unregisterScrollToEdition,
 } from "@/lib/editions-nav";
 
-const SNAP_LOCK_MS = 650;
+const SETTLED_EPS = 0.05;
 
 export function ScrollPinnedEditions({
   editions,
@@ -25,7 +25,9 @@ export function ScrollPinnedEditions({
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const lockUntilRef = useRef(0);
+  const activeIdxRef = useRef(0);
+  const snapTargetRef = useRef<number | null>(null);
+  const inZoneRef = useRef(false);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -45,6 +47,7 @@ export function ScrollPinnedEditions({
       if (idx !== prevIndex) {
         prevIndex = idx;
       }
+      activeIdxRef.current = idx;
       setActiveIndex(idx);
     };
 
@@ -56,9 +59,9 @@ export function ScrollPinnedEditions({
   const goTo = (idx: number) => {
     const wrapper = wrapperRef.current;
     if (!wrapper || editions.length < 2) return;
-    const scrollable = wrapper.offsetHeight - window.innerHeight;
-    const target =
-      wrapper.offsetTop + (idx * scrollable) / (editions.length - 1);
+    const target = Math.round(wrapper.getBoundingClientRect().top + window.scrollY) + idx * window.innerHeight;
+    inZoneRef.current = true;
+    snapTargetRef.current = target;
     window.scrollTo({ top: target, behavior: "smooth" });
   };
 
@@ -74,40 +77,51 @@ export function ScrollPinnedEditions({
     const onWheel = (e: WheelEvent) => {
       const dy = e.deltaY;
       if (dy === 0) return;
+      if (editions.length < 2) return;
 
-      const rect = wrapper.getBoundingClientRect();
-      const top = wrapper.offsetTop;
-      const scrollY = window.scrollY;
       const innerHeight = window.innerHeight;
+      const scrollY = window.scrollY;
 
-      const currentlyCaptured =
-        scrollY >= top - innerHeight * 0.5 && scrollY <= top + innerHeight * 0.5;
+      // Posición del tope del wrapper en coordenadas de documento
+      // (a prueba de ancestros con positioning, a diferencia de offsetTop).
+      const docTop = Math.round(wrapper.getBoundingClientRect().top + scrollY);
+      const docBottom = docTop + wrapper.offsetHeight;
 
-      const now = performance.now();
-      if (now < lockUntilRef.current) {
-        if (currentlyCaptured) e.preventDefault();
+      // Solo interceptar cuando la sección pinned está en pantalla (o muy cerca),
+      // para no secuestrar el scroll de secciones vecinas.
+      const inZone =
+        scrollY >= docTop - innerHeight * 0.5 &&
+        scrollY < docBottom + innerHeight * 0.5;
+      if (!inZone) {
+        inZoneRef.current = false;
         return;
       }
+      if (!inZoneRef.current) {
+        // Reentrada a la zona: el objetivo pendiente (si lo hubo) ya no aplica.
+        snapTargetRef.current = null;
+        inZoneRef.current = true;
+      }
 
-      const clipTop = Math.round(rect.top + scrollY);
-      const scrollable = wrapper.offsetHeight - innerHeight;
-      if (scrollable <= 0) return;
+      // No apilar snaps: esperar a que el scroll suave previo aterrice.
+      const target = snapTargetRef.current;
+      if (target !== null && Math.abs(scrollY - target) > innerHeight * SETTLED_EPS) {
+        // Animación en curso: re-armar el scrollTo al mismo objetivo. Sin esto,
+        // los preventDefault de los wheel cancelan la animación smooth y el
+        // scroll queda atrapado a mitad de camino.
+        e.preventDefault();
+        window.scrollTo({ top: target, behavior: "smooth" });
+        return;
+      }
+      snapTargetRef.current = null;
 
-      const progress = Math.max(0, Math.min(1, (scrollY - clipTop) / scrollable));
-      const idx = Math.min(
-        editions.length - 1,
-        Math.round(progress * (editions.length - 1)),
-      );
+      const current = activeIdxRef.current;
       const goingDown = dy > 0;
-      const next = goingDown ? idx + 1 : idx - 1;
-      if (next < 0 || next > editions.length - 1) return;
+      const next = goingDown ? current + 1 : current - 1;
+      if (next < 0 || next >= editions.length) return;
 
       e.preventDefault();
-      lockUntilRef.current = now + SNAP_LOCK_MS;
-      window.scrollTo({
-        top: clipTop + (next / (editions.length - 1)) * scrollable,
-        behavior: "smooth",
-      });
+      snapTargetRef.current = docTop + next * innerHeight;
+      window.scrollTo({ top: snapTargetRef.current, behavior: "smooth" });
     };
 
     wrapper.addEventListener("wheel", onWheel, { passive: false });
@@ -118,7 +132,7 @@ export function ScrollPinnedEditions({
     <div
       ref={wrapperRef}
       id="ediciones"
-      className="relative"
+      className="relative overflow-x-clip"
       style={{ height: `${Math.max(editions.length, 1) * 100}vh` }}
     >
       <section className="sticky top-0 h-screen overflow-hidden bg-dark">
@@ -132,7 +146,7 @@ export function ScrollPinnedEditions({
               key={edition.id}
               className="absolute inset-0 z-0 pointer-events-none"
               style={{
-                transform: isActive ? "translateY(0)" : `translateY(${slideOffset})`,
+                transform: isActive ? "translateX(0)" : `translateX(${slideOffset})`,
                 transition: "transform 600ms cubic-bezier(0.16, 1, 0.3, 1)",
                 willChange: "transform",
               }}

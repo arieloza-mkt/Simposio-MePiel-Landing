@@ -70,7 +70,7 @@ export function SimposioDermocosmetico({
                 {alianza.paragraphs.map((text, i) => (
                   <div
                     key={i}
-                    className="m-0 leading-relaxed text-[17px] text-black/70 max-sm:text-[15px]"
+                    className="m-0 leading-relaxed text-foreground/70 text-[17px] max-sm:text-[15px]"
                     dangerouslySetInnerHTML={{ __html: text }}
                   />
                 ))}

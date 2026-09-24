@@ -67,7 +67,7 @@ export function PhotoCarousel({
   }, [emblaApi, images, youtubeIds, autoplayMs]);
 
   return (
-    <div ref={fancyboxRef} className={`relative overflow-hidden bg-dark-s ${fill ? "h-full" : "rounded-[var(--radius-lg)]"} ${className ?? ""}`}>
+    <div ref={fancyboxRef} className={`relative overflow-hidden bg-dark-s max-md:mx-auto max-md:w-[80%] ${fill ? "h-full" : "rounded-[var(--radius-lg)]"} ${className ?? ""}`}>
       <div className={`overflow-hidden ${fill ? "h-full" : ""}`} ref={emblaRef}>
         <div className="flex h-full">
           {images.map((slide, i) => (

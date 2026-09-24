@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
 import { withCloudinaryTransform } from "@/lib/image";
 
 const NAVY = "#0a1330";
@@ -46,10 +46,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
     const update = () => {
       ticking = false;
       const rect = wrapper.getBoundingClientRect();
-      const scrollable = wrapper.offsetHeight - window.innerHeight;
-      if (scrollable <= 0) return;
-
-      let progress = -rect.top / scrollable;
+      let progress = -rect.top / window.innerHeight;
       progress = Math.min(Math.max(progress, 0), 1);
 
       const discR = disc.offsetWidth / 2;
@@ -79,7 +76,6 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       if (preview) {
         const revealed = progress >= 1;
         preview.style.pointerEvents = revealed ? "auto" : "none";
-        preview.style.overflowY = revealed ? "auto" : "hidden";
       }
     };
 
@@ -100,23 +96,46 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
     };
   }, []);
 
+  useLayoutEffect(() => {
+    const wrapper = wrapperRef.current;
+    const preview = previewRef.current;
+    if (!wrapper) return;
+
+    const applyHeight = () => {
+      const innerHeight = window.innerHeight;
+      const contentHeight = preview ? preview.offsetHeight : 0;
+      wrapper.style.height = `${Math.max(contentHeight, innerHeight) + innerHeight}px`;
+    };
+
+    applyHeight();
+    let observer: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== "undefined" && preview) {
+      observer = new ResizeObserver(applyHeight);
+      observer.observe(preview);
+    }
+    window.addEventListener("resize", applyHeight, { passive: true });
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", applyHeight);
+    };
+  }, []);
+
   return (
     <div
       id="acerca"
       ref={wrapperRef}
-      aria-hidden
       className="relative h-[200vh] select-none overflow-clip"
     >
       <div
-        className="sticky top-0 flex h-screen items-center justify-center overflow-hidden"
+        className="sticky top-0 flex items-center justify-center overflow-hidden"
         style={{ background: NAVY }}
       >
         {nextPreview && (
           <div
             ref={previewRef}
-            className="pointer-events-none absolute inset-0 z-0 overflow-y-auto bg-bg text-center dark:bg-[#0a1330]"
+            className="pointer-events-none relative z-0 w-full bg-bg text-center dark:bg-[#0a1330]"
           >
-            <div className="flex min-h-full items-center justify-center px-5 py-10 pb-16 sm:px-8 max-sm:py-4 max-sm:pb-10">
+            <div className="flex min-h-screen items-center justify-center px-5 py-10 pb-16 sm:px-8 max-sm:py-4 max-sm:pb-10">
               <div className="w-full max-w-[1440px]">{nextPreview}</div>
             </div>
           </div>

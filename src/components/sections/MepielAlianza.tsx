@@ -81,7 +81,7 @@ export function MepielAlianza({ alianza }: { alianza: MepielAlianzaSettings }) {
                 {alianza.paragraphs.map((text, i) => (
                   <div
                     key={i}
-                    className="m-0 leading-relaxed text-black/70 text-[17px]"
+                    className="m-0 leading-relaxed text-foreground/70 text-[17px]"
                     dangerouslySetInnerHTML={{ __html: text }}
                   />
                 ))}

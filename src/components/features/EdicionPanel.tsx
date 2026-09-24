@@ -97,26 +97,30 @@ export function EdicionPanel({
     <div className="absolute inset-0 flex items-center max-md:overflow-y-auto max-md:items-center py-[clamp(48px,8vw,96px)]">
       {edition.videoId ? (
         <>
-          {videoYoutubeId ? (
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${videoYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
-              title={`Video de fondo — ${edition.eyebrow} ${edition.ordinal}`}
-              allow="autoplay; encrypted-media"
-              referrerPolicy="strict-origin-when-cross-origin"
-              className="pointer-events-none absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.42]"
-            />
-          ) : (
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              aria-hidden
-              className="pointer-events-none absolute inset-0 h-full w-full object-cover brightness-[0.42]"
-            >
-              <source src={edition.videoId} type="video/mp4" />
-            </video>
-          )}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 overflow-hidden"
+          >
+            {videoYoutubeId ? (
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${videoYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+                title={`Video de fondo — ${edition.eyebrow} ${edition.ordinal}`}
+                allow="autoplay; encrypted-media"
+                referrerPolicy="strict-origin-when-cross-origin"
+                className="pointer-events-none absolute left-1/2 top-1/2 h-[max(56.25vw,100%)] w-[max(100%,177.78vh)] -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.42]"
+              />
+            ) : (
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="pointer-events-none absolute inset-0 h-full w-full object-cover brightness-[0.42]"
+              >
+                <source src={edition.videoId} type="video/mp4" />
+              </video>
+            )}
+          </div>
           <div
             className="pointer-events-none absolute inset-0 bg-dark/60"
             aria-hidden

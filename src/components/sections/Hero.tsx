@@ -45,7 +45,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-screen items-center overflow-hidden bg-dark pt-[clamp(100px,16vw,160px)] pb-[clamp(48px,7vw,80px)] text-white"
+      className="relative flex min-h-[82svh] items-center overflow-hidden bg-dark pt-[clamp(88px,12vw,140px)] pb-[clamp(32px,5vw,56px)] text-white"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <motion.div
@@ -114,7 +114,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           initial="hidden"
           animate="visible"
           variants={heroChildren}
-          className="max-w-[720px] text-left max-sm:mx-auto max-sm:text-center"
+          className="ml-auto w-full max-w-[720px] text-left max-sm:mx-auto max-sm:text-center"
         >
           <motion.h1
             variants={heroChild}
@@ -128,32 +128,32 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           >
             {site.description}
           </motion.p>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.4 }}
-          className="relative mt-12 flex justify-start max-sm:justify-center"
-        >
-          <button
-            onClick={() => scrollTo("#acerca")}
-            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+            className="mt-10"
           >
-            Ver más
-            <svg
-              aria-hidden
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5"
+            <button
+              onClick={() => scrollTo("#acerca")}
+              className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
             >
-              <path d="M12 5v14M5 12l7 7 7-7" />
-            </svg>
-          </button>
+              Ver más
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5"
+              >
+                <path d="M12 5v14M5 12l7 7 7-7" />
+              </svg>
+            </button>
+          </motion.div>
         </motion.div>
       </Container>
     </section>

@@ -70,7 +70,6 @@ export function Footer({ settings }: { settings: FooterSettings }) {
         </div>
       </Container>
       <br />
-      <hr />
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-[0.1]"
