@@ -44,20 +44,20 @@ export function QueEsContent({ queEs }: { queEs: QueEsSettings }) {
         )}
       </h2>
 
-      <div className="mt-[clamp(44px,6vw,80px)] grid grid-cols-12 gap-x-[clamp(40px,5vw,80px)] gap-y-[clamp(36px,5vw,56px)]">
+      <div className="mt-[clamp(36px,5vw,56px)] grid grid-cols-12 gap-x-[clamp(32px,4vw,56px)] gap-y-[clamp(28px,4vw,44px)]">
         <div className="col-span-12 flex flex-col lg:col-span-7">
-          <div className="m-0 max-w-[58ch] text-[19px] leading-relaxed text-muted" dangerouslySetInnerHTML={{ __html: queEs.intro }} />
-          <p className="mb-0 mt-8 font-display text-lg font-semibold">
+          <div className="m-0 max-w-[58ch] text-[17px] leading-relaxed text-muted" dangerouslySetInnerHTML={{ __html: queEs.intro }} />
+          <p className="mb-0 mt-5 font-display text-lg font-semibold">
             {queEs.experienceIntro}
           </p>
 
-          <ul className="m-0 mt-5 grid list-none gap-3.5 p-0 sm:grid-cols-2">
+          <ul className="m-0 mt-3 grid list-none gap-2.5 p-0 sm:grid-cols-2">
             {queEs.experienceItems.map((text, i) => (
               <li
                 key={i}
-                className="flex items-start gap-4 rounded-2xl border border-border bg-surface/40 p-5 transition-colors duration-200 hover:border-accent/40 hover:bg-accent/[0.05]"
+                className="flex items-start gap-3 rounded-2xl border border-border bg-surface/40 p-4 transition-colors duration-200 hover:border-accent/40 hover:bg-accent/[0.05]"
               >
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-accent/12 text-accent">
+                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent/12 text-accent">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -71,7 +71,7 @@ export function QueEsContent({ queEs }: { queEs: QueEsSettings }) {
                     {EXPERIENCE_ICONS[i % EXPERIENCE_ICONS.length]}
                   </svg>
                 </span>
-                <span className="pt-1 text-[15px] leading-relaxed" dangerouslySetInnerHTML={{ __html: text }} />
+                <span className="pt-0.5 text-[13px] leading-relaxed" dangerouslySetInnerHTML={{ __html: text }} />
               </li>
             ))}
           </ul>

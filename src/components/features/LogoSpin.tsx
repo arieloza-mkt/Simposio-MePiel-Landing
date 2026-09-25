@@ -154,7 +154,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
         )}
 
         {/* Logo: gira y luego se va a la derecha, por debajo del fondo azul */}
-        <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 grid h-svh place-items-center">
           <div
             ref={discRef}
             className="flex h-[min(68vmin,600px)] w-[min(68vmin,600px)] items-center justify-center rounded-full bg-white will-change-transform"
@@ -182,7 +182,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
         {/* Fondo azul con hueco circular: degradado radial cyan → navy */}
         <div
           ref={blueRef}
-          className="pointer-events-none absolute inset-0 z-20"
+          className="pointer-events-none absolute inset-x-0 top-0 z-20 h-svh"
           style={{
             background: `radial-gradient(circle at 50% 50%, ${CYAN} 0%, ${NAVY} 60%)`,
           }}

@@ -229,7 +229,7 @@ export function EdicionPanel({
                 ))}
               </div>
             )}
-            <div className="mt-[clamp(24px,3vw,40px)] flex flex-wrap items-center gap-3">
+            <div className="mt-[clamp(24px,3vw,40px)] flex flex-wrap items-center gap-3 max-[1020px]:justify-center">
               {edition.temario.length > 0 && (
                 <button
                   onClick={() => setTemarioOpen(true)}
@@ -347,7 +347,7 @@ export function EdicionPanel({
                 </div>
               </>
             ) : slides.length > 0 ? (
-              <PhotoCarousel images={slides} paused={!playing} className="max-md:aspect-[16/10]" />
+              <PhotoCarousel images={slides} paused={!playing} className="max-md:aspect-[16/10] max-[1020px]:!mx-auto max-[1020px]:!w-[70%]" />
             ) : null}
           </div>
         </div>

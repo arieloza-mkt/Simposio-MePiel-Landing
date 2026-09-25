@@ -75,7 +75,7 @@ export function ScrollPinnedEditions({
     return () => unregisterScrollToEdition();
   }, [goTo]);
 
-  const onWheel = (e: React.WheelEvent) => {
+  const onWheel = useCallback((e: WheelEvent) => {
     const dy = Math.round(e.deltaY);
     if (dy === 0 || editions.length < 2) return;
     const wrapper = wrapperRef.current;
@@ -139,7 +139,16 @@ export function ScrollPinnedEditions({
     const goal = docTop + next * innerHeight;
     snapTargetRef.current = goal;
     window.scrollTo({ top: goal, behavior: "smooth" });
-  };
+  }, [editions.length]);
+
+  // React registra los onWheel como pasivos y no deja hacer
+  // preventDefault; lo adjuntamos nativo y no-pasivo sobre el wrapper.
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+    wrapper.addEventListener("wheel", onWheel, { passive: false });
+    return () => wrapper.removeEventListener("wheel", onWheel);
+  }, [onWheel]);
 
   return (
     <div
@@ -147,7 +156,6 @@ export function ScrollPinnedEditions({
       id="ediciones"
       className="relative overflow-x-clip"
       style={{ height: `${Math.max(editions.length, 1) * 100}vh` }}
-      onWheel={onWheel}
     >
       <section
         ref={sectionRef}
@@ -155,25 +163,19 @@ export function ScrollPinnedEditions({
       >
         <div className="relative h-full w-full">
           {editions.map((edition, i) => {
-            const active = i === activeIndex;
-            const isPrev = i === activeIndex - 1;
-            const isNext = i === activeIndex + 1;
+            const offset = i - activeIndex;
+            const isActive = offset === 0;
             return (
               <div
                 key={edition.id}
-                className="absolute inset-0 z-0"
+                className="absolute inset-0"
                 style={{
-                  transform: active
-                    ? "translateX(0)"
-                    : isPrev
-                      ? "translateX(-100%)"
-                      : isNext
-                        ? "translateX(100%)"
-                        : "translateX(0)",
+                  transform: `translateX(${offset * 100}%)`,
                   transition: "transform 600ms var(--ease-in-out)",
                   willChange: "transform",
-                  pointerEvents: active ? "auto" : "none",
-                  opacity: active || isPrev || isNext ? 1 : 0,
+                  zIndex: isActive ? 3 : 1,
+                  pointerEvents: isActive ? "auto" : "none",
+                  opacity: Math.abs(offset) <= 1 ? 1 : 0,
                 }}
               >
                 <EdicionPanel
@@ -182,7 +184,7 @@ export function ScrollPinnedEditions({
                   eventConfig={eventConfig}
                   viewMoreText={viewMoreText}
                   modalSettings={modalSettings}
-                  playing={sectionInView && active}
+                  playing={sectionInView && isActive}
                 />
               </div>
             );
