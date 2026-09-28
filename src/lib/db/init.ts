@@ -139,7 +139,9 @@ async function init(): Promise<void> {
       }
     }
     // El título del hero pasó de `headline` (HTML de TipTap) a `h1` + `h2`
-    // (texto plano). Idempotente: solo actúa si la fila aún no tiene `h1`.
+    // (texto plano). Solo actúa si la fila todavía conserva `headline`: si
+    // `h1` quedara vacío tras la migración, volver a mirar `headline` la
+    // dispararía en cada request.
     const heroRow = await db
       .select({ value: schema.siteSettings.value })
       .from(schema.siteSettings)
@@ -148,7 +150,7 @@ async function init(): Promise<void> {
     const storedHero = heroRow[0]?.value as
       | (Record<string, unknown> & { headline?: unknown })
       | undefined;
-    if (storedHero && !storedHero.h1) {
+    if (storedHero && typeof storedHero.headline === "string") {
       const { h1, h2 } = splitLegacyHeadline(storedHero.headline);
       const next: Record<string, unknown> = { ...storedHero, h1, h2 };
       delete next.headline;
