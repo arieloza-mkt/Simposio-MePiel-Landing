@@ -32,6 +32,9 @@
 .vscode/
 .idea/
 
+# stray warp worktrees created with a Windows absolute path
+/C:\Users\*
+
 # debug
 npm-debug.log*
 yarn-debug.log*
