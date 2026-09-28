@@ -1,0 +1,17 @@
+# Normalize line endings so diffs stay clean across Windows/WSL/macOS/Linux.
+# Files are stored with LF in the repo and checked out as LF everywhere.
+* text=auto eol=lf
+
+# Keep binary assets out of text conversion.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.mp4 binary
+*.webm binary

@@ -85,7 +85,7 @@ export function LogoCarousel({
                   showNames ? "gap-2" : "h-12",
                 )}
               >
-                <div className={cn("flex items-center justify-center", showNames ? "h-12" : "h-full")}>
+                <div className={cn("flex items-center justify-center")}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={item.image}
@@ -94,11 +94,7 @@ export function LogoCarousel({
                     loading="lazy"
                   />
                 </div>
-                {showNames && (
-                  <span className="w-full truncate text-center text-xs font-medium text-muted">
-                    {item.name}
-                  </span>
-                )}
+              
               </div>
             </SwiperSlide>
           ))}
