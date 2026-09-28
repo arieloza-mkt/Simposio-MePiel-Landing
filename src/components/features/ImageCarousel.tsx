@@ -145,7 +145,7 @@ export function ImageCarousel({
     <div
       ref={fancyboxRef}
       className={cn(
-        "relative overflow-hidden rounded-[var(--radius-lg)]",
+        "relative overflow-hidden rounded-[var(--radius-lg)] max-md:mx-auto max-md:w-[80%]",
         className,
       )}
     >

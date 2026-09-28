@@ -5,6 +5,7 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { ImageCarousel } from "@/components/features/ImageCarousel";
+import { withCloudinaryTransform } from "@/lib/image";
 
 export function SimposioDermocosmetico({
   alianza,
@@ -24,7 +25,7 @@ export function SimposioDermocosmetico({
       className="relative overflow-hidden"
     >
       <img
-        src="https://res.cloudinary.com/cc4tium7/image/upload/v1789679969/alianza_back.png"
+        src={withCloudinaryTransform("https://res.cloudinary.com/cc4tium7/image/upload/v1789679969/alianza_back.png")}
         alt=""
         aria-hidden
         loading="lazy"
@@ -69,7 +70,7 @@ export function SimposioDermocosmetico({
                 {alianza.paragraphs.map((text, i) => (
                   <div
                     key={i}
-                    className="m-0 leading-relaxed text-[17px] text-black/70 max-sm:text-[15px]"
+                    className="m-0 leading-relaxed text-foreground/70 text-[17px] max-sm:text-[15px]"
                     dangerouslySetInnerHTML={{ __html: text }}
                   />
                 ))}

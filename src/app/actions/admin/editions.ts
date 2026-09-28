@@ -94,6 +94,7 @@ const editionSchema = z.object({
           time: z.string().optional(),
           title: z.string(),
           description: z.string().optional(),
+          speaker: z.string().optional(),
         }),
       ),
     ])

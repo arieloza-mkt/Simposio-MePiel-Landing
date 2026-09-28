@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import {
   motion,
   useReducedMotion,
@@ -9,6 +10,7 @@ import {
 import type { HeroSettings, SiteInfo } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { getYoutubeId } from "@/lib/video";
+import { useInView } from "@/lib/use-in-view";
 
 const heroChildren = {
   hidden: {},
@@ -26,23 +28,38 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
     if (el) {
-      window.scrollTo({
-        top: (el as HTMLElement).offsetTop - 60,
-        behavior: "smooth",
-      });
+      const elTop = (el as HTMLElement).offsetTop;
+      // #acerca es el wrapper h-[200vh] del LogoSpin: hay que recorrer
+      // la sección completa hasta el fin de la revelación (progreso 1),
+      // donde el hueco ya cubre la pantalla y CifrasPreview queda visible.
+      const top =
+        href === "#acerca" ? elTop + window.innerHeight : elTop - 60;
+      window.scrollTo({ top, behavior: "smooth" });
     }
   };
 
   const reducedMotion = useReducedMotion();
   const { scrollY } = useScroll();
   const backdropY = useTransform(scrollY, [0, 900], [0, 240]);
+  const [heroSectionRef, heroInView] = useInView<HTMLElement>({ threshold: 0.2 });
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+
   const heroVideoId = hero.videoId;
   const heroYoutubeId = heroVideoId ? getYoutubeId(heroVideoId) : null;
 
+  useEffect(() => {
+    if (heroYoutubeId) return;
+    const v = heroVideoRef.current;
+    if (!v) return;
+    if (heroInView) v.play().catch(() => {});
+    else v.pause();
+  }, [heroInView, heroYoutubeId]);
+
   return (
     <section
+      ref={heroSectionRef}
       id="inicio"
-      className="relative flex min-h-screen items-center overflow-hidden bg-dark pt-[clamp(100px,16vw,160px)] pb-[clamp(48px,7vw,80px)] text-white"
+      className="relative flex min-h-screen items-center overflow-hidden bg-dark pt-[clamp(100px,16vw,160px)] pb-[clamp(48px,7vw,80px)] text-white max-sm:min-h-[70svh]"
     >
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <motion.div
@@ -52,6 +69,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           <div className="absolute inset-0 overflow-hidden">
             {heroVideoId && !heroYoutubeId ? (
               <video
+                ref={heroVideoRef}
                 autoPlay
                 loop
                 muted
@@ -61,13 +79,24 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
                 <source src={heroVideoId} type="video/mp4" />
               </video>
             ) : heroYoutubeId ? (
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${heroYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
-                title="Video de fondo del Simposio Dermocosmético"
-                allow="autoplay; encrypted-media"
-                referrerPolicy="strict-origin-when-cross-origin"
-                className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.6]"
-              />
+              heroInView ? (
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${heroYoutubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${heroYoutubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+                  title="Video de fondo del Simposio Dermocosmético"
+                  allow="autoplay; encrypted-media"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  className="absolute top-1/2 left-1/2 h-[56.25vw] min-h-full w-[177.78vh] min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.6]"
+                />
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={`https://i.ytimg.com/vi/${heroYoutubeId}/maxresdefault.jpg`}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  className="absolute top-1/2 left-1/2 h-full min-h-full w-full min-w-full -translate-x-1/2 -translate-y-1/2 object-cover brightness-[0.6]"
+                />
+              )
 ) : null}
           </div>
           <div className="absolute inset-0" aria-hidden>
@@ -111,7 +140,7 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           initial="hidden"
           animate="visible"
           variants={heroChildren}
-          className="max-w-[720px] text-left max-sm:mx-auto max-sm:text-center"
+          className="max-w-[720px] text-left"
         >
           <motion.h1
             variants={heroChild}
@@ -125,32 +154,32 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           >
             {site.description}
           </motion.p>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.4 }}
-          className="relative mt-12 flex justify-start max-sm:justify-center"
-        >
-          <button
-            onClick={() => scrollTo("#ediciones")}
-            className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+            className="mt-10"
           >
-            Ver más
-            <svg
-              aria-hidden
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5"
+            <button
+              onClick={() => scrollTo("#acerca")}
+              className="group inline-flex items-center gap-2 rounded-full border border-white/25 px-7 py-3 text-sm font-semibold tracking-wide text-white/80 transition hover:border-accent hover:text-accent active:translate-y-px focus-visible:outline-2 focus-visible:outline-accent"
             >
-              <path d="M12 5v14M5 12l7 7 7-7" />
-            </svg>
-          </button>
+              Ver más
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-y-0.5"
+              >
+                <path d="M12 5v14M5 12l7 7 7-7" />
+              </svg>
+            </button>
+          </motion.div>
         </motion.div>
       </Container>
     </section>

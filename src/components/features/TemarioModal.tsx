@@ -22,9 +22,6 @@ export function TemarioModal({
       <h3 className="m-0 mb-1.5 font-display text-2xl font-bold tracking-tight">
         Temario de la {edition.ordinal} edición
       </h3>
-      <p className="m-0 mb-6 border-b border-border pb-4 text-[13px] leading-relaxed text-muted">
-        Actividades de la {edition.eyebrow} ({edition.year}).
-      </p>
 
       <ol className="m-0 list-none p-0">
         {edition.temario.map((item, i) => (
@@ -37,19 +34,20 @@ export function TemarioModal({
                 className="absolute -left-[5px] top-2 h-[9px] w-[9px] rounded-full bg-accent ring-4 ring-surface"
                 aria-hidden
               />
-              <h4 className="mb-0.5 mt-0.5 text-base font-semibold leading-snug text-fg">
+               {item.speaker ? (
+                <h3 className="mt-0.5 text-lg font-bold leading-relaxed">
+                  {item.speaker}
+                </h3>
+              ) : null}
+               <h4 className="mb-1 mt-0.5 text-base font-normal leading-snug text-fg">
                 {item.title}
               </h4>
               {item.description ? (
-                <p className="m-0 max-w-[52ch] text-sm leading-relaxed text-muted">
+                <p className="m-0 text-sm font-light leading-snug text-muted stext-fg">
                   {item.description}
                 </p>
               ) : null}
-              {item.speaker ? (
-                <p className="mt-1 text-sm text-muted/80">
-                  {item.speaker}
-                </p>
-              ) : null}
+            
             </div>
           </li>
         ))}

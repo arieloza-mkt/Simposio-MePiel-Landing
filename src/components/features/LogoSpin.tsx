@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
+import { withCloudinaryTransform } from "@/lib/image";
 
 const NAVY = "#0a1330";
 const CYAN = "#2EC5E8";
@@ -45,10 +46,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
     const update = () => {
       ticking = false;
       const rect = wrapper.getBoundingClientRect();
-      const scrollable = wrapper.offsetHeight - window.innerHeight;
-      if (scrollable <= 0) return;
-
-      let progress = -rect.top / scrollable;
+      let progress = -rect.top / window.innerHeight;
       progress = Math.min(Math.max(progress, 0), 1);
 
       const discR = disc.offsetWidth / 2;
@@ -66,7 +64,19 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       // Sigue rodando un poco mientras se aleja, para apreciar la trayectoria
       const rotation = spin * 360 + slide * 140;
 
+      // En mobile/tablet el logo no vuela a la derecha: desaparece
+      // suavemente durante la fase de salida y se cierra en progreso 1.
+      const isMobile = window.innerWidth <= 980;
+
       disc.style.transform = `translateX(${slideX.toFixed(1)}px) rotate(${rotation.toFixed(2)}deg)`;
+
+      if (isMobile) {
+        const fade =
+          progress <= SPIN_END ? 0 : (progress - SPIN_END) / (1 - SPIN_END);
+        disc.style.opacity = String(Math.max(0, 1 - fade).toFixed(3));
+      } else {
+        disc.style.opacity = "1";
+      }
 
       // Hueco: tapado por el disco durante el giro; crece después hasta llenar la pantalla
       const grow = progress <= SPIN_END ? 0 : (progress - SPIN_END) / (1 - SPIN_END);
@@ -76,7 +86,8 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
       applyHole(radius);
 
       if (preview) {
-        preview.style.pointerEvents = progress > SPIN_END ? "auto" : "none";
+        const revealed = progress >= 1;
+        preview.style.pointerEvents = revealed ? "auto" : "none";
       }
     };
 
@@ -97,30 +108,53 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
     };
   }, []);
 
+  useLayoutEffect(() => {
+    const wrapper = wrapperRef.current;
+    const preview = previewRef.current;
+    if (!wrapper) return;
+
+    const applyHeight = () => {
+      const innerHeight = window.innerHeight;
+      const contentHeight = preview ? preview.offsetHeight : 0;
+      wrapper.style.height = `${Math.max(contentHeight, innerHeight) + innerHeight}px`;
+    };
+
+    applyHeight();
+    let observer: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== "undefined" && preview) {
+      observer = new ResizeObserver(applyHeight);
+      observer.observe(preview);
+    }
+    window.addEventListener("resize", applyHeight, { passive: true });
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", applyHeight);
+    };
+  }, []);
+
   return (
     <div
       id="acerca"
       ref={wrapperRef}
-      aria-hidden
-      className="relative h-[200vh] select-none"
+      className="relative h-[200vh] select-none overflow-clip"
     >
       <div
-        className="sticky top-0 flex h-screen items-center justify-center overflow-hidden"
+        className="sticky top-0 flex items-center justify-center overflow-hidden"
         style={{ background: NAVY }}
       >
         {nextPreview && (
           <div
             ref={previewRef}
-            className="pointer-events-none absolute inset-0 z-0 overflow-y-auto bg-bg text-center dark:bg-[#0a1330]"
+            className="pointer-events-none relative z-0 w-full bg-bg text-center dark:bg-[#0a1330]"
           >
-            <div className="flex min-h-full items-center justify-center px-5 py-10 pb-16 sm:px-8 max-sm:py-4 max-sm:pb-10">
+            <div className="flex min-h-screen items-center justify-center px-5 py-10 pb-16 sm:px-8 max-sm:py-4 max-sm:pb-10 md:pl-12 md:pr-[clamp(48px,9vw,144px)] lg:pl-[clamp(48px,6vw,96px)]">
               <div className="w-full max-w-[1440px]">{nextPreview}</div>
             </div>
           </div>
         )}
 
         {/* Logo: gira y luego se va a la derecha, por debajo del fondo azul */}
-        <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 grid h-svh place-items-center">
           <div
             ref={discRef}
             className="flex h-[min(68vmin,600px)] w-[min(68vmin,600px)] items-center justify-center rounded-full bg-white will-change-transform"
@@ -131,7 +165,11 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={logoUrl || "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png"}
+              src={withCloudinaryTransform(
+                logoUrl || "https://res.cloudinary.com/cc4tium7/image/upload/v1787606525/Logo.png",
+                "fit",
+                "square",
+              )}
               alt=""
               draggable={false}
               loading="eager"
@@ -144,7 +182,7 @@ export function LogoSpin({ logoUrl, nextPreview }: { logoUrl?: string; nextPrevi
         {/* Fondo azul con hueco circular: degradado radial cyan → navy */}
         <div
           ref={blueRef}
-          className="pointer-events-none absolute inset-0 z-20"
+          className="pointer-events-none absolute inset-x-0 top-0 z-20 h-svh"
           style={{
             background: `radial-gradient(circle at 50% 50%, ${CYAN} 0%, ${NAVY} 60%)`,
           }}

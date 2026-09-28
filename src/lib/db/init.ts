@@ -108,6 +108,35 @@ async function init(): Promise<void> {
         }
       }
     }
+    // Normalización del temario (formato viejo): en `speaker` venía el nombre y
+    // el puesto combinados ("NOMBRE · PUESTO"). Se separa en description (nombre)
+    // y speaker (puesto). Idempotente: solo actúa si el item aún tiene " · ".
+    const temarioEditions = await db
+      .select({ id: schema.editions.id, temario: schema.editions.temario })
+      .from(schema.editions);
+    for (const row of temarioEditions) {
+      const items = Array.isArray(row.temario) ? row.temario : [];
+      let changed = false;
+      const next = items.map((item) => {
+        const t = item as Partial<schema.EditionTemarioItem>;
+        if (typeof t.speaker === "string" && t.speaker.includes("·")) {
+          const parts = t.speaker.split("·").map((p: string) => p.trim());
+          changed = true;
+          return {
+            title: t.title ?? "",
+            description: parts[0] ?? "",
+            speaker: parts.slice(1).join(" · ") || undefined,
+          };
+        }
+        return t as schema.EditionTemarioItem;
+      });
+      if (changed) {
+        await db
+          .update(schema.editions)
+          .set({ temario: next })
+          .where(eq(schema.editions.id, row.id));
+      }
+    }
     // Programa (3 días): se siembra solo si la tabla está vacía,
     // para no pisar las ediciones hechas desde /admin/programa.
     const programCount = await db

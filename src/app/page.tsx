@@ -6,7 +6,6 @@ import { CifrasPreview } from "@/components/sections/CifrasPreview";
 import { SimposioDermocosmetico } from "@/components/sections/SimposioDermocosmetico";
 import { ProgramaLauncher } from "@/components/programa/ProgramaLauncher";
 import { ScrollPinnedEditions } from "@/components/features/ScrollPinnedEditions";
-import { CategoriaHero } from "@/components/sections/CategoriaHero";
 import { getLandingContent } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
@@ -34,10 +33,10 @@ export default async function Home() {
        <ScrollPinnedEditions
           editions={content.editions}
           speakers={content.speakers}
+          eventConfig={content.eventConfig}
           viewMoreText={content.editionsPanel.viewMoreText}
           modalSettings={content.editionsModal}
         />
-        <CategoriaHero />
       </main>
       <ProgramaLauncher />
       <Footer settings={content.footer} />

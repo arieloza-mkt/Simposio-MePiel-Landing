@@ -387,19 +387,19 @@ function EditionForm({
           renderItem={(item, _, onChange) => (
             <div className="grid gap-3">
               <TextInput
-                placeholder="Título"
+                placeholder="Tema (ej. Mercado mexicano del dermocosmético)"
                 value={item.title}
                 onChange={(e) => onChange({ ...item, title: e.target.value })}
               />
               <TextInput
-                placeholder="Descripción (opcional)"
+                placeholder="Nombre del expositor (ej. MARIO MUÑIZ)"
                 value={item.description ?? ""}
                 onChange={(e) =>
                   onChange({ ...item, description: e.target.value })
                 }
               />
               <TextInput
-                placeholder="Expositor (opcional)"
+                placeholder="Puesto del expositor (ej. SR. GENERAL MANAGER NOLA IQVIA)"
                 value={item.speaker ?? ""}
                 onChange={(e) => onChange({ ...item, speaker: e.target.value })}
               />
