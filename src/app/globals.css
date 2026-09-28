@@ -152,25 +152,90 @@
   }
 }
 
-/* En móvil, los párrafos de la sección Alianza (HTML con <p> anidados)
-   se reducen y compactan para no desbordar el viewport. */
-@media (max-width: 639px) {
-  #alianza p:not(.admin p) {
-    font-size: 15px;
-    margin-block: 0 12px;
-  }
-
-  #cifras-preview-big-image {
-    display: none;
-  }
+/* Hero: H1 y H2 son texto plano (elementos reales <h1>/<h2>), con tamaño,
+   tipografía y color configurables desde el admin. Cada variable --hero-hN-*
+   llega como style inline; si no está definida se hereda la del contenedor. */
+.hero-headline {
+  --hero-headline-font: var(--font-display);
+  --hero-headline-size: clamp(48px, 7vw, 88px);
+  --hero-headline-color: #fff;
+  font-family: var(--hero-headline-font);
+  font-size: var(--hero-headline-size);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--hero-headline-color);
+  margin: 0 0 1.25rem 0;
+  text-wrap: balance;
+}
+.hero-headline h1 {
+  font-family: var(--hero-h1-font, var(--hero-headline-font));
+  font-size: var(--hero-h1-size, var(--hero-headline-size));
+  font-weight: var(--hero-h1-weight, 400);
+  font-style: var(--hero-h1-style, normal);
+  color: var(--hero-h1-color, var(--hero-headline-color));
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-wrap: inherit;
+  margin: 0;
+  padding: 0;
+}
+.hero-headline h2 {
+  font-family: var(--hero-h2-font, var(--hero-headline-font));
+  font-size: var(--hero-h2-size, var(--hero-headline-size));
+  font-weight: var(--hero-h2-weight, 400);
+  font-style: var(--hero-h2-style, normal);
+  color: var(--hero-h2-color, var(--hero-headline-color));
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-wrap: inherit;
+  margin: 0;
+  padding: 0;
 }
 
-/* En móvil, los párrafos de la sección Alianza (HTML con <p> anidados)
-   se reducen y compactan para no desbordar el viewport. */
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 2.4vw, 19px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 2rem 0;
+  text-wrap: pretty;
+}
+.hero-subtitle p,
+.hero-subtitle h1,
+.hero-subtitle h2,
+.hero-subtitle h3,
+.hero-subtitle ul,
+.hero-subtitle ol,
+.hero-subtitle li,
+.hero-subtitle div {
+  font-family: var(--font-body);
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+}
+.hero-subtitle strong,
+.hero-subtitle b {
+  font-weight: 700;
+  color: #fff;
+}
+.hero-subtitle em,
+.hero-subtitle i {
+  font-style: italic;
+}
+.hero-subtitle a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
 @media (max-width: 639px) {
-  #alianza p:not(.admin p) {
+  .hero-headline {
+    --hero-headline-size: clamp(32px, 9vw, 42px);
+  }
+  .hero-subtitle {
     font-size: 15px;
-    margin-block: 0 12px;
   }
 }
 

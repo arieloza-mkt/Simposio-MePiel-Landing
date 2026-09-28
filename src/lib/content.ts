@@ -2,6 +2,7 @@ import { asc, eq } from "drizzle-orm";
 import { getDbReady } from "./db/client";
 import { ensureDb } from "./db/init";
 import * as schema from "./db/schema";
+import { splitLegacyHeadline } from "./hero-headline";
 import {
   EDITION_SEED,
   FAQ_SEED,
@@ -40,9 +41,21 @@ export interface SeoSettings {
 }
 
 export interface HeroSettings {
-  headline: string;
+  h1: string;
+  h2: string;
+  subtitle: string;
   metrics: { value: string; label: string }[];
   videoId: string;
+  h1FontSize?: string;
+  h1FontFamily?: string;
+  h1FontWeight?: string;
+  h1FontStyle?: string;
+  h1Color?: string;
+  h2FontSize?: string;
+  h2FontFamily?: string;
+  h2FontWeight?: string;
+  h2FontStyle?: string;
+  h2Color?: string;
 }
 
 export interface TransmisionSettings {
@@ -174,6 +187,24 @@ export interface LandingContent {
   faq: FaqItem[];
 }
 
+/* La fila `hero` se guardaba antes con un único campo `headline` en HTML.
+   Si aún no tiene `h1`/`h2` se derivan aquí para que ni la landing ni el
+   admin se queden sin título (la migración de init.ts la persiste). */
+function normalizeHero(row: unknown): HeroSettings {
+  const seed = SETTINGS_SEED.hero as HeroSettings;
+  const { headline, ...rest } = (row ?? {}) as Partial<HeroSettings> & {
+    headline?: unknown;
+  };
+  const legacy = splitLegacyHeadline(headline);
+  const h1 = (rest.h1 ?? legacy.h1).trim();
+  return {
+    ...seed,
+    ...rest,
+    h1: h1 || seed.h1,
+    h2: (rest.h2 ?? legacy.h2).trim(),
+  };
+}
+
 export async function getLandingContent(): Promise<LandingContent> {
   let settingRows: (typeof schema.siteSettings.$inferSelect)[];
   let editionRows: Edition[];
@@ -247,7 +278,7 @@ export async function getLandingContent(): Promise<LandingContent> {
   return {
     site: s<SiteInfo>("site"),
     seo: s<SeoSettings>("seo"),
-    hero: s<HeroSettings>("hero"),
+    hero: normalizeHero(s<HeroSettings>("hero")),
     transmision: s<TransmisionSettings>("transmision"),
     benefits: s<Benefit[]>("benefits"),
     attendeeTypes: s<AttendeeType[]>("attendeeTypes"),

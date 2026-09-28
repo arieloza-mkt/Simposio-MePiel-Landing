@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${bebas.variable} ${montserrat.className}`}
+      className={`${bebas.variable} ${montserrat.variable} ${montserrat.className}`}
       data-theme="dark"
       suppressHydrationWarning
     >

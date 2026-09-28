@@ -66,6 +66,47 @@ const stringArray = z.string().transform((raw) => {
   return raw.split("\n").map((l) => l.trim()).filter(Boolean);
 });
 
+/* Solo se admiten longitudes CSS simples: "48px", "3rem", "7vw", "100%" y
+   funciones clamp()/min()/max() con 2 o 3 longitudes separadas por "," o "/".
+   Se rechaza todo lo demás (calc(), url(), var(), ;, etc.) porque el valor
+   acaba en un style inline. */
+const CSS_UNITS = ["px", "rem", "em", "vw", "vh", "vmin", "vmax", "%"].join("|");
+const CSS_LENGTH = `(?:\\d+(?:\\.\\d+)?|\\.\\d+)(?:${CSS_UNITS})`;
+const CSS_SIZE_RE = new RegExp(
+  `^(?:(?:clamp|min|max)\\(\\s*${CSS_LENGTH}(?:\\s*[,/]\\s*${CSS_LENGTH}){1,2}\\s*\\)|${CSS_LENGTH})$`,
+);
+
+const cssSize = z
+  .string()
+  .trim()
+  .max(80)
+  .refine((v) => CSS_SIZE_RE.test(v), {
+    message:
+      "Tamaño inválido. Ej: 48px, 3rem, 7vw o clamp(48px, 7vw, 88px)",
+  });
+
+/* Pesos disponibles en las fuentes del proyecto: Montserrat carga
+   300/400/500/600/700/900. Bebas Neue solo tiene 400 (el resto lo
+   sintetiza el navegador), igual que la cursiva. */
+const optionalWeight = z.union([
+  z.literal(""),
+  z.enum(["300", "400", "500", "600", "700", "900"]),
+]);
+
+const optionalFontStyle = z.union([z.literal(""), z.enum(["normal", "italic"])]);
+
+const hexColor = z
+  .string()
+  .trim()
+  .regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, "Color hexadecimal inválido. Ej: #ffffff");
+
+const optionalHexColor = z
+  .string()
+  .trim()
+  .refine((v) => v === "" || /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v), {
+    message: "Color hexadecimal inválido. Ej: #ffffff",
+  });
+
 export type ContentKey =
   | "site"
   | "seo"
@@ -105,9 +146,21 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
     description: z.string(),
   }),
   hero: z.object({
-    headline: z.string().trim().min(1),
+    h1: z.string().trim().min(1, "El H1 no puede quedar vacío").max(120),
+    h2: z.string().trim().max(160),
+    subtitle: z.string(),
     videoId: z.string().trim().max(120),
     metrics: pairLines,
+    h1FontSize: z.union([z.literal(""), cssSize]),
+    h1FontFamily: z.enum(["display", "body", "mono"]).default("display"),
+    h1FontWeight: optionalWeight,
+    h1FontStyle: optionalFontStyle,
+    h1Color: optionalHexColor,
+    h2FontSize: z.union([z.literal(""), cssSize]),
+    h2FontFamily: z.enum(["display", "body", "mono"]).default("display"),
+    h2FontWeight: optionalWeight,
+    h2FontStyle: optionalFontStyle,
+    h2Color: optionalHexColor,
   }),
   queEs: z.object({
     eyebrow: z.string().trim(),
@@ -230,6 +283,7 @@ export async function saveContentSetting(
   // Sanitize HTML fields before validation
   const sanitizedValues = { ...rawValues };
   const htmlFields: Record<string, string[]> = {
+    hero: ["subtitle"],
     queEs: ["intro", "experienceIntro"],
     mepielAlianza: ["paragraphs"],
     registroSection: ["description", "validationText"],

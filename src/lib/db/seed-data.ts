@@ -328,8 +328,10 @@ export const SETTINGS_SEED: Record<string, unknown> = {
       "El encuentro comercial más relevante de la industria dermocosmética en México. Farmacias, laboratorios, distribuidores y especialistas conectan para impulsar la categoría.",
   },
   hero: {
-    headline:
-      "Una alianza que impulsa tu práctica. Una experiencia que reconoce tu confianza.",
+    h1: "Una alianza que impulsa tu práctica.",
+    h2: "Una experiencia que reconoce tu confianza.",
+    subtitle:
+      "El encuentro comercial más relevante de la industria dermocosmética en México. Farmacias, laboratorios, distribuidores y especialistas conectan para impulsar la categoría.",
     metrics: [
       { value: "+1500", label: "Asistentes\nacumulados" },
       { value: "+50", label: "Laboratorios\nparticipantes" },
