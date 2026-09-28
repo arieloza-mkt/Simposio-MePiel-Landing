@@ -7,6 +7,7 @@ import { FieldArray } from "@/components/admin/FieldArray";
 import { ImageField } from "@/components/admin/ImageField";
 import { Button, Field, Select, TextInput, TextArea } from "@/components/admin/ui";
 import { TipTapEditor } from "./TipTapEditor";
+import { heroStyleKey, type HeroStyleField } from "@/lib/hero-style";
 import type {
   SiteInfo,
   SeoSettings,
@@ -40,6 +41,176 @@ const WEIGHT_LABELS: Record<string, string> = {
   "700": "Bold (700)",
   "900": "Black (900)",
 };
+
+/* Los estilos del título se editan por dispositivo: escritorio y móvil. El
+   breakpoint lo fija globals.css (`screen and (max-width: 1000px)`). */
+type Viewport = "desktop" | "mobile";
+
+const VIEWPORTS: { value: Viewport; label: string; hint: string }[] = [
+  {
+    value: "desktop",
+    label: "Escritorio",
+    hint: "Se aplica en pantallas de más de 1000px de ancho.",
+  },
+  {
+    value: "mobile",
+    label: "Móvil",
+    hint: "Se aplica en `screen and (max-width: 1000px)`. Los campos vacíos usan el valor de escritorio.",
+  },
+];
+
+const STYLE_FIELDS = [
+  "FontSize",
+  "FontFamily",
+  "FontWeight",
+  "FontStyle",
+  "Color",
+] as const satisfies readonly HeroStyleField[];
+
+/* h1FontSize → h1-font-size, h2ColorMobile → h2-color-mobile. */
+const fieldId = (key: string) =>
+  `hero-${key.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}`;
+
+function ViewportTabs({
+  value,
+  onChange,
+}: {
+  value: Viewport;
+  onChange: (next: Viewport) => void;
+}) {
+  return (
+    <div
+      role="tablist"
+      aria-label="Dispositivo"
+      className="inline-flex shrink-0 rounded-lg border border-border p-1"
+    >
+      {VIEWPORTS.map((viewport) => (
+        <button
+          key={viewport.value}
+          type="button"
+          role="tab"
+          aria-selected={value === viewport.value}
+          onClick={() => onChange(viewport.value)}
+          className={`rounded-md px-4 py-1.5 text-sm font-medium transition ${
+            value === viewport.value
+              ? "bg-accent text-accent-foreground"
+              : "text-muted-foreground hover:text-fg"
+          }`}
+        >
+          {viewport.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function HeadlineStyleFields({
+  level,
+  viewport,
+  form,
+  setForm,
+}: {
+  level: 1 | 2;
+  viewport: Viewport;
+  form: Record<string, string>;
+  setForm: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+}) {
+  const mobile = viewport === "mobile";
+  const key = (field: HeroStyleField) =>
+    heroStyleKey(level, field, mobile);
+  const value = (field: HeroStyleField) => form[key(field)] ?? "";
+  const update = (field: HeroStyleField, next: string) =>
+    setForm((prev) => ({ ...prev, [key(field)]: next }));
+
+  const inheritHint = "Vacío = tamaño responsive actual.";
+  const mobileHint = "Vacío = se usa el valor de escritorio.";
+
+  return (
+    <fieldset className="grid gap-4 rounded-lg border border-border p-4">
+      <legend className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        Estilo del H{level} · {mobile ? "móvil" : "escritorio"}
+      </legend>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Field
+          label="Tamaño"
+          htmlFor={fieldId(key("FontSize"))}
+          hint={mobile ? mobileHint : inheritHint}
+        >
+          <TextInput
+            id={fieldId(key("FontSize"))}
+            placeholder={mobile ? "40px" : "clamp(48px, 7vw, 88px)"}
+            value={value("FontSize")}
+            onChange={(e) => update("FontSize", e.target.value)}
+          />
+        </Field>
+        <Field label="Tipografía" htmlFor={fieldId(key("FontFamily"))}>
+          <Select
+            id={fieldId(key("FontFamily"))}
+            value={value("FontFamily")}
+            onChange={(e) => update("FontFamily", e.target.value)}
+          >
+            {mobile && <option value="">Igual que escritorio</option>}
+            <option value="display">Bebas Neue</option>
+            <option value="body">Montserrat</option>
+          </Select>
+        </Field>
+        <Field
+          label="Peso"
+          htmlFor={fieldId(key("FontWeight"))}
+          hint="Bebas Neue solo tiene 400; el navegador sintetiza el resto."
+        >
+          <Select
+            id={fieldId(key("FontWeight"))}
+            value={value("FontWeight")}
+            onChange={(e) => update("FontWeight", e.target.value)}
+          >
+            {Object.entries(WEIGHT_LABELS).map(([weight, label]) => (
+              <option key={weight} value={weight}>
+                {mobile && weight === "" ? "Igual que escritorio" : label}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Field
+          label="Estilo"
+          htmlFor={fieldId(key("FontStyle"))}
+          hint="Ninguna fuente carga cursiva real; se sintetiza."
+        >
+          <Select
+            id={fieldId(key("FontStyle"))}
+            value={value("FontStyle")}
+            onChange={(e) => update("FontStyle", e.target.value)}
+          >
+            <option value="">{mobile ? "Igual que escritorio" : "Sin cambio (normal)"}</option>
+            <option value="normal">Normal</option>
+            <option value="italic">Cursiva (italic)</option>
+          </Select>
+        </Field>
+        <Field
+          label="Color"
+          htmlFor={fieldId(key("Color"))}
+          hint={mobile ? mobileHint : "Vacío = blanco."}
+        >
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              aria-label={`Color del H${level} (${viewport})`}
+              className="h-9 w-11 shrink-0 cursor-pointer rounded-md border border-input bg-transparent p-1"
+              value={isHex(value("Color")) ? value("Color") : "#ffffff"}
+              onChange={(e) => update("Color", e.target.value)}
+            />
+            <TextInput
+              id={fieldId(key("Color"))}
+              placeholder="#ffffff"
+              value={value("Color")}
+              onChange={(e) => update("Color", e.target.value)}
+            />
+          </div>
+        </Field>
+      </div>
+    </fieldset>
+  );
+}
 
 function SaveButton({ pending, message }: { pending: boolean; message: string | null }) {
   return (
@@ -135,46 +306,40 @@ export function SiteEditor({ data }: { data: SiteInfo }) {
 
 export function HeroEditor({ data }: { data: HeroSettings }) {
   const { message, pending, save } = useSave("hero");
-  const [form, setForm] = useState({
-    h1: data.h1 ?? "",
-    h2: data.h2 ?? "",
-    subtitle: data.subtitle ?? "",
-    videoId: data.videoId ?? "",
-    h1FontSize: data.h1FontSize ?? "",
-    h1FontFamily: fontFamily(data.h1FontFamily),
-    h1FontWeight: data.h1FontWeight ?? "",
-    h1FontStyle: data.h1FontStyle ?? "",
-    h1Color: data.h1Color ?? "",
-    h2FontSize: data.h2FontSize ?? "",
-    h2FontFamily: fontFamily(data.h2FontFamily),
-    h2FontWeight: data.h2FontWeight ?? "",
-    h2FontStyle: data.h2FontStyle ?? "",
-    h2Color: data.h2Color ?? "",
+  const [viewport, setViewport] = useState<Viewport>("desktop");
+  const [form, setForm] = useState<Record<string, string>>(() => {
+    const initial: Record<string, string> = {
+      h1: data.h1 ?? "",
+      h2: data.h2 ?? "",
+      subtitle: data.subtitle ?? "",
+      videoId: data.videoId ?? "",
+    };
+    for (const level of [1, 2] as const) {
+      for (const mobile of [false, true]) {
+        for (const field of STYLE_FIELDS) {
+          const key = heroStyleKey(level, field, mobile);
+          const value = data[key] ?? "";
+          // La tipografía de escritorio siempre tiene valor: el select no
+          // admite "" y se normaliza a Bebas si el dato guardado falta.
+          initial[key] =
+            field === "FontFamily" && !mobile ? fontFamily(value) : value;
+        }
+      }
+    }
+    return initial;
   });
   const [metrics, setMetrics] = useState(() =>
     (data.metrics ?? []).map((m) => ({ ...m, id: uid() }))
   );
+  const viewportMeta = VIEWPORTS.find((v) => v.value === viewport);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         save({
-          h1: form.h1,
-          h2: form.h2,
-          subtitle: form.subtitle,
-          videoId: form.videoId,
+          ...form,
           metrics: JSON.stringify(metrics.map(({ id, ...m }) => m)),
-          h1FontSize: form.h1FontSize,
-          h1FontFamily: form.h1FontFamily,
-          h1FontWeight: form.h1FontWeight,
-          h1FontStyle: form.h1FontStyle,
-          h1Color: form.h1Color,
-          h2FontSize: form.h2FontSize,
-          h2FontFamily: form.h2FontFamily,
-          h2FontWeight: form.h2FontWeight,
-          h2FontStyle: form.h2FontStyle,
-          h2Color: form.h2Color,
         });
       }}
       className="grid gap-4"
@@ -186,7 +351,7 @@ export function HeroEditor({ data }: { data: HeroSettings }) {
             value={form.h1}
             maxLength={120}
             placeholder="Una alianza que impulsa tu práctica."
-            onChange={(e) => setForm({ ...form, h1: e.target.value })}
+            onChange={(e) => setForm((prev) => ({ ...prev, h1: e.target.value }))}
           />
         </Field>
         <Field label="Subtítulo H2" htmlFor="hero-h2" hint="Segunda línea. Si lo dejas vacío no se muestra.">
@@ -195,172 +360,35 @@ export function HeroEditor({ data }: { data: HeroSettings }) {
             value={form.h2}
             maxLength={160}
             placeholder="Una experiencia que reconoce tu confianza."
-            onChange={(e) => setForm({ ...form, h2: e.target.value })}
+            onChange={(e) => setForm((prev) => ({ ...prev, h2: e.target.value }))}
           />
         </Field>
       </div>
 
-      <fieldset className="grid gap-4 rounded-lg border border-border p-4">
-        <legend className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Estilo del H1
-        </legend>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Field
-            label="Tamaño"
-            htmlFor="hero-h1-size"
-            hint="Vacío = tamaño responsive actual."
-          >
-            <TextInput
-              id="hero-h1-size"
-              placeholder="clamp(48px, 7vw, 88px)"
-              value={form.h1FontSize}
-              onChange={(e) => setForm({ ...form, h1FontSize: e.target.value })}
-            />
-          </Field>
-          <Field label="Tipografía" htmlFor="hero-h1-font">
-            <Select
-              id="hero-h1-font"
-              value={form.h1FontFamily}
-              onChange={(e) => setForm({ ...form, h1FontFamily: e.target.value })}
-            >
-              <option value="display">Bebas Neue</option>
-              <option value="body">Montserrat</option>
-            </Select>
-          </Field>
-          <Field
-            label="Peso"
-            htmlFor="hero-h1-weight"
-            hint="Bebas Neue solo tiene 400; el navegador sintetiza el resto."
-          >
-            <Select
-              id="hero-h1-weight"
-              value={form.h1FontWeight}
-              onChange={(e) => setForm({ ...form, h1FontWeight: e.target.value })}
-            >
-              {Object.entries(WEIGHT_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </Select>
-          </Field>
-          <Field
-            label="Estilo"
-            htmlFor="hero-h1-style"
-            hint="Ninguna fuente carga cursiva real; se sintetiza."
-          >
-            <Select
-              id="hero-h1-style"
-              value={form.h1FontStyle}
-              onChange={(e) => setForm({ ...form, h1FontStyle: e.target.value })}
-            >
-              <option value="">Sin cambio (normal)</option>
-              <option value="normal">Normal</option>
-              <option value="italic">Cursiva (italic)</option>
-            </Select>
-          </Field>
-          <Field label="Color" htmlFor="hero-h1-color" hint="Vacío = blanco.">
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                aria-label="Color del H1"
-                className="h-9 w-11 shrink-0 cursor-pointer rounded-md border border-input bg-transparent p-1"
-                value={isHex(form.h1Color) ? form.h1Color : "#ffffff"}
-                onChange={(e) => setForm({ ...form, h1Color: e.target.value })}
-              />
-              <TextInput
-                id="hero-h1-color"
-                placeholder="#ffffff"
-                value={form.h1Color}
-                onChange={(e) => setForm({ ...form, h1Color: e.target.value })}
-              />
-            </div>
-          </Field>
-        </div>
-      </fieldset>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <ViewportTabs value={viewport} onChange={setViewport} />
+        {viewportMeta && (
+          <p className="text-xs text-muted-foreground">{viewportMeta.hint}</p>
+        )}
+      </div>
 
-      <fieldset className="grid gap-4 rounded-lg border border-border p-4">
-        <legend className="px-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Estilo del H2
-        </legend>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Field
-            label="Tamaño"
-            htmlFor="hero-h2-size"
-            hint="Vacío = tamaño responsive actual."
-          >
-            <TextInput
-              id="hero-h2-size"
-              placeholder="clamp(32px, 9vw, 42px)"
-              value={form.h2FontSize}
-              onChange={(e) => setForm({ ...form, h2FontSize: e.target.value })}
-            />
-          </Field>
-          <Field label="Tipografía" htmlFor="hero-h2-font">
-            <Select
-              id="hero-h2-font"
-              value={form.h2FontFamily}
-              onChange={(e) => setForm({ ...form, h2FontFamily: e.target.value })}
-            >
-              <option value="display">Bebas Neue</option>
-              <option value="body">Montserrat</option>
-            </Select>
-          </Field>
-          <Field
-            label="Peso"
-            htmlFor="hero-h2-weight"
-            hint="Bebas Neue solo tiene 400; el navegador sintetiza el resto."
-          >
-            <Select
-              id="hero-h2-weight"
-              value={form.h2FontWeight}
-              onChange={(e) => setForm({ ...form, h2FontWeight: e.target.value })}
-            >
-              {Object.entries(WEIGHT_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </Select>
-          </Field>
-          <Field
-            label="Estilo"
-            htmlFor="hero-h2-style"
-            hint="Ninguna fuente carga cursiva real; se sintetiza."
-          >
-            <Select
-              id="hero-h2-style"
-              value={form.h2FontStyle}
-              onChange={(e) => setForm({ ...form, h2FontStyle: e.target.value })}
-            >
-              <option value="">Sin cambio (normal)</option>
-              <option value="normal">Normal</option>
-              <option value="italic">Cursiva (italic)</option>
-            </Select>
-          </Field>
-          <Field label="Color" htmlFor="hero-h2-color" hint="Vacío = blanco.">
-            <div className="flex items-center gap-2">
-              <input
-                type="color"
-                aria-label="Color del H2"
-                className="h-9 w-11 shrink-0 cursor-pointer rounded-md border border-input bg-transparent p-1"
-                value={isHex(form.h2Color) ? form.h2Color : "#ffffff"}
-                onChange={(e) => setForm({ ...form, h2Color: e.target.value })}
-              />
-              <TextInput
-                id="hero-h2-color"
-                placeholder="#ffffff"
-                value={form.h2Color}
-                onChange={(e) => setForm({ ...form, h2Color: e.target.value })}
-              />
-            </div>
-          </Field>
-        </div>
-      </fieldset>
+      <HeadlineStyleFields
+        level={1}
+        viewport={viewport}
+        form={form}
+        setForm={setForm}
+      />
+      <HeadlineStyleFields
+        level={2}
+        viewport={viewport}
+        form={form}
+        setForm={setForm}
+      />
+
       <Field label="Subtítulo" htmlFor="hero-subtitle" hint="Texto de apoyo debajo del título. Antes se tomaba de la descripción del sitio.">
         <TipTapEditor
           value={form.subtitle}
-          onChange={(html) => setForm({ ...form, subtitle: html })}
+          onChange={(html) => setForm((prev) => ({ ...prev, subtitle: html }))}
           placeholder="Escribe el subtítulo…"
         />
       </Field>
@@ -373,7 +401,7 @@ export function HeroEditor({ data }: { data: HeroSettings }) {
         <FieldArray
           items={metrics}
           onChange={setMetrics}
-          addLabel=" agregar métrica"
+          addLabel="Agregar métrica"
           emptyLabel="Sin métricas"
           renderItem={(item, _, onChange) => (
             <div className="grid grid-cols-2 gap-3">

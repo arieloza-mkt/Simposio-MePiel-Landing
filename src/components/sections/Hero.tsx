@@ -7,6 +7,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import { heroStyleKey, type HeroStyleField } from "@/lib/hero-style";
 import type { HeroSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { getYoutubeId } from "@/lib/video";
@@ -38,21 +39,33 @@ function headlineFont(value?: string): string | undefined {
   return HEADLINE_FONTS[value] ?? "var(--font-body)";
 }
 
+/* Cada propiedad produce dos variables: --hero-hN-* (escritorio) y
+   --hero-hN-*-mobile, que globals.css aplica dentro del media query
+   `screen and (max-width: 1000px)`. Las que queden sin valor no se emiten,
+   así el navegador cae en el valor de escritorio. */
+const HEADLINE_PROPS = ["font", "size", "weight", "style", "color"] as const;
+type HeadlineProp = (typeof HEADLINE_PROPS)[number];
+
+const HEADLINE_FIELDS: Record<HeadlineProp, HeroStyleField> = {
+  font: "FontFamily",
+  size: "FontSize",
+  weight: "FontWeight",
+  style: "FontStyle",
+  color: "Color",
+};
+
 function headlineStyle(hero: HeroSettings): CSSProperties {
   const style: CSSProperties & Record<string, string> = {};
-  const levels = [1, 2] as const;
-  for (const level of levels) {
-    const prefix = `--hero-h${level}`;
-    const font = headlineFont(level === 1 ? hero.h1FontFamily : hero.h2FontFamily);
-    const size = level === 1 ? hero.h1FontSize : hero.h2FontSize;
-    const weight = level === 1 ? hero.h1FontWeight : hero.h2FontWeight;
-    const fontStyle = level === 1 ? hero.h1FontStyle : hero.h2FontStyle;
-    const color = level === 1 ? hero.h1Color : hero.h2Color;
-    if (font) style[`${prefix}-font`] = font;
-    if (size) style[`${prefix}-size`] = size;
-    if (weight) style[`${prefix}-weight`] = weight;
-    if (fontStyle) style[`${prefix}-style`] = fontStyle;
-    if (color) style[`${prefix}-color`] = color;
+  for (const level of [1, 2] as const) {
+    for (const mobile of [false, true]) {
+      for (const prop of HEADLINE_PROPS) {
+        const raw = hero[heroStyleKey(level, HEADLINE_FIELDS[prop], mobile)];
+        const value = prop === "font" ? headlineFont(raw) : raw;
+        if (value) {
+          style[`--hero-h${level}-${prop}${mobile ? "-mobile" : ""}`] = value;
+        }
+      }
+    }
   }
   return style;
 }

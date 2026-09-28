@@ -230,12 +230,43 @@
   text-decoration: underline;
 }
 
-@media (max-width: 639px) {
+@media screen and (max-width: 1000px) {
+  /* Versión móvil de los estilos del título: si el admin dejó un campo
+     "--hero-hN-*-mobile" vacío, la variable cae al valor de escritorio y,
+     si tampoco hay valor guardado, al responsive de .hero-headline. */
   .hero-headline {
     --hero-headline-size: clamp(32px, 9vw, 42px);
   }
+  .hero-headline h1 {
+    font-family: var(--hero-h1-font-mobile, var(--hero-h1-font, var(--hero-headline-font)));
+    font-size: var(--hero-h1-size-mobile, var(--hero-h1-size, var(--hero-headline-size)));
+    font-weight: var(--hero-h1-weight-mobile, var(--hero-h1-weight, 400));
+    font-style: var(--hero-h1-style-mobile, var(--hero-h1-style, normal));
+    color: var(--hero-h1-color-mobile, var(--hero-h1-color, var(--hero-headline-color)));
+  }
+  .hero-headline h2 {
+    font-family: var(--hero-h2-font-mobile, var(--hero-h2-font, var(--hero-headline-font)));
+    font-size: var(--hero-h2-size-mobile, var(--hero-h2-size, var(--hero-headline-size)));
+    font-weight: var(--hero-h2-weight-mobile, var(--hero-h2-weight, 400));
+    font-style: var(--hero-h2-style-mobile, var(--hero-h2-style, normal));
+    color: var(--hero-h2-color-mobile, var(--hero-h2-color, var(--hero-headline-color)));
+  }
+}
+
+/* En móvil, los párrafos de la sección Alianza (HTML con <p> anidados)
+   se reducen y compactan para no desbordar el viewport. */
+@media (max-width: 639px) {
   .hero-subtitle {
     font-size: 15px;
+  }
+
+  #alianza p:not(.admin p) {
+    font-size: 15px;
+    margin-block: 0 12px;
+  }
+
+  #cifras-preview-big-image {
+    display: none;
   }
 }
 

@@ -95,17 +95,42 @@ const optionalWeight = z.union([
 
 const optionalFontStyle = z.union([z.literal(""), z.enum(["normal", "italic"])]);
 
-const hexColor = z
-  .string()
-  .trim()
-  .regex(/^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/, "Color hexadecimal inválido. Ej: #ffffff");
-
 const optionalHexColor = z
   .string()
   .trim()
   .refine((v) => v === "" || /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v), {
     message: "Color hexadecimal inválido. Ej: #ffffff",
   });
+
+/* Estilos de un título (H1/H2). La variante de escritorio siempre tiene
+   tipografía (el select no puede quedar vacío); la móvil puede quedar en ""
+   para heredar el valor de escritorio dentro del media query de 1000px. */
+function headlineStyle(mobile: boolean) {
+  return {
+    fontSize: z.union([z.literal(""), cssSize]),
+    fontFamily: mobile
+      ? z.union([z.literal(""), z.enum(["display", "body", "mono"])])
+      : z.enum(["display", "body", "mono"]).default("display"),
+    fontWeight: optionalWeight,
+    fontStyle: optionalFontStyle,
+    color: optionalHexColor,
+  };
+}
+
+/* El prefijo de los campos guardados es "h1"/"h2" y el sufijo de viewport
+   es "" (escritorio) o "Mobile". Se aplana a un objeto de una sola clave por
+   propiedad porque la base de datos guarda el contenido como JSON plano. */
+function headlineStyleFields(level: "h1" | "h2") {
+  const desktop = headlineStyle(false);
+  const mobile = headlineStyle(true);
+  const fields: Record<string, z.ZodTypeAny> = {};
+  for (const prop of ["fontSize", "fontFamily", "fontWeight", "fontStyle", "color"] as const) {
+    const name = `${prop[0].toUpperCase()}${prop.slice(1)}`;
+    fields[`${level}${name}`] = desktop[prop];
+    fields[`${level}${name}Mobile`] = mobile[prop];
+  }
+  return fields;
+}
 
 export type ContentKey =
   | "site"
@@ -151,16 +176,8 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
     subtitle: z.string(),
     videoId: z.string().trim().max(120),
     metrics: pairLines,
-    h1FontSize: z.union([z.literal(""), cssSize]),
-    h1FontFamily: z.enum(["display", "body", "mono"]).default("display"),
-    h1FontWeight: optionalWeight,
-    h1FontStyle: optionalFontStyle,
-    h1Color: optionalHexColor,
-    h2FontSize: z.union([z.literal(""), cssSize]),
-    h2FontFamily: z.enum(["display", "body", "mono"]).default("display"),
-    h2FontWeight: optionalWeight,
-    h2FontStyle: optionalFontStyle,
-    h2Color: optionalHexColor,
+    ...headlineStyleFields("h1"),
+    ...headlineStyleFields("h2"),
   }),
   queEs: z.object({
     eyebrow: z.string().trim(),

@@ -3,6 +3,7 @@ import { getDbReady } from "./db/client";
 import { ensureDb } from "./db/init";
 import * as schema from "./db/schema";
 import { splitLegacyHeadline } from "./hero-headline";
+import type { HeroStyleSettings } from "./hero-style";
 import {
   EDITION_SEED,
   FAQ_SEED,
@@ -40,22 +41,15 @@ export interface SeoSettings {
   description: string;
 }
 
-export interface HeroSettings {
+/* Los estilos del título (H1 y H2) se editan dos veces: escritorio y móvil
+   (sufijo `Mobile`). La variante móvil se aplica dentro del media query
+   `screen and (max-width: 1000px)`; si queda vacía se usa la de escritorio. */
+export interface HeroSettings extends HeroStyleSettings {
   h1: string;
   h2: string;
   subtitle: string;
   metrics: { value: string; label: string }[];
   videoId: string;
-  h1FontSize?: string;
-  h1FontFamily?: string;
-  h1FontWeight?: string;
-  h1FontStyle?: string;
-  h1Color?: string;
-  h2FontSize?: string;
-  h2FontFamily?: string;
-  h2FontWeight?: string;
-  h2FontStyle?: string;
-  h2Color?: string;
 }
 
 export interface TransmisionSettings {
