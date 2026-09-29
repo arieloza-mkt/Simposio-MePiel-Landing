@@ -42,11 +42,3 @@ export function sanitizeHtml(html: string): string {
     allowedSchemes: ["http", "https", "mailto", "tel"],
   });
 }
-
-export function sanitizeHtmlSimple(html: string): string {
-  return cleanHtml(html, {
-    allowedTags: ["p", "br", "strong", "em", "u", "h2", "h3", "ul", "ol", "li", "a"],
-    allowedAttributes: { a: ["href", "target", "rel"] },
-    allowedSchemes: ["http", "https", "mailto", "tel"],
-  });
-}

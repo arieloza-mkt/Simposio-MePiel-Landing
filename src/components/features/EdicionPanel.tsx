@@ -19,12 +19,6 @@ interface EdicionPanelProps {
   playing?: boolean;
 }
 
-const TERCERA_EDICION_STATS = [
-  { value: "8", label: "Conferencias" },
-  { value: "13", label: "Laboratorios" },
-  { value: "1", label: "Workshop" },
-];
-
 const COUNTDOWN_UNITS = [
   { key: "d", label: "Días" },
   { key: "h", label: "Horas" },
@@ -120,7 +114,7 @@ export function EdicionPanel({
                   title={`Video de fondo — ${edition.eyebrow} ${edition.ordinal}`}
                   allow="autoplay; encrypted-media"
                   referrerPolicy="strict-origin-when-cross-origin"
-                  className="pointer-events-none absolute left-1/2 top-1/2 h-[max(56.25vw,100%)] w-[max(100%,177.78vh)] -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.42]"
+                  className="pointer-events-none absolute left-1/2 top-1/2 aspect-video min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 border-0 brightness-[0.42]"
                 />
               ) : (
                 /* eslint-disable-next-line @next/next/no-img-element */
@@ -217,6 +211,8 @@ export function EdicionPanel({
                 </svg>
               </button>
             ) : null}
+            {/* La 3ra edición muestra sus stats en la columna derecha, junto al
+                countdown ("Lo que nos espera"), para no repetirlos. */}
             {!isThirdEdition && edition.stats.length > 0 && (
               <div className="mt-[clamp(24px,4vw,56px)] flex items-center justify-center gap-2 sm:gap-6 md:flex-wrap md:gap-[clamp(24px,4vw,48px)]">
                 {edition.stats.map((s) => (
@@ -335,7 +331,7 @@ export function EdicionPanel({
                     Lo que nos espera
                   </h3>
                   <div className="flex items-center justify-center gap-2 sm:gap-6 md:flex-wrap md:gap-[clamp(24px,4vw,48px)]">
-                    {TERCERA_EDICION_STATS.map((s) => (
+                    {edition.stats.map((s) => (
                       <div key={s.label} className="min-w-0 flex flex-1 flex-col items-center text-center md:flex-none">
                         <div className="font-display text-[clamp(22px,6.5vw,34px)] font-bold leading-none text-accent md:text-[clamp(48px,6vw,72px)]">
                           {s.value}

@@ -44,17 +44,22 @@ export function Field({
   label,
   hint,
   htmlFor,
+  labelId,
   children,
 }: {
   label: string;
   hint?: string;
   htmlFor?: string;
+  /* Para controles que no son labelables (el contenteditable de TipTap), el
+     label necesita id + aria-labelledby en vez de htmlFor. */
+  labelId?: string;
   children: ReactNode;
 }) {
   return (
     <div className="min-w-0">
       <label
-        htmlFor={htmlFor}
+        id={labelId}
+        htmlFor={labelId ? undefined : htmlFor}
         className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-muted-foreground"
       >
         {label}

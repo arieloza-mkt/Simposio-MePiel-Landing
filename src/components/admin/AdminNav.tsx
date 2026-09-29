@@ -10,6 +10,7 @@ import {
   BookOpen,
   FileText,
   ClipboardList,
+  Radio,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
@@ -20,6 +21,7 @@ const LINKS = [
   { href: "/admin/programa", label: "Programa", icon: ClipboardList },
   { href: "/admin/cronograma", label: "Cronograma", icon: Calendar },
   { href: "/admin/ediciones", label: "Ediciones", icon: BookOpen },
+  { href: "/admin/evento", label: "Evento", icon: Radio },
   { href: "/admin/contenido", label: "Contenido", icon: FileText },
 ];
 

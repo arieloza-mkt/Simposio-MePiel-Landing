@@ -148,7 +148,14 @@ export function CronogramaModal({
   useEffect(() => {
     if (!open) return;
     const update = () =>
-      setStatuses(getItemStatuses(items, eventConfig, zonedNow(eventConfig.timezone)));
+      setStatuses(
+        getItemStatuses(
+          items,
+          eventConfig,
+          // timezone es opcional en el tipo; Intl lanza RangeError con undefined.
+          zonedNow(eventConfig.timezone ?? "America/Mexico_City"),
+        ),
+      );
     update();
     const id = setInterval(update, 30_000);
     return () => clearInterval(id);

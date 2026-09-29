@@ -106,10 +106,11 @@ export interface CtaCierreSettings {
 
 export interface EventConfig {
   startsAt: string;
-  endsAt: string;
-  timezone: string;
-  dateLabel: string;
-  venueLabel: string;
+  /* Opcional: el countdown solo usa startsAt, la ventana de escaneo usa ambos. */
+  endsAt?: string | null;
+  timezone?: string;
+  dateLabel?: string;
+  venueLabel?: string;
 }
 
 export interface LogoSpinSettings {

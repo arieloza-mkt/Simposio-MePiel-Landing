@@ -72,10 +72,17 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
       { value: "+15", label: "Laboratorios" },
       { value: "+30", label: "Conferencias" },
     ],
-    videoId: null,
+    videoId: "https://youtu.be/bxlIhOVBT2k",
     backdropUrl:
       "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
     images: [
+      /* Los videos van siempre como primer slide (ver sortVideosFirst): el
+         carrusel detecta YouTube por getYoutubeId(slide.src) y lo reproduce
+         como iframe dándole un turno más largo antes de avanzar a las fotos. */
+      {
+        src: "https://youtu.be/bxlIhOVBT2k",
+        alt: "Primera edición - video resumen",
+      },
       {
         src: "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0",
         alt: "Primera edición - panorama general",
@@ -125,10 +132,14 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
       { value: "+40", label: "Laboratorios" },
       { value: "+50", label: "Conferencias" },
     ],
-    videoId: null,
+    videoId: "https://youtu.be/8bfcESgQOes",
     backdropUrl:
       "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?q=80&w=1170&auto=format&fit=crop",
     images: [
+      {
+        src: "https://youtu.be/8bfcESgQOes",
+        alt: "Segunda edición - video resumen",
+      },
       {
         src: "https://images.unsplash.com/photo-1626125345510-4603468eedfb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0",
         alt: "Segunda edición - panorama general",
@@ -170,9 +181,10 @@ export const EDITION_SEED: (InferInsertModel<typeof editions> & {
       "La tercera edición del Simposio Dermocosmético llegará con la esencia que ya nos caracteriza, pero con nuevas experiencias para conectar, aprender y vivir la categoría de una forma diferente.\nHabrá más ponencias, espacios de convivencia y encuentros con los laboratorios participantes… y tenemos algo más preparado para esta edición que todavía no podemos revelar.\nNuevas experiencias. La misma misión: seguir impulsando juntos la dermocosmética en México.",
     temario: [],
     stats: [
-      { value: "+5000", label: "Asistentes" },
-      { value: "+60", label: "Laboratorios" },
-      { value: "+80", label: "Conferencias" },
+      { value: "8", label: "Conferencias" },
+      { value: "13", label: "Laboratorios" },
+      { value: "1", label: "Workshop" },
+      { value: "3", label: "Talleres" },
     ],
     videoId:
       "https://1t0z4lon9s.ucarecd.net/fe7e3a99-507a-4c7d-b87c-becccf561016/simposio.mp4",

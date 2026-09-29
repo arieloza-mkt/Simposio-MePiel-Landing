@@ -3,6 +3,7 @@ import { newAccessCode } from "@/lib/access-code";
 import { getDbReady, resetDb } from "./client";
 import { DDL_STATEMENTS } from "./ddl";
 import { splitLegacyHeadline } from "../hero-headline";
+import { sortVideosFirst } from "../video";
 import {
   EDITION_SEED,
   FAQ_SEED,
@@ -135,6 +136,24 @@ async function init(): Promise<void> {
         await db
           .update(schema.editions)
           .set({ temario: next })
+          .where(eq(schema.editions.id, row.id));
+      }
+    }
+    // Galería de ediciones: los videos de YouTube van siempre primero, las
+    // fotos después. Se normaliza el orden guardado para que /admin/ediciones
+    // muestre el mismo orden que la web. Idempotente: solo escribe si cambió.
+    const galleryEditions = await db
+      .select({ id: schema.editions.id, images: schema.editions.images })
+      .from(schema.editions);
+    for (const row of galleryEditions) {
+      const images = Array.isArray(row.images) ? row.images : [];
+      if (images.length === 0) continue;
+      const ordered = sortVideosFirst(images);
+      const changed = ordered.some((slide, i) => slide.src !== images[i]?.src);
+      if (changed) {
+        await db
+          .update(schema.editions)
+          .set({ images: ordered })
           .where(eq(schema.editions.id, row.id));
       }
     }

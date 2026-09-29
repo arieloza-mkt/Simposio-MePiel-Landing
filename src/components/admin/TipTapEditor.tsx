@@ -14,9 +14,13 @@ interface TipTapEditorProps {
   placeholder?: string;
   className?: string;
   readonly?: boolean;
+  /* El contenido editable de ProseMirror es un div, no un control labelable:
+     `htmlFor` no lo asocia, así que el label se enlaza con aria-labelledby. */
+  id?: string;
+  labelledBy?: string;
 }
 
-export function TipTapEditor({ value, onChange, placeholder, className, readonly }: TipTapEditorProps) {
+export function TipTapEditor({ value, onChange, placeholder, className, readonly, id, labelledBy }: TipTapEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({ heading: { levels: [2, 3] } }),
@@ -30,6 +34,17 @@ export function TipTapEditor({ value, onChange, placeholder, className, readonly
     ],
     content: value,
     editable: !readonly,
+    editorProps: {
+      // Sin role="textbox" ni nombre accesible, los lectores de pantalla
+      // anuncian el contenteditable como un bloque de texto sin etiqueta.
+      attributes: {
+        role: "textbox",
+        "aria-multiline": "true",
+        ...(readonly ? { "aria-readonly": "true" } : {}),
+        ...(labelledBy ? { "aria-labelledby": labelledBy } : {}),
+        ...(id ? { id } : {}),
+      },
+    },
     onUpdate: ({ editor }) => onChange(editor.getHTML()),
   });
 

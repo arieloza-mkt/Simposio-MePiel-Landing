@@ -38,6 +38,13 @@ async function getEventWindow(): Promise<EventWindow> {
     endsAt: string;
     dateLabel: string;
   };
+  /* El valor guardado en DB puede venir sin endsAt (es opcional en el admin),
+     pero el seed siempre lo trae y se usa como red de seguridad. */
+  type StoredEventConfig = {
+    startsAt: string;
+    endsAt?: string | null;
+    dateLabel?: string;
+  };
   try {
     const db = await getDbReady();
     const [row] = await db
@@ -45,11 +52,16 @@ async function getEventWindow(): Promise<EventWindow> {
       .from(siteSettings)
       .where(eq(siteSettings.key, "eventConfig"))
       .limit(1);
-    const raw = (row?.value ?? fallback) as typeof fallback;
+    const raw = (row?.value ?? fallback) as StoredEventConfig;
+    const startsAt = new Date(raw.startsAt);
+    /* endsAt es opcional en el admin (solo el countdown lo necesita), pero
+       new Date(null) es epoch 1970 y cerraría la ventana de escaneo para
+       siempre. Si falta, se usa el seed. */
+    const endsAt = raw.endsAt ? new Date(raw.endsAt) : new Date(fallback.endsAt);
     return {
-      startsAt: new Date(raw.startsAt),
-      endsAt: new Date(raw.endsAt),
-      dateLabel: raw.dateLabel,
+      startsAt,
+      endsAt: Number.isNaN(endsAt.getTime()) ? new Date(fallback.endsAt) : endsAt,
+      dateLabel: raw.dateLabel ?? fallback.dateLabel,
     };
   } catch {
     return {

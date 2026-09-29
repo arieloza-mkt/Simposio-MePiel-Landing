@@ -1,83 +1,61 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
 import { siteSettings } from "@/lib/db/schema";
 
-const transmisionSchema = z.object({
-  isLive: z.boolean(),
-  videoId: z.string().trim().max(120).transform((v) => v || null),
-  title: z.string().trim().min(1),
-  description: z.string().trim(),
-  backdropUrl: z
-    .string()
-    .trim()
-    .refine((v) => v === "" || /^https?:\/\//.test(v), "Debe ser URL http(s)")
-    .transform((v) => v || null),
-});
-
-export type TransmisionInput = z.infer<typeof transmisionSchema>;
-
+/* endsAt es opcional: solo lo usa la ventana de escaneo de entradas
+   (lib/entrada.ts). El countdown de la edición 3 únicamente lee startsAt, así
+   que exigirlo impedía configurar solo la fecha que muestra el contador. */
 const eventConfigSchema = z.object({
   startsAt: z.string().datetime({ offset: true }),
-  endsAt: z.string().datetime({ offset: true }),
+  endsAt: z
+    .string()
+    .trim()
+    .refine((v) => v === "" || !Number.isNaN(new Date(v).getTime()), "Fecha inválida")
+    .transform((v) => v || null)
+    .nullable()
+    .optional(),
 });
-
-export async function saveTransmision(
-  input: TransmisionInput,
-): Promise<{ ok: boolean; error?: string }> {
-  const parsed = transmisionSchema.safeParse(input);
-  if (!parsed.success) {
-    return { ok: false, error: "Datos inválidos." };
-  }
-
-  await ensureDb();
-  const db = await getDbReady();
-
-  await db
-    .insert(siteSettings)
-    .values({ key: "transmision", value: parsed.data })
-    .onConflictDoUpdate({
-      target: siteSettings.key,
-      set: { value: parsed.data },
-    });
-
-  return { ok: true };
-}
 
 export async function saveEventScheduleWindow(
   startsAt: string,
   endsAt: string,
 ): Promise<{ ok: boolean; error?: string }> {
-  const currentResult = await db_getEventConfig();
   const parsed = eventConfigSchema.safeParse({
-    startsAt,
-    endsAt,
+    startsAt: startsAt.trim(),
+    endsAt: endsAt.trim(),
   });
   if (!parsed.success) {
     return {
       ok: false,
       error:
+        parsed.error.issues[0]?.message ??
         "Fechas inválidas. Usa el formato con zona horaria, p. ej. 2026-10-15T09:00:00-06:00.",
     };
   }
 
   await ensureDb();
   const db = await getDbReady();
+  const current = await db_getEventConfig();
 
+  // Solo se sobreescriben las claves enviadas: eventConfig también guarda
+  // timezone, dateLabel y venueLabel, que este formulario no expone.
   await db
     .insert(siteSettings)
     .values({
       key: "eventConfig",
-      value: { ...currentResult, ...parsed.data },
+      value: { ...current, ...parsed.data },
     })
     .onConflictDoUpdate({
       target: siteSettings.key,
-      set: { value: { ...currentResult, ...parsed.data } },
+      set: { value: { ...current, ...parsed.data } },
     });
 
+  revalidatePath("/");
   return { ok: true };
 }
 

@@ -71,6 +71,8 @@ const STYLE_FIELDS = [
 const fieldId = (key: string) =>
   `hero-${key.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase()}`;
 
+const VIEWPORT_PANEL_ID = "hero-style-panel";
+
 function ViewportTabs({
   value,
   onChange,
@@ -78,18 +80,39 @@ function ViewportTabs({
   value: Viewport;
   onChange: (next: Viewport) => void;
 }) {
+  /* Con roving tabindex solo el tab activo es alcanzable con Tab; las flechas
+     recorren el grupo, como espera el patrón de tablist. */
+  const move = (delta: number) => {
+    const index = VIEWPORTS.findIndex((v) => v.value === value);
+    const next = VIEWPORTS[(index + delta + VIEWPORTS.length) % VIEWPORTS.length];
+    onChange(next.value);
+    document.getElementById(`hero-viewport-tab-${next.value}`)?.focus();
+  };
+
   return (
     <div
       role="tablist"
       aria-label="Dispositivo"
       className="inline-flex shrink-0 rounded-lg border border-border p-1"
+      onKeyDown={(e) => {
+        if (e.key === "ArrowRight") {
+          e.preventDefault();
+          move(1);
+        } else if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          move(-1);
+        }
+      }}
     >
       {VIEWPORTS.map((viewport) => (
         <button
           key={viewport.value}
+          id={`hero-viewport-tab-${viewport.value}`}
           type="button"
           role="tab"
           aria-selected={value === viewport.value}
+          aria-controls={VIEWPORT_PANEL_ID}
+          tabIndex={value === viewport.value ? 0 : -1}
           onClick={() => onChange(viewport.value)}
           className={`rounded-md px-4 py-1.5 text-sm font-medium transition ${
             value === viewport.value
@@ -372,21 +395,30 @@ export function HeroEditor({ data }: { data: HeroSettings }) {
         )}
       </div>
 
-      <HeadlineStyleFields
-        level={1}
-        viewport={viewport}
-        form={form}
-        setForm={setForm}
-      />
-      <HeadlineStyleFields
-        level={2}
-        viewport={viewport}
-        form={form}
-        setForm={setForm}
-      />
+      <div
+        id={VIEWPORT_PANEL_ID}
+        role="tabpanel"
+        aria-labelledby={`hero-viewport-tab-${viewport}`}
+        className="grid gap-4"
+      >
+        <HeadlineStyleFields
+          level={1}
+          viewport={viewport}
+          form={form}
+          setForm={setForm}
+        />
+        <HeadlineStyleFields
+          level={2}
+          viewport={viewport}
+          form={form}
+          setForm={setForm}
+        />
+      </div>
 
-      <Field label="Subtítulo" htmlFor="hero-subtitle" hint="Texto de apoyo debajo del título. Antes se tomaba de la descripción del sitio.">
+      <Field label="Subtítulo" labelId="hero-subtitle-label" hint="Texto de apoyo debajo del título. Antes se tomaba de la descripción del sitio.">
         <TipTapEditor
+          id="hero-subtitle"
+          labelledBy="hero-subtitle-label"
           value={form.subtitle}
           onChange={(html) => setForm((prev) => ({ ...prev, subtitle: html }))}
           placeholder="Escribe el subtítulo…"
@@ -582,8 +614,10 @@ export function QueEsEditor({ data }: { data: QueEsSettings }) {
           <TextInput id="queEs-imageAlt" value={form.imageAlt} onChange={(e) => setForm({ ...form, imageAlt: e.target.value })} />
         </Field>
       </div>
-      <Field label="Introducción" htmlFor="queEs-intro">
+      <Field label="Introducción" labelId="queEs-intro-label">
         <TipTapEditor
+          id="queEs-intro"
+          labelledBy="queEs-intro-label"
           value={form.intro}
           onChange={(html) => setForm({ ...form, intro: html })}
           placeholder="Texto de introducción"
@@ -646,8 +680,10 @@ export function EditionsEditor({
           <Field label="Título ponentes" htmlFor="modal-speakersTitle">
             <TextInput id="modal-speakersTitle" value={modal.speakersTitle} onChange={(e) => setModal({ ...modal, speakersTitle: e.target.value })} />
           </Field>
-          <Field label="Descripción ponentes" htmlFor="modal-speakersDesc">
+          <Field label="Descripción ponentes" labelId="modal-speakersDesc-label">
             <TipTapEditor
+              id="modal-speakersDesc"
+              labelledBy="modal-speakersDesc-label"
               value={modal.speakersDescription}
               onChange={(html) => setModal({ ...modal, speakersDescription: html })}
               placeholder="Descripción de ponentes"
@@ -656,8 +692,10 @@ export function EditionsEditor({
           <Field label="Título laboratorios" htmlFor="modal-labsTitle">
             <TextInput id="modal-labsTitle" value={modal.labsTitle} onChange={(e) => setModal({ ...modal, labsTitle: e.target.value })} />
           </Field>
-          <Field label="Descripción laboratorios" htmlFor="modal-labsDesc">
+          <Field label="Descripción laboratorios" labelId="modal-labsDesc-label">
             <TipTapEditor
+              id="modal-labsDesc"
+              labelledBy="modal-labsDesc-label"
               value={modal.labsDescription}
               onChange={(html) => setModal({ ...modal, labsDescription: html })}
               placeholder="Descripción de laboratorios"
@@ -720,15 +758,19 @@ export function RegistroEditor({ data }: { data: RegistroSettings }) {
           <TextInput id="reg-title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
         </Field>
       </div>
-      <Field label="Descripción" htmlFor="reg-desc">
+      <Field label="Descripción" labelId="reg-desc-label">
         <TipTapEditor
+          id="reg-desc"
+          labelledBy="reg-desc-label"
           value={form.description}
           onChange={(html) => setForm({ ...form, description: html })}
           placeholder="Descripción del registro"
         />
       </Field>
-      <Field label="Texto de validación" htmlFor="reg-validation">
+      <Field label="Texto de validación" labelId="reg-validation-label">
         <TipTapEditor
+          id="reg-validation"
+          labelledBy="reg-validation-label"
           value={form.validationText}
           onChange={(html) => setForm({ ...form, validationText: html })}
           placeholder="Texto de validación"
@@ -782,8 +824,10 @@ export function FooterEditor({ data }: { data: FooterSettings }) {
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
       <ImageField name="logoUrl" label="Logo del footer" defaultValue={form.logoUrl} onChange={(url) => setForm({ ...form, logoUrl: url })} />
-      <Field label="Descripción" htmlFor="footer-desc">
+      <Field label="Descripción" labelId="footer-desc-label">
         <TipTapEditor
+          id="footer-desc"
+          labelledBy="footer-desc-label"
           value={form.description}
           onChange={(html) => setForm({ ...form, description: html })}
           placeholder="Descripción del footer"

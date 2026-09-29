@@ -6,6 +6,7 @@ import { z } from "zod";
 import { getDbReady } from "@/lib/db/client";
 import { ensureDb } from "@/lib/db/init";
 import { editions } from "@/lib/db/schema";
+import { sortVideosFirst } from "@/lib/video";
 
 const urlOrNull = z
   .string()
@@ -153,7 +154,7 @@ export async function saveEdition(
     logoUrl: data.logoUrl,
     videoId: data.videoId,
     stats: data.stats,
-    images: data.images,
+    images: sortVideosFirst(data.images),
     labs: data.labs,
     speakerIds: data.speakerIds,
     temario: data.temario,

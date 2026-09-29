@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useId, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
-import { getYoutubeId } from "@/lib/video";
+import { getYoutubeId, isVideoSlide, sortVideosFirst } from "@/lib/video";
 import { useFancybox } from "@/components/ui/Fancybox";
 
 interface PhotoSlide {
@@ -15,6 +15,9 @@ interface PhotoCarouselProps {
   className?: string;
   fill?: boolean;
   autoplayMs?: number;
+  /* Los videos duran más en pantalla que una foto: una foto se alcanza a ver
+     en 5s, un video necesita su tiempo antes de pasar al siguiente. */
+  videoMs?: number;
   paused?: boolean;
 }
 
@@ -23,13 +26,18 @@ export function PhotoCarousel({
   className,
   fill,
   autoplayMs = 5000,
+  videoMs = 40000,
   paused = false,
 }: PhotoCarouselProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
   const fancyboxRef = useFancybox<HTMLDivElement>();
   const group = useId();
-  const youtubeIds = images.map((slide) => getYoutubeId(slide.src));
+  const slides = useMemo(() => sortVideosFirst(images), [images]);
+  const youtubeIds = useMemo(
+    () => slides.map((slide) => getYoutubeId(slide.src)),
+    [slides],
+  );
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -57,23 +65,42 @@ export function PhotoCarousel({
     if (!emblaApi) return;
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (mq.matches) return;
-    const interval = setInterval(() => {
-      if (document.hidden) return;
+    if (slides.length <= 1) return;
+
+    let timer: number | null = null;
+    const clear = () => {
+      if (timer !== null) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+    };
+    /* Un solo temporizador, reprogramado en cada cambio de slide. El video
+       (que va primero) recibe un turno largo; al agotarse avanza a las fotos,
+       así el carrusel no se queda pegado en el video. */
+    const schedule = () => {
+      clear();
       if (paused) return;
       const current = emblaApi.selectedScrollSnap();
-      if (images.length <= 1) return;
-      // Pausa el autoplay mientras se muestra un video para poder verlo.
-      if (current < youtubeIds.length && youtubeIds[current]) return;
-      emblaApi.scrollNext();
-    }, autoplayMs);
-    return () => clearInterval(interval);
-  }, [emblaApi, images, youtubeIds, autoplayMs, paused]);
+      const delay = youtubeIds[current] ? videoMs : autoplayMs;
+      timer = window.setTimeout(() => {
+        if (!document.hidden) emblaApi.scrollNext();
+        schedule();
+      }, delay);
+    };
+
+    schedule();
+    emblaApi.on("select", schedule);
+    return () => {
+      clear();
+      emblaApi.off("select", schedule);
+    };
+  }, [emblaApi, slides, youtubeIds, autoplayMs, videoMs, paused]);
 
   return (
     <div ref={fancyboxRef} className={`relative overflow-hidden bg-dark-s max-md:mx-auto max-md:w-[80%] ${fill ? "h-full" : "rounded-[var(--radius-lg)]"} ${className ?? ""}`}>
       <div className={`overflow-hidden ${fill ? "h-full" : ""}`} ref={emblaRef}>
         <div className="flex h-full">
-          {images.map((slide, i) => (
+          {slides.map((slide, i) => (
             <div
               key={i}
               className={`min-w-full shrink-0 relative ${fill ? "h-full" : "aspect-[16/10]"}`}
@@ -145,13 +172,13 @@ export function PhotoCarousel({
       </button>
 
       <div className="absolute bottom-3 left-1/2 z-2 flex -translate-x-1/2 gap-1.5">
-        {images.map((_, i) => (
+        {slides.map((slide, i) => (
           <button
             key={i}
             type="button"
             onClick={() => scrollTo(i)}
             className="grid h-8 w-8 place-items-center rounded-full border-none p-0 transition-colors"
-            aria-label={`Foto ${i + 1}`}
+            aria-label={`${isVideoSlide(slide.src) ? "Video" : "Foto"} ${i + 1}`}
             aria-current={i === selectedIndex}
           >
             <span
