@@ -188,17 +188,19 @@ export function EdicionPanel({
             <p
               ref={descriptionRef}
               className={`mt-6 mb-0 whitespace-pre-line text-[17px] leading-relaxed text-white/55 ${
-                isThirdEdition ? "" : "line-clamp-4"
+                isThirdEdition ? "max-[1020px]:line-clamp-4" : "line-clamp-4"
               }`}
             >
               {edition.description}
             </p>
-            {overflows && !isThirdEdition ? (
+            {overflows ? (
               <button
                 type="button"
                 onClick={() => setLightboxOpen(true)}
                 aria-haspopup="dialog"
-                className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-colors hover:text-white"
+                className={`mt-3 items-center gap-1.5 text-sm font-medium text-accent transition-colors hover:text-white ${
+                  isThirdEdition ? "flex min-[1021px]:hidden" : "inline-flex"
+                }`}
               >
                 Leer más
                 <svg

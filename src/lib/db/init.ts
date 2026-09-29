@@ -2,6 +2,7 @@ import { eq, isNull, sql } from "drizzle-orm";
 import { newAccessCode } from "@/lib/access-code";
 import { getDbReady, resetDb } from "./client";
 import { DDL_STATEMENTS } from "./ddl";
+import { splitLegacyHeadline } from "../hero-headline";
 import {
   EDITION_SEED,
   FAQ_SEED,
@@ -137,6 +138,28 @@ async function init(): Promise<void> {
           .where(eq(schema.editions.id, row.id));
       }
     }
+    // El título del hero pasó de `headline` (HTML de TipTap) a `h1` + `h2`
+    // (texto plano). Solo actúa si la fila todavía conserva `headline`: si
+    // `h1` quedara vacío tras la migración, volver a mirar `headline` la
+    // dispararía en cada request.
+    const heroRow = await db
+      .select({ value: schema.siteSettings.value })
+      .from(schema.siteSettings)
+      .where(eq(schema.siteSettings.key, "hero"))
+      .limit(1);
+    const storedHero = heroRow[0]?.value as
+      | (Record<string, unknown> & { headline?: unknown })
+      | undefined;
+    if (storedHero && typeof storedHero.headline === "string") {
+      const { h1, h2 } = splitLegacyHeadline(storedHero.headline);
+      const next: Record<string, unknown> = { ...storedHero, h1, h2 };
+      delete next.headline;
+      await db
+        .update(schema.siteSettings)
+        .set({ value: next, updatedAt: new Date() })
+        .where(eq(schema.siteSettings.key, "hero"));
+    }
+
     // Programa (3 días): se siembra solo si la tabla está vacía,
     // para no pisar las ediciones hechas desde /admin/programa.
     const programCount = await db

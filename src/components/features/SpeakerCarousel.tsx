@@ -134,16 +134,17 @@ export function SpeakerCarousel({
                   <div className="mb-1 text-[15px] font-semibold leading-snug transition-colors duration-300 group-hover:text-accent">
                     {speaker.name}
                   </div>
+                     {speaker.role ? (
+                    <div className="text-sm leading-snug text-muted">
+                      {speaker.role}
+                    </div>
+                  ) : null}
                   {speaker.company ? (
                     <div className="mb-1 text-sm leading-snug text-muted">
                       {speaker.company}
                     </div>
                   ) : null}
-                  {speaker.role ? (
-                    <div className="text-sm leading-snug text-muted">
-                      {speaker.role}
-                    </div>
-                  ) : null}
+               
                 </figcaption>
               </figure>
             </SwiperSlide>

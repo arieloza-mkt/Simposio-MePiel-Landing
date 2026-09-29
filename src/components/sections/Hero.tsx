@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import {
   motion,
   useReducedMotion,
   useScroll,
   useTransform,
 } from "framer-motion";
-import type { HeroSettings, SiteInfo } from "@/lib/content";
+import { heroStyleKey, type HeroStyleField } from "@/lib/hero-style";
+import type { HeroSettings } from "@/lib/content";
 import { Container } from "@/components/layout/Container";
 import { getYoutubeId } from "@/lib/video";
 import { useInView } from "@/lib/use-in-view";
@@ -24,7 +25,52 @@ const heroChild = {
   visible: { opacity: 1, y: 0 },
 };
 
-export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
+/* Solo hay dos familias reales: Bebas Neue (display) y Montserrat (body).
+   "mono" se acepta por compatibilidad con valores ya guardados, pero
+   --font-mono apunta a la misma Montserrat que --font-body. */
+const HEADLINE_FONTS: Record<string, string> = {
+  display: "var(--font-display)",
+  body: "var(--font-body)",
+  mono: "var(--font-body)",
+};
+
+function headlineFont(value?: string): string | undefined {
+  if (!value) return undefined;
+  return HEADLINE_FONTS[value] ?? "var(--font-body)";
+}
+
+/* Cada propiedad produce dos variables: --hero-hN-* (escritorio) y
+   --hero-hN-*-mobile, que globals.css aplica dentro del media query
+   `screen and (max-width: 1000px)`. Las que queden sin valor no se emiten,
+   así el navegador cae en el valor de escritorio. */
+const HEADLINE_PROPS = ["font", "size", "weight", "style", "color"] as const;
+type HeadlineProp = (typeof HEADLINE_PROPS)[number];
+
+const HEADLINE_FIELDS: Record<HeadlineProp, HeroStyleField> = {
+  font: "FontFamily",
+  size: "FontSize",
+  weight: "FontWeight",
+  style: "FontStyle",
+  color: "Color",
+};
+
+function headlineStyle(hero: HeroSettings): CSSProperties {
+  const style: CSSProperties & Record<string, string> = {};
+  for (const level of [1, 2] as const) {
+    for (const mobile of [false, true]) {
+      for (const prop of HEADLINE_PROPS) {
+        const raw = hero[heroStyleKey(level, HEADLINE_FIELDS[prop], mobile)];
+        const value = prop === "font" ? headlineFont(raw) : raw;
+        if (value) {
+          style[`--hero-h${level}-${prop}${mobile ? "-mobile" : ""}`] = value;
+        }
+      }
+    }
+  }
+  return style;
+}
+
+export function Hero({ hero }: { hero: HeroSettings }) {
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
     if (el) {
@@ -142,18 +188,21 @@ export function Hero({ site, hero }: { site: SiteInfo; hero: HeroSettings }) {
           variants={heroChildren}
           className="max-w-[720px] text-left"
         >
-          <motion.h1
+          <motion.div
             variants={heroChild}
-            className="mb-5 font-display text-[clamp(48px,7vw,88px)] font-bold leading-[1.04] tracking-tight text-white max-sm:text-[clamp(32px,9vw,42px)]"
+            className="hero-headline"
+            style={headlineStyle(hero)}
           >
-            {hero.headline}
-          </motion.h1>
-          <motion.p
-            variants={heroChild}
-            className="mb-8 max-w-[52ch] text-[19px] leading-relaxed text-white/55 max-sm:text-[16px]"
-          >
-            {site.description}
-          </motion.p>
+            <h1>{hero.h1}</h1>
+            {hero.h2 && <h2>{hero.h2}</h2>}
+          </motion.div>
+          {hero.subtitle && (
+            <motion.div
+              variants={heroChild}
+              className="hero-subtitle max-w-[52ch]"
+              dangerouslySetInnerHTML={{ __html: hero.subtitle }}
+            />
+          )}
 
           <motion.div
             initial={{ opacity: 0 }}

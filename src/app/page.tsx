@@ -17,7 +17,7 @@ export default async function Home() {
     <>
       <TopNav editions={content.editions} />
       <main id="content">
-        <Hero site={content.site} hero={content.hero} />
+        <Hero hero={content.hero} />
         <SimposioDermocosmetico alianza={content.mepielAlianza} />
         <LogoSpin
           logoUrl={content.logoSpin.logoUrl}

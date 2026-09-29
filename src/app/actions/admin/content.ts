@@ -66,6 +66,72 @@ const stringArray = z.string().transform((raw) => {
   return raw.split("\n").map((l) => l.trim()).filter(Boolean);
 });
 
+/* Solo se admiten longitudes CSS simples: "48px", "3rem", "7vw", "100%" y
+   funciones clamp()/min()/max() con 2 o 3 longitudes separadas por "," o "/".
+   Se rechaza todo lo demás (calc(), url(), var(), ;, etc.) porque el valor
+   acaba en un style inline. */
+const CSS_UNITS = ["px", "rem", "em", "vw", "vh", "vmin", "vmax", "%"].join("|");
+const CSS_LENGTH = `(?:\\d+(?:\\.\\d+)?|\\.\\d+)(?:${CSS_UNITS})`;
+const CSS_SIZE_RE = new RegExp(
+  `^(?:(?:clamp|min|max)\\(\\s*${CSS_LENGTH}(?:\\s*[,/]\\s*${CSS_LENGTH}){1,2}\\s*\\)|${CSS_LENGTH})$`,
+);
+
+const cssSize = z
+  .string()
+  .trim()
+  .max(80)
+  .refine((v) => CSS_SIZE_RE.test(v), {
+    message:
+      "Tamaño inválido. Ej: 48px, 3rem, 7vw o clamp(48px, 7vw, 88px)",
+  });
+
+/* Pesos disponibles en las fuentes del proyecto: Montserrat carga
+   300/400/500/600/700/900. Bebas Neue solo tiene 400 (el resto lo
+   sintetiza el navegador), igual que la cursiva. */
+const optionalWeight = z.union([
+  z.literal(""),
+  z.enum(["300", "400", "500", "600", "700", "900"]),
+]);
+
+const optionalFontStyle = z.union([z.literal(""), z.enum(["normal", "italic"])]);
+
+const optionalHexColor = z
+  .string()
+  .trim()
+  .refine((v) => v === "" || /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v), {
+    message: "Color hexadecimal inválido. Ej: #ffffff",
+  });
+
+/* Estilos de un título (H1/H2). La variante de escritorio siempre tiene
+   tipografía (el select no puede quedar vacío); la móvil puede quedar en ""
+   para heredar el valor de escritorio dentro del media query de 1000px. */
+function headlineStyle(mobile: boolean) {
+  return {
+    fontSize: z.union([z.literal(""), cssSize]),
+    fontFamily: mobile
+      ? z.union([z.literal(""), z.enum(["display", "body", "mono"])])
+      : z.enum(["display", "body", "mono"]).default("display"),
+    fontWeight: optionalWeight,
+    fontStyle: optionalFontStyle,
+    color: optionalHexColor,
+  };
+}
+
+/* El prefijo de los campos guardados es "h1"/"h2" y el sufijo de viewport
+   es "" (escritorio) o "Mobile". Se aplana a un objeto de una sola clave por
+   propiedad porque la base de datos guarda el contenido como JSON plano. */
+function headlineStyleFields(level: "h1" | "h2") {
+  const desktop = headlineStyle(false);
+  const mobile = headlineStyle(true);
+  const fields: Record<string, z.ZodTypeAny> = {};
+  for (const prop of ["fontSize", "fontFamily", "fontWeight", "fontStyle", "color"] as const) {
+    const name = `${prop[0].toUpperCase()}${prop.slice(1)}`;
+    fields[`${level}${name}`] = desktop[prop];
+    fields[`${level}${name}Mobile`] = mobile[prop];
+  }
+  return fields;
+}
+
 export type ContentKey =
   | "site"
   | "seo"
@@ -105,9 +171,13 @@ const CONTENT_SCHEMAS: Record<ContentKey, z.ZodTypeAny> = {
     description: z.string(),
   }),
   hero: z.object({
-    headline: z.string().trim().min(1),
+    h1: z.string().trim().min(1, "El H1 no puede quedar vacío").max(120),
+    h2: z.string().trim().max(160),
+    subtitle: z.string(),
     videoId: z.string().trim().max(120),
     metrics: pairLines,
+    ...headlineStyleFields("h1"),
+    ...headlineStyleFields("h2"),
   }),
   queEs: z.object({
     eyebrow: z.string().trim(),
@@ -230,6 +300,7 @@ export async function saveContentSetting(
   // Sanitize HTML fields before validation
   const sanitizedValues = { ...rawValues };
   const htmlFields: Record<string, string[]> = {
+    hero: ["subtitle"],
     queEs: ["intro", "experienceIntro"],
     mepielAlianza: ["paragraphs"],
     registroSection: ["description", "validationText"],
